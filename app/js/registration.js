@@ -7,7 +7,7 @@ if (regForm && containerDiv) {
        const formData = new FormData(regForm);
        const data = Object.fromEntries(formData.entries()); 
  
-       fetch('response.php', {
+       fetch('../php/registration.php', {
            method: 'POST',
            body: JSON.stringify(data),
            headers: {

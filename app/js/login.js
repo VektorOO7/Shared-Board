@@ -9,7 +9,7 @@ loginForm.addEventListener('submit', (event) => {
         loginData[input.name] = input.value;
     });
 
-    fetch('login.php', {
+    fetch('../php/login.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
