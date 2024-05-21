@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS SharedBoard;
+
+USE SharedBoard;
+
+CREATE TABLE IF NOT EXISTS Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    salt VARCHAR(255) NOT NULL,
+    hashed_password VARCHAR(255) NOT NULL
+);

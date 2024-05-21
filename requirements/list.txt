@@ -1,0 +1,5 @@
+
+- XAMPP Control Panel v3.3.0
+- PHP version 8.2.12
+
+- MySQL Port = 3307
