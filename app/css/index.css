@@ -3,18 +3,23 @@
 
 body {
     margin: 0;
+    height: 100vh;
+
+    min-width: 300px;
+
+    background-color: var(--primary-color);
 }
 
 header {
     margin: 0;
-    padding: 8px 8px 4px 8px;
+    padding: 8px 8px 8px 8px;
     border-bottom: 1px solid black;
 
     background: var(--secondary-color);
 }
 
 main {
-    margin: 4px 0px 8px 0px;
+    margin: 0px 0px 8px 0px;
     padding: 0px 8px 0px 8px;
 }
 
@@ -22,6 +27,8 @@ nav {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 0;
+
+    height: var(--nav-bar-height);
 
     background-color: var(--secondary-color);
 }
@@ -31,36 +38,87 @@ nav {
     height: 100%;
 }
 
+#create-board-button-div,
+#account-button-div {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    align-items: center;
+}
+
 #create-board-button,
 #account-button {
     padding: 0;
     border: none;
 
+    position: relative;
+
     background: var(--secondary-color);
 }
 
-#create-board-button-div {
-    
+#create-board-button {
+    height: var(--nav-bar-height);
+    width: calc(var(--nav-bar-height) * 2.25);
+
+    left: 0;
 }
 
-#account-button-div {
-    
+#account-button {
+    height: calc(var(--nav-bar-height) * 0.8);
+    width: calc(var(--nav-bar-height) * 1.2);
+
+    left: calc(100% - calc(var(--nav-bar-height) * 1.2));
 }
 
 .text {
     color: var(--text-color);
+
+    margin: 5px;
 }
 
 #create-board-button-svg {
-    width: 3vw;
-    height: 3vw;
+    height: calc(var(--nav-bar-height) * 0.5);
+    width: auto;
 
     fill: var(--text-color);
 }
 
 #account-button-svg {
-    width: 4vw;
-    height: 4vw;
+    width: calc(var(--nav-bar-height) * 0.8);
+    height: calc(var(--nav-bar-height) * 0.8);
 
     fill: var(--text-color);
+}
+
+main {
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+
+    height: 100vh - $nav-bar-height
+
+    background-color: var(--primary-color);
+}
+
+
+.board-container {
+    display: grid;
+    gap: 10px;
+
+    padding: 10px;
+    
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    justify-items: center;
+
+    background-color: var(--primary-color);
+}
+
+.board {
+    width: 200px;
+    height: 200px;
+    
+    border-radius: 5px;
+
+    background-color: #4CAF50; /* temporary */
 }
