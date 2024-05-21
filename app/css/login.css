@@ -63,21 +63,23 @@ form {
 #password-field {
     padding: var(--form-field-padding-sides) var(--form-field-padding-top-bottom);
 
-    width: calc(var(--form-field-width) - var(--form-field-padding-sides));
-    height: calc(var(--form-field-height) - var(--form-field-padding-top-bottom));
+    width: var(--form-field-width);
+    height: var(--form-field-height);
 
-    border: 1.5px solid lightgrey;
+    border: var(--form-field-border) solid lightgrey;
     border-radius: 5px;
+
+    font-size: var(--form-font);
 }
 
 #username-or-email-field {
-    margin-top: 3vh;
-    margin-bottom: 1vh;
+    margin-top: var(--between-field-margin);
+    margin-bottom: calc(var(--between-field-margin) / 2);
 }
 
 #password-field {
-    margin-top: 1vh;
-    margin-bottom: 3vh;
+    margin-top: calc(var(--between-field-margin) / 2);
+    margin-bottom: calc(var(--between-field-margin) / 2);
 }
 
 #login-button-div {
@@ -86,11 +88,12 @@ form {
 
 #login-button {
     padding: 0;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0;
+    margin-top: calc(var(--between-field-margin) / 2);
+    margin-bottom: var(--between-field-margin);
 
-    width: var(--form-field-width);
-    height: var(--form-field-height);
+    width: var(--form-login-button-width);
+    height: var(--form-login-button-height);
 
     position: relative;
 
@@ -99,7 +102,7 @@ form {
 
     background: var(--primary-color);
 
-    font-size: 20px;
+    font-size: var(--form-font);
 }
 
 #login-button:hover {

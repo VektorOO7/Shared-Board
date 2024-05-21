@@ -2,30 +2,39 @@
 
 
 :root {
-	/*
-		index.css variables
-	*/
+    /*
+        index.css variables
+    */
 
-	--primary-color: rgb(39, 43, 48);
-	--secondary-color: rgb(58, 63, 68);
-	--text-color: rgb(222, 226, 230	);
-	--border-color: var(--text-color);
+    --primary-color: rgb(39, 43, 48);
+    --secondary-color: rgb(58, 63, 68);
+    --text-color: rgb(222, 226, 230	);
+    --border-color: var(--text-color);
 
-	--nav-bar-height: 9vh;
+    --nav-bar-height: 9vh;
 
-	--board-width: 200px;
-	--board-height: 200px;
-	--between-board-gap: 10px;
+    --board-width: 200px;
+    --board-height: 200px;
+    --between-board-gap: 20px;
 
-	/*
-		login.css variables
-	*/
+    /*
+       login.css variables
+    */
 
-	--form-width: 30vw;
-	--form-height: 75vh;
+    --form-width: 30vw;
+    --form-height: 75vh;
 
-	--form-field-padding-sides: 10px;
-	--form-field-padding-top-bottom: 10px;
-	--form-field-width: calc(var(--form-width) * 0.9);
-	--form-field-height: 7vh;
+    --form-font: 20px;
+
+    --between-field-margin: 1.5vh;
+
+    --form-field-padding-sides: 10px;
+    --form-field-padding-top-bottom: 10px;
+    --form-field-border: 1.5px;
+
+    --form-login-button-width: calc(var(--form-width) * 0.9);
+    --form-login-button-height: 7vh;
+    
+    --form-field-width: calc(var(--form-login-button-width) - 2 * calc(var(--form-field-padding-sides) + var(--form-field-border)));
+    --form-field-height: calc(var(--form-login-button-height) - 2 * calc(var(--form-field-padding-top-bottom) + var(--form-field-border)));
 }
