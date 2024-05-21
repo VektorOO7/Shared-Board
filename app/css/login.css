@@ -1,0 +1,115 @@
+
+
+
+body {
+    margin: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    place-items: center;
+
+    background-color: var(--secondary-color);
+}
+
+main {
+    width: var(--form-width);
+
+    border-radius: 20px;
+
+    background-color: none;
+}
+
+form {
+    width: 100%;
+
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#form-title-div {
+    overflow: hidden;
+    text-align: center;
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+
+    background-color: var(--primary-color);
+}
+
+#form-title {
+    margin: 15px 0;
+
+    color: var(--text-color);
+}
+
+#form-body-div {
+    flex-grow: 1;
+
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    background-color: white;
+}
+
+.field-div {
+    text-align: center;
+}
+
+#username-or-email-field,
+#password-field {
+    padding: var(--form-field-padding-sides) var(--form-field-padding-top-bottom);
+
+    width: calc(var(--form-field-width) - var(--form-field-padding-sides));
+    height: calc(var(--form-field-height) - var(--form-field-padding-top-bottom));
+
+    border: 1.5px solid lightgrey;
+    border-radius: 5px;
+}
+
+#username-or-email-field {
+    margin-top: 3vh;
+    margin-bottom: 1vh;
+}
+
+#password-field {
+    margin-top: 1vh;
+    margin-bottom: 3vh;
+}
+
+#login-button-div {
+    text-align: center;
+}
+
+#login-button {
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+
+    width: var(--form-field-width);
+    height: var(--form-field-height);
+
+    position: relative;
+
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+
+    background: var(--primary-color);
+
+    font-size: 20px;
+}
+
+#login-button:hover {
+    background: var(--secondary-color);
+
+    cursor: pointer;
+}
+
+.text {
+    color: var(--text-color);
+
+    margin: 5px;
+}

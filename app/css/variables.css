@@ -17,5 +17,15 @@
 	--board-height: 200px;
 	--between-board-gap: 10px;
 
-	--board-text-one-line: 1em;
+	/*
+		login.css variables
+	*/
+
+	--form-width: 30vw;
+	--form-height: 75vh;
+
+	--form-field-padding-sides: 10px;
+	--form-field-padding-top-bottom: 10px;
+	--form-field-width: calc(var(--form-width) * 0.9);
+	--form-field-height: 7vh;
 }

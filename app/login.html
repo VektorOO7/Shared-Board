@@ -1,27 +1,37 @@
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login</title>
+
+        <link rel="stylesheet" href="./css/login.css">
+        <link rel="stylesheet" href="./css/variables.css">
         <script src="./js/login.js" defer></script>
+
+        <title>Shared Board Login</title>
     </head>
+
     <body>
-        <section class="form-body">
-        <form id="login-form">
-            <div class="form-item">
-                <label for="email">Email</label>
-                <input id="email" type="email" name="email">
-            </div>
-            <div class="form-item">
-                <label for="password">Парола
-                    <input id="password" type="password" name="password">
-                </label>
-                
-            </div>
-            <div class="form-item">
-                <button class="btn">Вход</button>
-            </div>
-        </form>
+        <main>
+            <form id="login-form">
+                <div id="form-title-div">
+                    <h1 id="form-title">Login Form</h1>
+                </div>
+
+                <div id="form-body-div">
+                    <div class="field-div">
+                        <input id="username-or-email-field" type="email" name="email" placeholder="Username or Email">
+                    </div>
+
+                    <div class="field-div">
+                        <input id="password-field" type="password" name="password" placeholder="Password">
+                    </div>
+
+                    <div id="login-button-div">
+                        <button id="login-button" class="text">Login</button>
+                    </div>
+                </div>
+            </form>
+        </main>
     </body>
 </html>    
