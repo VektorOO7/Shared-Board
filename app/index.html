@@ -9,6 +9,16 @@
         <script src="./js/index.js" defer></script>
 
         <title>Shared Board</title>
+
+        <script type="text/javascript">
+            // This script is for testing only!
+            
+            document.addEventListener("DOMContentLoaded", function() {
+                createBoard('Example Title 1', 'Example Owner 1', 'This is an example description about a board!');
+                createBoard('Example Title 2', 'Example Owner 2', 'This is an example description about a board!');
+                createBoard('Example Title 3', 'Example Owner 3', 'This is an example description about a board!');
+            });
+        </script>
     </head>
 
     <body>
@@ -27,6 +37,12 @@
                 </div>
 
                 <div class="grid-element">
+                    <div id="nav-title">
+                        <h1 class="text">Shared Board</h1>
+                    </div>
+                </div>
+
+                <div class="grid-element">
                     <div id="account-button-div">
                         <button id="account-button">
                             <svg class="bi bi-person-circle" id="account-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -41,9 +57,6 @@
 
         <main>
             <div class="board-container">
-                <div class="board"></div>
-                <div class="board"></div>
-                <div class="board"></div>
             </div>
         </main>
     </body>
