@@ -26,11 +26,14 @@
 
     --form-font: 20px;
 
-    --between-field-margin: 1.5vh;
+    --between-form-element-margin: 3vh;
 
     --form-field-padding-sides: 10px;
     --form-field-padding-top-bottom: 10px;
     --form-field-border: 1.5px;
+
+    --form-text-margin-sides: 1.55vw;
+    --form-text-margin-top: 1vh;
 
     --form-login-button-width: calc(var(--form-width) * 0.9);
     --form-login-button-height: 7vh;

@@ -73,13 +73,20 @@ form {
 }
 
 #username-or-email-field {
-    margin-top: var(--between-field-margin);
-    margin-bottom: calc(var(--between-field-margin) / 2);
+    margin-top: var(--between-form-element-margin);
+    margin-bottom: calc(var(--between-form-element-margin) / 2);
 }
 
 #password-field {
-    margin-top: calc(var(--between-field-margin) / 2);
-    margin-bottom: calc(var(--between-field-margin) / 2);
+    margin-top: calc(var(--between-form-element-margin) / 2);
+    margin-bottom: 0;
+}
+
+#forgot-password-div {
+    margin-left: var(--form-text-margin-sides);
+    margin-right: var(--form-text-margin-sides);
+    margin-top: var(--form-text-margin-top);
+    margin-bottom: var(--between-form-element-margin);
 }
 
 #login-button-div {
@@ -88,9 +95,7 @@ form {
 
 #login-button {
     padding: 0;
-    margin: 0;
-    margin-top: calc(var(--between-field-margin) / 2);
-    margin-bottom: var(--between-field-margin);
+    margin: 0 calc(var(--between-form-element-margin) / 2);
 
     width: var(--form-login-button-width);
     height: var(--form-login-button-height);
@@ -111,8 +116,19 @@ form {
     cursor: pointer;
 }
 
+#do-not-have-account-div {
+    margin-left: var(--form-text-margin-sides);
+    margin-right: var(--form-text-margin-sides);
+    margin-top: calc(var(--between-form-element-margin) / 2);
+    margin-bottom: var(--between-form-element-margin);
+}
+
 .text {
     color: var(--text-color);
 
     margin: 5px;
+}
+
+.normal-text {
+    color: var(--primary-color);
 }
