@@ -124,11 +124,19 @@ form {
 }
 
 .text {
+    margin: 5px;
+
     color: var(--text-color);
 
-    margin: 5px;
+    font-size: var(--form-text-font);
 }
 
 .normal-text {
     color: var(--primary-color);
+
+    font-size: var(--form-text-font);
+}
+
+a {
+    font-size: var(--form-text-font);
 }

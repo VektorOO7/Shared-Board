@@ -12,18 +12,33 @@
     </head>
 
     <body>
-        <main class="container">
-            <form id="reg-form">
-                <label> Username 
-                    <input id="username" type="text" name="username" placeholder="John Smith">
-                </label>
-                
-                <label> Email    
-                    <input id="email" type="email" name="email" placeholder="a@a.com"> 
-                </label>
-                <label> Password 
-                    <input id="password" type="password" name="password">
-                </label>
+        <main>
+            <form id="registration-form">
+                <div id="form-title-div">
+                    <h1 id="form-title">Registration Form</h1>
+                </div>
+
+                <div id="form-body-div">
+                    <div class="field-div">
+                        <input id="username-field" type="text" name="text" placeholder="Username">
+                    </div>
+
+                    <div class="field-div">
+                        <input id="email-field" type="email" name="email" placeholder="Email">
+                    </div>
+
+                    <div class="field-div">
+                        <input id="password-field" type="password" name="password" placeholder="Password">
+                    </div>
+
+                    <div class="field-div">
+                        <input id="confirm-password-field" type="password" name="password" placeholder="Confirm Password">
+                    </div>
+
+                    <div id="register-button-div">
+                        <button id="register-button" class="text">Register</button>
+                    </div>
+                </div>
             </form>
         </main>
     </body>

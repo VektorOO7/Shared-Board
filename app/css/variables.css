@@ -18,13 +18,14 @@
     --between-board-gap: 20px;
 
     /*
-       login.css variables
+       login.css & registration.css variables
     */
 
     --form-width: 30vw;
     --form-height: 75vh;
 
-    --form-font: 20px;
+    --form-font: 25px;
+    --form-text-font: 20px;
 
     --between-form-element-margin: 3vh;
 
@@ -34,6 +35,9 @@
 
     --form-text-margin-sides: 1.55vw;
     --form-text-margin-top: 1vh;
+
+    --form-registration-button-width: calc(var(--form-width) * 0.9);
+    --form-registration-button-height: 7vh;
 
     --form-login-button-width: calc(var(--form-width) * 0.9);
     --form-login-button-height: 7vh;
