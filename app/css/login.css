@@ -107,7 +107,7 @@ form {
 
     background: var(--primary-color);
 
-    font-size: var(--form-font);
+    font-size: var(--form-button-font);
 }
 
 #login-button:hover {
@@ -128,15 +128,15 @@ form {
 
     color: var(--text-color);
 
-    font-size: var(--form-text-font);
+    font-size: var(--text-font);
 }
 
 .normal-text {
     color: var(--primary-color);
 
-    font-size: var(--form-text-font);
+    font-size: var(--text-font);
 }
 
 a {
-    font-size: var(--form-text-font);
+    font-size: var(--text-font);
 }

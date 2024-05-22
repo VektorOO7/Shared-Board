@@ -13,6 +13,9 @@
 
     --nav-bar-height: 9vh;
 
+    --text-font: 2vh;
+    --title-text-font: 3vh;
+
     --board-width: 200px;
     --board-height: 200px;
     --between-board-gap: 20px;
@@ -24,8 +27,8 @@
     --form-width: 30vw;
     --form-height: 75vh;
 
-    --form-font: 25px;
-    --form-text-font: 20px;
+    --form-font: var(--text-font);
+    --form-button-font: 2.75vh;
 
     --between-form-element-margin: 3vh;
 

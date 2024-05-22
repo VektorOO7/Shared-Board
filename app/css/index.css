@@ -54,6 +54,12 @@ nav {
     text-align: center;
 }
 
+#title-text {
+    color: var(--text-color);
+
+    font-size: var(--title-text-font);
+}
+
 #create-board-button,
 #account-button {
     padding: 0;
@@ -92,6 +98,8 @@ nav {
     color: var(--text-color);
 
     margin: 5px;
+
+    font-size: var(--text-font);
 }
 
 #create-board-button-svg {
