@@ -7,7 +7,7 @@ class DB {
     public function __construct() {
         //note that this connection is may not work if your db is host on another localhost, or has a different name
         //the localhost is 3306 by default
-        $this->connection = new PDO("mysql:host=localhost:3306;dbname=/*dbname goes here*/", "root", "");
+        $this->connection = new PDO("mysql:host=localhost:3306;dbname=sharedboard", "root", "");
     }
 
     public function getConnection() {
