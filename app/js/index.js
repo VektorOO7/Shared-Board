@@ -8,7 +8,6 @@ const boardContainer = document.querySelector('.board-container');
 
 let boardCounter = 0;
 
-
 function createBoard(title, owner, description) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
@@ -37,6 +36,30 @@ function createBoard(title, owner, description) {
     boardCounter++;
 }
 
+function checkSessionAndLoadData() {
+    fetch('php/index.php', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.active) {
+            console.log('Session is not active');
+            // Redirect to login page or show an error message
+            //window.location.href = 'login.html';
+        } else {
+            console.log('Session is active', data.user);
+            // Call the function to load other content or execute further logic
+            //loadAdditionalContent();
+        }
+    })
+    .catch(error => {
+        console.error('Error checking session:', error);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     createBoardButton.addEventListener('click', function() {
         createBoard('Example Title', 'Example Owner', 'This is an example description about a board!')
@@ -45,5 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     accountButton.addEventListener('click', () => {
         console.log("Account button clicked");
     });
+
+    checkSessionAndLoadData();
 });
 
