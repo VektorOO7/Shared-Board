@@ -8,6 +8,7 @@ const boardContainer = document.querySelector('.board-container');
 
 let boardCounter = 0;
 
+
 function createBoard(title, owner, description) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');

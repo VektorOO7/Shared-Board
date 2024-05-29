@@ -37,7 +37,7 @@ $valid = isUserDataValid($userData);
 if ($valid["isValid"]) {
     $userData["password"] = password_hash($userData["password"], PASSWORD_DEFAULT);
     try {
-        // Modify after proper db is made
+
         $db = new DB();
         $conn = $db->getConnection();
         $sql = "INSERT INTO users (username, email, hashed_password) VALUES (?,?,?)";

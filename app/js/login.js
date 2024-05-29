@@ -17,6 +17,9 @@ loginForm.addEventListener('submit', (event) => {
         body: JSON.stringify(loginData)
     })
     .then((res) => {
+        if(res.status == 200){
+            window.location.href = 'index.html';
+        }
         return res.json();
     })
 

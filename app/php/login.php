@@ -60,8 +60,21 @@ if ($userData && isset($userData["u_or_e"]) && isset($userData["password"])) {
             echo json_encode(["message" => "Входът е неуспешен, грешна парола"]);
             exit();
         }
+
         session_start();
         $_SESSION["user"] = $user;
+        $cookie_name = "user";
+        $cookie_value = json_encode($user);
+        $cookie_options = [
+            'expires' => time() + 3600,
+            'path' => '/',
+            'domain' => '', // your domain name
+            'secure' => true, // Only send over HTTPS
+            'httponly' => true, // Only accessible via HTTP(S), not JavaScript
+            'samesite' => 'Lax'
+        ];
+
+        setcookie($cookie_name, $cookie_value, $cookie_options);
         echo json_encode(["message" => "Входът е успешен"]); 
 
     } catch (Error $exc) {
