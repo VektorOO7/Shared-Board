@@ -15,10 +15,14 @@ function checkSessionAndLoadData(loadFunction) {
             
             // cookies don't work
             //window.location.href = 'login.html';
+
+            //return false;
         } else {
             console.log('Session is active', data.user);
             
             loadFunction();
+
+            //return true;
         }
     })
     .catch(error => {
@@ -61,32 +65,6 @@ function createBoard(title, owner, description) {
     boardCounter++;
 }
 
-function checkSessionAndLoadData() {
-    fetch('../php/index.php', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (!data.active) {
-            console.log('Session is not active');
-            // Redirect to login page or show an error message
-            //window.location.href = 'login.html';
-            //return false;
-        } else {
-            console.log('Session is active', data.user);
-            // Call the function to load other content or execute further logic
-            //loadAdditionalContent();
-            //return true;
-        }
-    })
-    .catch(error => {
-        console.error('Error checking session:', error);
-    });
-}
-
 function logout(){
     fetch('../php/logout.php', {
         method: 'POST'
@@ -95,8 +73,8 @@ function logout(){
     .then(data => {
         if (data.success) {
             console.log('Logged out successfully');
-            // Redirect to login page
-            //window.location.href = 'login.html';
+
+            window.location.href = 'login.html';
         } else {
             console.error('Logout failed:', data.message);
         }
