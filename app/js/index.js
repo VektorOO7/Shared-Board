@@ -1,31 +1,6 @@
 
 
 
-function checkSessionAndLoadData(loadFunction) {
-    fetch('../php/index.php', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (!data.active) {
-            console.log('Session is not active');
-            
-            // cookies don't work
-            //window.location.href = 'login.html';
-        } else {
-            console.log('Session is active', data.user);
-            
-            loadFunction();
-        }
-    })
-    .catch(error => {
-        console.error('Error checking session:', error);
-    });
-}
-
 const createBoardButton = document.querySelector('#create-board-button');
 const accountButton = document.querySelector('#account-button');
 
@@ -61,11 +36,31 @@ function createBoard(title, owner, description) {
     boardCounter++;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    checkSessionAndLoadData(function() {
-        console.log('Loading Additional Content!');
+function checkSessionAndLoadData() {
+    fetch('php/index.php', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.active) {
+            console.log('Session is not active');
+            // Redirect to login page or show an error message
+            //window.location.href = 'login.html';
+        } else {
+            console.log('Session is active', data.user);
+            // Call the function to load other content or execute further logic
+            //loadAdditionalContent();
+        }
+    })
+    .catch(error => {
+        console.error('Error checking session:', error);
     });
+}
 
+document.addEventListener("DOMContentLoaded", () => {
     createBoardButton.addEventListener('click', function() {
         createBoard('Example Title', 'Example Owner', 'This is an example description about a board!')
     });
@@ -73,5 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     accountButton.addEventListener('click', () => {
         console.log("Account button clicked");
     });
+
+    checkSessionAndLoadData();
 });
 

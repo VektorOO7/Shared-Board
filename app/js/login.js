@@ -2,15 +2,14 @@ const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
-
     const inputs = Array.from(loginForm.getElementsByTagName('input'));
+
     const loginData = {};
-    
     inputs.forEach(input => {
         loginData[input.name] = input.value;
     });
 
-    fetch('../php/login.php', {
+    fetch('php/login.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

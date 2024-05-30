@@ -1,17 +1,17 @@
 <?php
 
-    class DB {
-        public $connection;
+class DB {
 
-        public function __construct() {
-            //note that this connection may not work if the database is hosted on another localhost, or has a different name
-            //the localhost is 3307
-            $this->connection = new PDO("mysql:host=localhost:3307;dbname=sharedboard", "root", "");
-        }
+    public $connection;
 
-        public function getConnection() {
-            return $this->connection;
-        }
+    public function __construct() {
+        //note that this connection is may not work if your db is host on another localhost, or has a different name
+        //the localhost is 3306 by default
+        $this->connection = new PDO("mysql:host=localhost:3306;dbname=sharedboard", "root", "");
     }
 
-?>
+    public function getConnection() {
+        return $this->connection;
+    }
+
+}
