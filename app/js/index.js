@@ -62,7 +62,7 @@ function createBoard(title, owner, description) {
 }
 
 function checkSessionAndLoadData() {
-    fetch('php/index.php', {
+    fetch('../php/index.php', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ function checkSessionAndLoadData() {
 }
 
 function logout(){
-    fetch('php/logout.php', {
+    fetch('../php/logout.php', {
         method: 'POST'
     })
     .then(response => response.json())
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     accountButton.addEventListener('click', () => {
         console.log("Account button clicked");
-        //if(checkSessionAndLoadData()){
+        //if(checkSessionAndLoadData()) {
             //console.log("Session is active");
             logout();
         //}
