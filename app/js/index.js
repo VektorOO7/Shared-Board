@@ -1,6 +1,31 @@
 
 
 
+function checkSessionAndLoadData(loadFunction) {
+    fetch('../php/index.php', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.active) {
+            console.log('Session is not active');
+            
+            // cookies don't work
+            //window.location.href = 'login.html';
+        } else {
+            console.log('Session is active', data.user);
+            
+            loadFunction();
+        }
+    })
+    .catch(error => {
+        console.error('Error checking session:', error);
+    });
+}
+
 const createBoardButton = document.querySelector('#create-board-button');
 const accountButton = document.querySelector('#account-button');
 
@@ -82,6 +107,10 @@ function logout(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    checkSessionAndLoadData(function() {
+        console.log('Loading Additional Content!');
+    });
+
     createBoardButton.addEventListener('click', function() {
         createBoard('Example Title', 'Example Owner', 'This is an example description about a board!')
     });
@@ -94,7 +123,5 @@ document.addEventListener("DOMContentLoaded", () => {
         //}
         //console.log("Session is NOT active");
     });
-
-    checkSessionAndLoadData();
 });
 
