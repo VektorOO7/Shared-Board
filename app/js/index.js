@@ -49,14 +49,35 @@ function checkSessionAndLoadData() {
             console.log('Session is not active');
             // Redirect to login page or show an error message
             //window.location.href = 'login.html';
+            //return false;
         } else {
             console.log('Session is active', data.user);
             // Call the function to load other content or execute further logic
             //loadAdditionalContent();
+            //return true;
         }
     })
     .catch(error => {
         console.error('Error checking session:', error);
+    });
+}
+
+function logout(){
+    fetch('php/logout.php', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Logged out successfully');
+            // Redirect to login page
+            //window.location.href = 'login.html';
+        } else {
+            console.error('Logout failed:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
 }
 
@@ -67,6 +88,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     accountButton.addEventListener('click', () => {
         console.log("Account button clicked");
+        //if(checkSessionAndLoadData()){
+            //console.log("Session is active");
+            logout();
+        //}
+        //console.log("Session is NOT active");
     });
 
     checkSessionAndLoadData();
