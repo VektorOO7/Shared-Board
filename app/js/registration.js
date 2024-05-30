@@ -21,6 +21,8 @@ if (regForm && containerDiv) {
         .then(response => response.json()) 
         .then(responseData => {
             console.log(responseData);
+
+            window.location.href = 'index.html';
         })
     });
 }

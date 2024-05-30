@@ -1,14 +1,7 @@
 const loginForm = document.getElementById('login-form');
 
-loginForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const inputs = Array.from(loginForm.getElementsByTagName('input'));
-    const loginData = {};
-    
-    inputs.forEach(input => {
-        loginData[input.name] = input.value;
-    });
+function login(loginData) {
+    console.log(loginData);
 
     fetch('php/login.php', {
         method: 'POST',
@@ -24,6 +17,17 @@ loginForm.addEventListener('submit', (event) => {
         
         return res.json();
     })
+}
 
+loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const inputs = Array.from(loginForm.getElementsByTagName('input'));
+    const loginData = {};
     
+    inputs.forEach(input => {
+        loginData[input.name] = input.value;
+    });
+
+    login(loginData);
 });
