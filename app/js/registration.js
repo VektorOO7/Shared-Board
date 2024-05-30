@@ -15,7 +15,7 @@ if (regForm && containerDiv) {
        })
        .then(response => response.json()) 
        .then(responseData => {
-           console.log(responseData);//just to make sure it worked
+           console.log(responseData); //just to make sure it worked
        })
     });
  }
