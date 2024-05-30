@@ -20,7 +20,7 @@
         } catch (PDOException $exc) {
             error_log(print_r($exc->errorInfo, true));
             
-            throw $exc
+            throw $exc;
         }
     }
 
@@ -37,7 +37,7 @@
         } catch (PDOException $exc) {
             error_log(print_r($exc->errorInfo, true));
             
-            throw $exc
+            throw $exc;
         }
     }
 
@@ -87,7 +87,7 @@
 
             echo json_encode(["message" => "Login successfull!"]); 
 
-        } catch () {
+        } catch (Error $exc) {
             http_response_code(500);
             echo json_encode(["message" => "Failed to connect to server!"]);
         } catch (Error $exc) {
