@@ -2,7 +2,7 @@
 
 
 function checkSessionAndLoadData(loadFunction) {
-    fetch('../php/index.php', {
+    fetch('php/index.php', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -13,8 +13,7 @@ function checkSessionAndLoadData(loadFunction) {
         if (!data.active) {
             console.log('Session is not active');
             
-            // cookies don't work
-            //window.location.href = 'login.html';
+            window.location.href = 'login.html';
 
             //return false;
         } else {
@@ -66,7 +65,7 @@ function createBoard(title, owner, description) {
 }
 
 function logout(){
-    fetch('../php/logout.php', {
+    fetch('php/logout.php', {
         method: 'POST'
     })
     .then(response => response.json())

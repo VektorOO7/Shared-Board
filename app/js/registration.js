@@ -11,7 +11,7 @@ if (regForm && containerDiv) {
         const formData = new FormData(regForm);
         const data = Object.fromEntries(formData.entries()); 
         
-        fetch('../php/registration.php', {
+        fetch('php/registration.php', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -20,7 +20,6 @@ if (regForm && containerDiv) {
         })
         .then(response => response.json()) 
         .then(responseData => {
-            // for debugging purposes
             console.log(responseData);
         })
     });
