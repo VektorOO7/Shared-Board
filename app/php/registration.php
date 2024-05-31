@@ -5,7 +5,12 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    require_once("../db/db.php");
+    try {
+        require_once("../db/db.php");
+    } catch (PDOException $exc) {
+        http_response_code(500);
+        echo json_encode(["message" => "Failed to make a connection to database!"]);
+    }
 
     function isUserDataValid($userData) {
         if (!$userData || !isset($userData["username"]) || !isset($userData["email"]) ||
@@ -54,7 +59,7 @@
             }
 
             error_log("PDO Error: " . print_r($e->errorInfo, true));
-            echo json_encode(["message" => "Unknown registration error!"]);
+            echo json_encode(["message" => "Failed to connect to database!"]);
         }
     } else {
         http_response_code(400);

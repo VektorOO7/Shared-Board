@@ -5,7 +5,12 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    require_once("../db/db.php");
+    try {
+        require_once("../db/db.php");
+    } catch (PDOException $exc) {
+        http_response_code(500);
+        echo json_encode(["message" => "Failed to make a connection to database!"]);
+    }
 
     function loginEmail($userData) {
         try {
@@ -87,9 +92,9 @@
 
             echo json_encode(["message" => "Login successfull!"]); 
 
-        } catch (Error $exc) {
+        } catch (PDOException $exc) {
             http_response_code(500);
-            echo json_encode(["message" => "Failed to connect to server!"]);
+            echo json_encode(["message" => "Failed to connect to database!"]);
         } catch (Error $exc) {
             http_response_code(500);
             echo json_encode(["message" => "Unknown login error!"]);
