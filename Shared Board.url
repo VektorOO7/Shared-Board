@@ -2,4 +2,5 @@
 Prop3=19,2
 [InternetShortcut]
 IDList=
-URL=http://localhost/SharedBoard/index.html
+URL=http://localhost/Shared-Board/app
+HotKey=0
