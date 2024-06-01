@@ -21,6 +21,8 @@ function checkSessionAndLoadData(loadFunction) {
             
             loadFunction();
 
+            document.getElementById('username-display').textContent = 'Hello, ' + data.user.username;
+
             //return true;
         }
     })

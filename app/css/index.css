@@ -5,7 +5,7 @@ body {
     margin: 0;
     height: 100vh;
 
-    min-width: 300px;
+    min-width: 600px;
 
     background-color: var(--primary-color);
 }
@@ -41,9 +41,29 @@ nav {
 }
 
 #create-board-button-div,
-#nav-title,
-#account-button-div {
+#nav-title {
     width: 100%;
+    height: 100%;
+
+    display: grid;
+    align-items: center;
+}
+
+#dropdown-menu-div {
+    display: grid;
+    grid-template-columns: 1fr var(--nav-bar-height);
+    grid-gap: 0;
+
+    height: var(--nav-bar-height);
+}
+
+.grid-sub-elements {
+    display: grid;
+    align-items: center;
+}
+
+#account-button-div {
+    width: 100%
     height: 100%;
 
     display: grid;
@@ -58,6 +78,18 @@ nav {
     color: var(--text-color);
 
     font-size: var(--title-text-font);
+}
+
+#username-display-div {
+    text-align: right;
+}
+
+#username-display {
+    padding-right: 0.5vw;
+
+    color: var(--text-color);
+
+    font-size: var(--username-display-text-font);
 }
 
 #create-board-button,
@@ -89,7 +121,7 @@ nav {
     height: calc(var(--nav-bar-height) * 0.8);
     width: calc(var(--nav-bar-height) * 0.8);
 
-    border-radius: 50%;
+    border-radius: 50%; /* should make the button round, but it doesn't work! */
 
     left: calc(100% - calc(var(--nav-bar-height) * 1));
 }
