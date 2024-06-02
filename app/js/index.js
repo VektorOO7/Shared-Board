@@ -1,35 +1,7 @@
 
 
 
-function checkSessionAndLoadData(loadFunction) {
-    fetch('php/index.php', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (!data.active) {
-            console.log('Session is not active');
-            
-            window.location.href = 'login.html';
-
-            //return false;
-        } else {
-            console.log('Session is active', data.user);
-            
-            loadFunction();
-
-            document.getElementById('username-display').textContent = 'Hello, ' + data.user.username;
-
-            //return true;
-        }
-    })
-    .catch(error => {
-        console.error('Error checking session:', error);
-    });
-}
+let userData;
 
 const createBoardButton = document.querySelector('#create-board-button');
 const accountButton = document.querySelector('#account-button');
@@ -38,35 +10,89 @@ const boardContainer = document.querySelector('.board-container');
 
 let boardCounter = 0;
 
-function createBoard(title, owner, description) {
+async function loadSession() {
+    try {
+        const response = await fetch('php/index.php', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        if (!data.active) {
+            // console.log('Session is not active');
+
+            window.location.href = 'login.html';
+        } else {
+            // console.log('Session is active', data.user);
+
+            userData = data.user;
+        }
+    } catch (error) {
+        console.error('Error checking session:', error);
+    }
+}
+
+function createBoard(boardData) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
 
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
     boardTitle.id = 'board-title-' + boardCounter;
-    boardTitle.textContent = title;
+    boardTitle.textContent = boardData.title;
 
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
     boardOwner.id = 'board-owner-' + boardCounter;
-    boardOwner.textContent = owner;
+    boardOwner.textContent = boardData.owner;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
     boardDescription.id = 'board-description-' + boardCounter;
-    boardDescription.textContent = description;
+    boardDescription.textContent = boardData.description;
+
+    const boardOpen = document.createElement('button');
+    boardOpen.classList.add('board-open-button');
+    boardOpen.id = 'board-open-button-' + boardCounter;
+    boardOpen.textContent = "Open";
 
     newBoard.appendChild(boardTitle);
     newBoard.appendChild(boardOwner);
     newBoard.appendChild(boardDescription);
+    newBoard.appendChild(boardOpen);
 
     boardContainer.appendChild(newBoard);
 
     boardCounter++;
 }
 
-function logout(){
+function showPopup() {
+    let boardData = {
+        'title': 'New Board',
+        'owner': userData.username,
+        'description': 'Description'
+    };
+
+    document.body.classList.add('active-popup');
+
+    return new Promise((resolve) => {
+        document.getElementById('popup-done-button').addEventListener('click', function() {
+            createBoard(boardData);
+
+            hidePopup();
+
+            resolve(boardData);
+        }, { once: true });
+    });
+}
+
+function hidePopup() {
+    document.body.classList.remove('active-popup');
+}
+
+function logout() {
     fetch('php/logout.php', {
         method: 'POST'
     })
@@ -85,22 +111,24 @@ function logout(){
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    checkSessionAndLoadData(function() {
-        console.log('Loading Additional Content!');
-    });
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSession();
 
-    createBoardButton.addEventListener('click', function() {
-        createBoard('Example Title', 'Example Owner', 'This is an example description about a board!')
+    if (userData) {
+        document.getElementById('username-display').textContent = 'Hello, ' + userData.username;
+    } else {
+        console.error('The user data from the session is missing!');
+    }
+
+    createBoardButton.addEventListener('click', async function() {
+        await showPopup();
     });
 
     accountButton.addEventListener('click', () => {
         console.log("Account button clicked");
-        //if(checkSessionAndLoadData()) {
-            //console.log("Session is active");
-            logout();
-        //}
-        //console.log("Session is NOT active");
+
+        // this is only temporary, until we add the dropdown menu
+        logout();
     });
 });
 

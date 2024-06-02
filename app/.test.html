@@ -1,25 +1,103 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="UTF-8">
+    <title>Blur and Popup Example</title>
+    <style>
+        /* Basic styles for the body */
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-        <title>File Upload Form Testing</title>
+        /* Button to trigger the popup */
+        #trigger-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-        <script src="js/file_manager.js" defer></script>
-    </head>
+        /* Container for the entire content to blur */
+        #content {
+            transition: filter 0.3s ease;
+        }
 
-    <body>
-        <h1>Upload a File</h1>
+        /* Popup overlay */
+        #popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+        }
 
-        <form id="uploadForm" onsubmit="return handleFormSubmit(event)">
-            <div>
-                <input type="file" name="uploadedFile" required>
-            </div>
+        /* Popup content */
+        #popup {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-            <input type="submit" value="Upload File">
-        </form>
-        
-        <div id="result"></div>
-    </body>
+        /* Button to close the popup */
+        #close-popup {
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Active state for the popup overlay */
+        .active #popup-overlay {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Blur effect when the popup is active */
+        .active #content {
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+
+<div id="content">
+    <button id="trigger-button">Show Popup</button>
+    <!-- Main content of the page goes here -->
+    <p>This is some example content that will be blurred when the popup is active.</p>
+</div>
+
+<div id="popup-overlay">
+    <div id="popup">
+        <h2>Custom Popup</h2>
+        <p>This is a custom popup message.</p>
+        <button id="close-popup">Close</button>
+    </div>
+</div>
+
+<script>
+    // Function to show the popup and blur the content
+    function showPopup() {
+        document.body.classList.add('active');
+    }
+
+    // Function to hide the popup and remove the blur
+    function hidePopup() {
+        document.body.classList.remove('active');
+    }
+
+    // Add event listener to the trigger button to show the popup
+    document.getElementById('trigger-button').addEventListener('click', showPopup);
+
+    // Add event listener to the close button to hide the popup
+    document.getElementById('close-popup').addEventListener('click', hidePopup);
+</script>
+
+</body>
 </html>
