@@ -184,6 +184,17 @@ main {
     background-color: var(--secondary-color);
 }
 
+.board-buttonOpen{
+    /*left: 20px; /* Adjust this value to set the distance from the left border */
+    margin-left: 10px;
+    top: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--secondary-color);
+    width: calc(var(--board-width)/2.5);
+    transform: translateY(-50%);
+}
+
+.board-buttonOpen,
 .board-title,
 .board-owner,
 .board-description {

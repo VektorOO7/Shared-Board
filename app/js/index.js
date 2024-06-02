@@ -57,9 +57,15 @@ function createBoard(title, owner, description) {
     boardDescription.id = 'board-description-' + boardCounter;
     boardDescription.textContent = description;
 
+    const boardOpen = document.createElement('button');
+    boardOpen.classList.add('board-buttonOpen');
+    boardOpen.id = 'board-openButton-' + boardCounter;
+    boardOpen.textContent = "open";
+
     newBoard.appendChild(boardTitle);
     newBoard.appendChild(boardOwner);
     newBoard.appendChild(boardDescription);
+    newBoard.appendChild(boardOpen);
 
     boardContainer.appendChild(newBoard);
 
