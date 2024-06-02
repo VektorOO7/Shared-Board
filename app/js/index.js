@@ -58,6 +58,11 @@ function createBoard(boardData) {
     boardOpen.id = 'board-open-button-' + boardCounter;
     boardOpen.textContent = "Open";
 
+    const boardOpen = document.createElement('button');
+    boardOpen.classList.add('board-buttonOpen');
+    boardOpen.id = 'board-openButton-' + boardCounter;
+    boardOpen.textContent = "open";
+
     newBoard.appendChild(boardTitle);
     newBoard.appendChild(boardOwner);
     newBoard.appendChild(boardDescription);
