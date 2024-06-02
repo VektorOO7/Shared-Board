@@ -46,7 +46,7 @@ function createBoard(boardData) {
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
     boardOwner.id = 'board-owner-' + boardCounter;
-    boardOwner.textContent = boardData.owner;
+    boardOwner.textContent = 'Owner: ' + boardData.owner;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
@@ -78,13 +78,23 @@ function showPopup() {
     document.body.classList.add('active-popup');
 
     return new Promise((resolve) => {
-        document.getElementById('popup-done-button').addEventListener('click', function() {
-            createBoard(boardData);
+        function handlePopupClose() {
+            hidePopup();
+            
+            resolve();
+            document.getElementById('popup-done-button').removeEventListener('click', handlePopupDone);
+        }
 
+        function handlePopupDone() {
+            createBoard(boardData);
             hidePopup();
 
             resolve(boardData);
-        }, { once: true });
+            document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
+        }
+
+        document.getElementById('popup-done-button').addEventListener('click', handlePopupDone, { once: true });
+        document.getElementById('popup-close-button').addEventListener('click', handlePopupClose, { once: true });
     });
 }
 

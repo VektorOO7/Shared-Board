@@ -14,9 +14,9 @@
             // This script is for testing only!
             
             document.addEventListener("DOMContentLoaded", function() {
-                createBoard('Example Title 1', 'Example Owner 1', 'This is an example description about a board!');
-                createBoard('Example Title 2', 'Example Owner 2', 'This is an example description about a board!');
-                createBoard('Example Title 3', 'Example Owner 3', 'This is an example description about a board!');
+                createBoard({'title': 'Example Title 1', 'owner': 'Example Owner 1', 'description': 'This is an example description about a board!'});
+                createBoard({'title': 'Example Title 2', 'owner': 'Example Owner 2', 'description': 'This is an example description about a board!'});
+                createBoard({'title': 'Example Title 3', 'owner': 'Example Owner 3', 'description': 'This is an example description about a board!'});
             });
         </script>
     </head>
@@ -71,7 +71,10 @@
                 <h2>Custom Popup</h2>
                 <p>This is a custom popup message.</p>
 
-                <button id="popup-done-button">Done</button>
+                <div id="popup-buttons">
+                    <button id="popup-done-button">Done</button>
+                    <button id="popup-close-button">Close</button>
+                </div>
             </div>
         </div>
     </body>
