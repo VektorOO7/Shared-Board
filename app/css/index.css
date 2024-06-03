@@ -256,10 +256,9 @@ nav {
     transition: visibility 0s, opacity 0.3s ease;
 }
 
-#popup {
+#popup-board-data-form {
     padding: 20px;
 
-    
     width: var(--popup-width);
     height: var(--popup-height);
 
@@ -273,11 +272,37 @@ nav {
     text-align: center;
 }
 
+#popup-buttons-div {
+    
+}
+
+#popup-done-button-div,
+#popup-close-button-div {
+    text-align: center;
+}
+
 #popup-done-button,
 #popup-close-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    
+    padding: 0;
+    margin: 0 calc(1.5vh);
+
+    width: calc(var(--popup-width) * 0.9);
+    height: var(3vh);
+
+    position: relative;
+
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+
+    background: var(--primary-color);
+
+    font-size: var(--form-button-font);
+}
+
+#popup-done-button:hover,
+#popup-close-button:hover {
+    background: var(--secondary-color);
+
     cursor: pointer;
 }
 

@@ -8,7 +8,9 @@ const accountButton = document.querySelector('#account-button');
 
 const boardContainer = document.querySelector('.board-container');
 
-let boardCounter = 1;//for the database(it strats counting from 1)
+const popupBoardDataForm = document.querySelector('#popup-board-data-form');
+
+let boardCounter = 1; //for the database(it strats counting from 1)
 
 async function loadSession() {
     try {
@@ -72,24 +74,35 @@ function createBoard(boardData) {
     boardCounter++;
 }
 
-function showPopup() {
-    let boardData = {
-        'title': 'New Board',
-        'owner': userData.username,
-        'description': 'Description'
+function createNewBoardJSONObject(title, owner, description) {
+    return {
+        'title': title,
+        'owner': owner,
+        'description': description,
+        'board tabs': []
     };
+}
 
+function showPopup() {
     document.body.classList.add('active-popup');
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         function handlePopupClose() {
             hidePopup();
-            
-            resolve();
-            document.getElementById('popup-done-button').removeEventListener('click', handlePopupDone);
+
+            reject('Popup closed');
+            popupBoardDataForm.removeEventListener('submit', handlePopupDone);
         }
 
-        function handlePopupDone() {
+        function handlePopupDone(event) {
+            event.preventDefault();
+
+            const boardTitle = document.querySelector('#popup-title-field').value;
+            const boardOwner = userData.username;
+            const boardDescription = document.querySelector('#popup-description-field').value;
+
+            const boardData = createNewBoardJSONObject(boardTitle, boardOwner, boardDescription);
+
             createBoard(boardData);
             hidePopup();
 
@@ -97,7 +110,7 @@ function showPopup() {
             document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
-        document.getElementById('popup-done-button').addEventListener('click', handlePopupDone, { once: true });
+        popupBoardDataForm.addEventListener('submit', handlePopupDone, { once: true });
         document.getElementById('popup-close-button').addEventListener('click', handlePopupClose, { once: true });
     });
 }

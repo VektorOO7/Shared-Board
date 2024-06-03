@@ -68,15 +68,27 @@
         </div>
 
         <div id="popup-overlay">
-            <div id="popup">
-                <h2>Custom Popup</h2>
-                <p>This is a custom popup message.</p>
+            <form id="popup-board-data-form">
+                <div id="form-body-div">
+                    <div class="field-div">
+                        <input id="popup-title-field" type="text" name="title" placeholder="Board Title">
+                    </div>
 
-                <div id="popup-buttons">
-                    <button id="popup-done-button">Done</button>
-                    <button id="popup-close-button">Close</button>
+                    <div class="field-div">
+                        <textarea id="popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
+                    </div>
+
+                    <div id="popup-buttons-div">
+                        <div id="popup-done-button-div">
+                            <button id="popup-done-button" type="submit" class="text">Done</button>
+                        </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button id="popup-close-button" type="button" class="text">Cancel</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </body>
 </html>
