@@ -12,8 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`php/get_board_content.php?board=${boardId}`)
             .then(response => response.json())
             .then(data => {
-                document.getElementById('boardTitle').textContent = data.title;
-                document.getElementById('boardDescription').textContent = data.content;
+                if (data.error) {
+                    document.getElementById('boardTitle').textContent = 'Error';
+                    document.getElementById('boardDescription').textContent = data.error;
+                } else {
+                    document.getElementById('boardTitle').textContent = data.title;
+                    document.getElementById('boardDescription').textContent = data.content;
+                }
             })
             .catch(error => {
                 console.error('Error fetching board content:', error);
