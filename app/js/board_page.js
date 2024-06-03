@@ -1,3 +1,5 @@
+const backButton = document.querySelector('#back-button');
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -20,4 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('boardTitle').textContent = 'Error';
         document.getElementById('boardDescription').textContent = 'No board ID provided in the URL.';
     }
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    backButton.addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+
 });

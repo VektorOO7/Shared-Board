@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 try {
     require_once("../db/db.php");
 } catch (PDOException $exc) {
@@ -11,6 +13,11 @@ try {
     $connection = $db->getConnection();
 } catch (PDOException $e) {
     echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+    exit();
+}
+
+if (!isset($_SESSION['user'])) {
+    echo json_encode(['error' => 'User not logged in']);
     exit();
 }
 
