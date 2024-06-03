@@ -168,6 +168,39 @@ nav {
     Boards css
 */
 
+#boardTitle, #boardDescription {
+    color: var(--text-color);
+    text-align: center;
+}
+
+#account-button-div {
+    display: inline-flex;
+    align-items: center;
+}
+
+#back-button {
+    background-color: var(--secondary-color);
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+#back-button:hover {
+    background-color: var(--primary-color);
+}
+
+#back-button-svg {
+    width: 2.5em;  /* Increased width */
+    height: 2.5em; /* Increased height */
+    fill: white;
+}
+
+
 .board-container {
     display: grid;
     gap: var(--between-board-gap);

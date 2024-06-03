@@ -1,6 +1,3 @@
-
-
-
 let userData;
 
 const createBoardButton = document.querySelector('#create-board-button');
@@ -37,31 +34,32 @@ async function loadSession() {
 }
 
 function createBoard(boardData) {
+    const temp_board_count = boardCounter;//fixes the boardCount bug
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
 
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
-    boardTitle.id = 'board-title-' + boardCounter;
+    boardTitle.id = 'board-title-' + temp_board_count;
     boardTitle.textContent = boardData.title;
 
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
-    boardOwner.id = 'board-owner-' + boardCounter;
+    boardOwner.id = 'board-owner-' + temp_board_count;
     boardOwner.textContent = 'Owner: ' + boardData.owner;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
-    boardDescription.id = 'board-description-' + boardCounter;
+    boardDescription.id = 'board-description-' + temp_board_count;
     boardDescription.textContent = boardData.description;
 
     const boardOpen = document.createElement('button');
     boardOpen.classList.add('board-open-button');
-    boardOpen.id = 'board-open-button-' + boardCounter;
+    boardOpen.id = 'board-open-button-' + temp_board_count;
     boardOpen.textContent = "Open";
 
     boardOpen.addEventListener('click', function() {
-        window.location.href = 'board.html?board=' + boardCounter;
+        window.location.href = 'board.html?board=' + temp_board_count;
     });
 
     newBoard.appendChild(boardTitle);

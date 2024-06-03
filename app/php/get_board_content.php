@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 try {
     require_once("../db/db.php");
 } catch (PDOException $exc) {
@@ -14,14 +16,29 @@ try {
     exit();
 }
 
+if (!isset($_SESSION['user'])) {
+    echo json_encode(['error' => 'User not logged in']);
+    exit();
+}
+
+$user = $_SESSION['user'];
+$user_id = $user['user_id']; 
 if (isset($_GET['board'])) {
     $boardId = $_GET['board'];
-    $stmt = $connection->prepare('SELECT title, content FROM boards WHERE id = :id');
+    $stmt = $connection->prepare('SELECT title, content, user_id FROM boards WHERE id = :id');
     $stmt->execute(['id' => $boardId]);
     $board = $stmt->fetch(PDO::FETCH_ASSOC);
-
     if ($board) {
-        echo json_encode($board);
+        
+        if ($board['user_id'] == $user_id) {
+           
+            echo json_encode([
+                'title' => $board['title'],
+                'content' => $board['content']
+            ]);
+        } else {
+            echo json_encode(['error' => 'User not authorized to view this board']);
+        }
     } else {
         echo json_encode(['error' => 'Board not found']);
     }
