@@ -57,10 +57,10 @@ function createBoard(boardData) {
     boardOpen.id = 'board-open-button-' + boardCounter;
     boardOpen.textContent = "Open";
 
-    const boardOpen = document.createElement('button');
+    /*const boardOpen = document.createElement('button');
     boardOpen.classList.add('board-buttonOpen');
     boardOpen.id = 'board-openButton-' + boardCounter;
-    boardOpen.textContent = "Open";
+    boardOpen.textContent = "Open";*/
     boardOpen.addEventListener('click', function() {
         window.location.href = 'board.html?board=' + boardCounter;
     });

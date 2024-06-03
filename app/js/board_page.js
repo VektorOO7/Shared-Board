@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const boardId = getQueryParam('board');
     console.log(boardId);
     if (boardId) {
-        fetch(`php/getBoardContent.php?board=${boardId}`)
+        fetch(`php/get_board_content.php?board=${boardId}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('boardTitle').textContent = data.title;
