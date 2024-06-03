@@ -21,8 +21,8 @@
     --board-height: 300px;
     --between-board-gap: 20px;
 
-    --popup-width: 50vw;
-    --popup-height: 60vw;
+    --popup-width: 40vw;
+    --popup-height: 85vh;
 
     /*
        login.css & registration.css variables

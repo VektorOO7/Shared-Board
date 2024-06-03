@@ -32,7 +32,7 @@ main {
     padding: 20px;
     box-sizing: border-box;
 
-    height: 100vh - $nav-bar-height
+    height: calc(100vh - var(--nav-bar-height));
 
     background-color: var(--primary-color);
 }
@@ -79,7 +79,7 @@ nav {
 }
 
 #account-button-div {
-    width: 100%
+    width: 100%;
     height: 100%;
 
     display: grid;
@@ -193,7 +193,6 @@ nav {
     background-color: var(--secondary-color);
 }
 
-.board-buttonOpen{
 .board-open-button {
     /*left: 20px; /* Adjust this value to set the distance from the left border */
     margin-left: 10px;
@@ -260,6 +259,7 @@ nav {
 #popup {
     padding: 20px;
 
+    
     width: var(--popup-width);
     height: var(--popup-height);
 
