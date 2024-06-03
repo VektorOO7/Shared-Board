@@ -1,0 +1,23 @@
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const boardId = getQueryParam('board');
+    console.log(boardId);
+    if (boardId) {
+        fetch(`php/getBoardContent.php?board=${boardId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('boardTitle').textContent = data.title;
+                document.getElementById('boardDescription').textContent = data.content;
+            })
+            .catch(error => {
+                console.error('Error fetching board content:', error);
+            });
+    } else {
+        document.getElementById('boardTitle').textContent = 'Error';
+        document.getElementById('boardDescription').textContent = 'No board ID provided in the URL.';
+    }
+});

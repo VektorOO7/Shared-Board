@@ -6,9 +6,9 @@
 
         <link rel="stylesheet" href="./css/index.css">
         <link rel="stylesheet" href="./css/variables.css">
-        <script src="./js/index.js" defer></script>
+        <script src="./js/boardPage.js" defer></script>
 
-        <title>Shared Board</title>
+        <title>Board</title>
 
         <script type="text/javascript">
             // This script is for testing only!
@@ -20,7 +20,6 @@
             });*/
         </script>
     </head>
-
     <body>
         <header>
             <nav>
@@ -31,14 +30,14 @@
                                 <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                             </svg>
 
-                            <p class="text">Create new board</p>
+                            <p class="text">Create new Note</p>
                         </button>
                     </div>
                 </div>
 
                 <div class="grid-element">
                     <div id="nav-title">
-                        <h1 id="title-text">Shared Board</h1>
+                        <h1 id="title-text">Board</h1>
                     </div>
                 </div>
 
@@ -60,16 +59,9 @@
         </header>
 
         <main>
-            <div class="board-container">
-            </div>
-
-            <div id="popup-overlay">
-                <div id="popup">
-                    <h2>Custom Popup</h2>
-                    <p>This is a custom popup message.</p>
-                    
-                    <button id="popup-done-button">Done</button>
-                </div>
+            <div id="boardContent">
+                <h1 id="boardTitle">Loading...</h1>
+                <p id="boardDescription">Please wait while we load the content.</p>
             </div>
         </main>
     </body>

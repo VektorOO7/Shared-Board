@@ -24,6 +24,7 @@
             return $stmt;
         } catch (PDOException $exc) {
             error_log(print_r($exc->errorInfo, true));
+            echo $exc->errorInfo;
             
             throw $exc;
         }

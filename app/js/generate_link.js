@@ -9,7 +9,7 @@ document.getElementById('shareButton').addEventListener('click', function() {
         },
         body: JSON.stringify({ pageId: pageId }),
     })
-    .then(response => response.json())
+    .then(response => response.json())//test to see how the errors are checked
     .then(data => {
         if (data.url) {
             document.getElementById('shareLink').textContent = data.url;

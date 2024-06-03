@@ -41,7 +41,6 @@ let boardCounter = 0;
 function createBoard(title, owner, description) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
-
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
     boardTitle.id = 'board-title-' + boardCounter;
@@ -60,7 +59,10 @@ function createBoard(title, owner, description) {
     const boardOpen = document.createElement('button');
     boardOpen.classList.add('board-buttonOpen');
     boardOpen.id = 'board-openButton-' + boardCounter;
-    boardOpen.textContent = "open";
+    boardOpen.textContent = "Open";
+    boardOpen.addEventListener('click', function() {
+        window.location.href = 'board.html?board=' + boardCounter;
+    });
 
     newBoard.appendChild(boardTitle);
     newBoard.appendChild(boardOwner);

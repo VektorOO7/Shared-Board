@@ -185,7 +185,6 @@ main {
 }
 
 .board-buttonOpen{
-    /*left: 20px; /* Adjust this value to set the distance from the left border */
     margin-left: 10px;
     top: 50%;
     border: 1px solid var(--border-color);
@@ -193,6 +192,12 @@ main {
     width: calc(var(--board-width)/2.5);
     transform: translateY(-50%);
 }
+/*does not work for some reason*/
+.board-buttonOpen:hover {
+    background: var(--primary-color);
+    cursor: pointer;
+}
+
 
 .board-buttonOpen,
 .board-title,
