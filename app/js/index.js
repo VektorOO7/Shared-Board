@@ -81,6 +81,24 @@ function createNewBoardJSONObject(title, owner, description) {
     };
 }
 
+function saveBoardToDatabase(boardData) {
+    return fetch('php/write_board_to_db.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(boardData)
+    }).then(response => response.json()).then(data => {
+        if (!data.success) {
+            throw new Error(data.message || 'Unknown error');
+        }
+        return data;
+    }).catch(error => {
+        console.error('Error in saveBoardToDatabase:', error);
+        throw error;
+    });
+}
+
 function showPopup() {
     document.body.classList.add('active-popup');
 
@@ -100,11 +118,27 @@ function showPopup() {
             const boardDescription = document.querySelector('#popup-description-field').value;
 
             const boardData = createNewBoardJSONObject(boardTitle, boardOwner, boardDescription);
+            //save to database
+            saveBoardToDatabase(boardData).then(response => {
+                if (response.success) {
+                    createBoard(boardData);
+                    hidePopup();
+                    resolve(boardData);
+                } else {
+                    console.error(response.message);
+                    reject(response.message);
+                }
+            }).catch(error => {
+                console.error('Error saving board:', error);
+                reject('Error saving board');
+            });
 
-            createBoard(boardData);
+            /*createBoard(boardData);
             hidePopup();
-
-            resolve(boardData);
+            resolve(boardData);*/
+            //reintroduce after fixing bug
+            //hidePopup();
+            //resolve(boardData);
             document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
