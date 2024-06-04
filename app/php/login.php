@@ -17,7 +17,7 @@
             $db = new DB();
             $connection = $db->getConnection();
 
-            $sql = "SELECT * from users where email = ?";
+            $sql = "SELECT * FROM users WHERE email = ?";
             $stmt = $connection->prepare($sql);
             $stmt->execute([$userData["u_or_e"]]);
 

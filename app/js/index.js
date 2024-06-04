@@ -1,3 +1,5 @@
+import { saveBoard, getBoard } from "./file_manager.js";
+
 let userData;
 
 const createBoardButton = document.querySelector('#create-board-button');
@@ -33,7 +35,7 @@ async function loadSession() {
     }
 }
 
-function createBoard(boardData) {
+function renderBoard(boardData) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
 
@@ -110,14 +112,104 @@ async function generateUniqueBoardId() {
     return boardId;
 }
 
-async function createNewBoardJSONObject(title, owner, description) {
+async function createNewBoardJSONObject(boardTitle, owner_username, user_id, description) {
     return {
         'board_id': await generateUniqueBoardId(),
-        'title': title,
-        'owner': owner,
+        'board_title': boardTitle,
+        'owner_username': owner_username,
+        'user_id': user_id,
         'description': description,
         'board_tabs': []
     };
+}
+
+// returns a promise with: success & message
+async function saveBoardOnServer(boardJSON) {
+    async function sendBoardDataToDatabase(boardId, userId, boardTitle) {
+        const response = await fetch('php/save_board_to_database.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            return true;
+        } else {
+            console.error(result.message);
+
+            return false;
+        }
+    }
+
+    const boardId = boardJSON.board_id;
+    const userId = boardJSON.user_id;
+    const boardTitle = boardJSON.board_title;
+
+    if (await sendBoardDataToDatabase(boardId, userId, boardTitle)) {
+        const result = await saveBoard(boardJSON);
+
+        return result;
+    } else {
+        console.error('Failed to save board data to the database');
+
+        return { 'success': false, 'message': 'Failed to save board data to the database' };
+    }
+}
+
+// returns a promise with: boards & boards_count
+async function loadBoardsFromServer(userId) {
+    async function getBoardsDataFromDatabase(userId) {
+        const response = await fetch('php/load_boards_from_database.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            return {
+                boards_count: result.count,
+                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title }))
+            };
+        } else {
+            console.error(result.message);
+
+            return {
+                boards_count: 0,
+                boards: []
+            };
+        }
+    }
+
+    const boardsData = await getBoardsDataFromDatabase(userId);
+    const boardsCount = boardsData.boards_count;
+
+    if (boardsCount === 0) {
+        return { boards_count: 0, boards: [] };
+    }
+
+    const boardPromises = boardsData.boards.map(board => getBoard(board.board_id, board.board_title));
+    const boardResults = await Promise.all(boardPromises);
+    const boards = [];
+
+    boardResults.forEach(result => {
+        if (result.success) {
+            boards.push(result.file);
+        } else {
+            console.error(`Failed to fetch board with id '${result.board_id}' and title '${result.board_title}': ${result.message}`);
+
+            boardsCount--;
+        }
+    });
+
+    return { success: true, boards_count: boardsCount, boards: boards };
 }
 
 async function showPopup() {
@@ -147,7 +239,8 @@ async function showPopup() {
             event.preventDefault();
 
             const boardTitle = boardTitleInput.value;
-            const boardOwner = userData.username;
+            const boardOwnerUsername = userData.username;
+            const boarduserId = userData.user_id;
             const boardDescription = boardDescriptionInput.value;
 
             if (!boardTitle || !boardDescription) {
@@ -155,14 +248,16 @@ async function showPopup() {
                 return;
             }
 
-            const boardData = await createNewBoardJSONObject(boardTitle, boardOwner, boardDescription);
+            const board = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
 
-            console.log(boardData);
+            //console.log(board); // for testing purposes only
 
-            createBoard(boardData);
+            renderBoard(board);
             hidePopup();
 
-            resolve(boardData);
+            saveBoardOnServer(board)
+
+            resolve(board);
             document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
@@ -198,7 +293,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadSession();
 
     if (userData) {
-        document.getElementById('username-display').textContent = 'Hello, ' + userData.username;
+        const userId = userData.user_id;
+        const username = userData.username;
+
+        //console.log(userData); // for testing purposes only
+
+        document.getElementById('username-display').textContent = 'Hello, ' + username;
+
+        try {
+            const loadResult = await loadBoardsFromServer(userId);
+            const oldBoardCounter = boardCounter;
+            const boardsCount = loadResult.boards_count;
+            const boards = loadResult.boards;
+
+            if (loadResult) {
+                //console.log('Boards loaded successfully:', loadResult); // for testing purposes only
+
+                boards.forEach(renderBoard);
+
+                if (oldBoardCounter + boardsCount != boardCounter) {
+                    console.error('Unknown Error: The loaded number of boards doesn\'t match the number of boards that should have been loaded!');
+                }
+            } else {
+                console.error('Failed to load boards:', loadResult.message);
+            }
+        } catch (error) {
+            console.error('Error loading boards:', error);
+        }
     } else {
         console.error('The user data from the session is missing!');
     }
@@ -214,7 +335,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     accountButton.addEventListener('click', () => {
-        console.log("Account button clicked");
+        //console.log("Account button clicked"); // for testing purposes only
 
         // this is only temporary, until we add the dropdown menu
         logout();

@@ -2,6 +2,109 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Download Test</title>
+
+    <script type="text/javascript">
+        async function saveFile(file, path) {
+            const formData = new FormData();
+
+            formData.append('uploadedFile', file);
+            formData.append('path', path);
+
+            const response = await fetch('php/save_file.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            return result;
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            const result = await saveFile(file, "/gfc97a2g-87g1c-3287g8-62g3qf/");
+            
+            if (result.success) {
+                alert('File uploaded successfully!');
+            } else {
+                alert('Failed to upload file. Error: ' + result.message);
+            }
+        }
+
+        async function getFile(path, fileName) {
+            const requestData = { path: path, fileName: fileName };
+
+            const response = await fetch('php/get_file.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            const result = await response.json();
+
+            return result;
+        }
+
+        async function downloadFile() {
+            const fileName = document.getElementById('fileNameInput').value;
+            if (!fileName) {
+                alert('Please enter a file name.');
+                return;
+            }
+
+            const result = await getFile("/gfc97a2g-87g1c-3287g8-62g3qf/", fileName);
+
+            if (result.success) {
+                // Decode the Base64-encoded file content
+                const decodedContent = atob(result.file);
+
+                // Process the decoded file content as needed
+                console.log(decodedContent);
+            } else {
+                alert('Failed to download file. Error: ' + result.message);
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <h2>Upload File</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file">
+        <button type="button" onclick="uploadFile()">Upload File</button>
+    </form>
+
+    <hr>
+
+    <h2>Download File</h2>
+    <form id="downloadForm">
+        <input type="text" id="fileNameInput" placeholder="Enter file name with extension">
+        <button type="button" onclick="downloadFile()">Download File</button>
+    </form>
+</body>
+</html>
+
+
+
+
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>Blur and Popup Example</title>
     <style>
         /* Basic styles for the body */
@@ -69,7 +172,7 @@
 
 <div id="content">
     <button id="trigger-button">Show Popup</button>
-    <!-- Main content of the page goes here -->
+    <!!-- Main content of the page goes here ->
     <p>This is some example content that will be blurred when the popup is active.</p>
 </div>
 
@@ -101,3 +204,4 @@
 
 </body>
 </html>
+-->

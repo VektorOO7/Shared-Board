@@ -8,25 +8,28 @@
 
     try {
         $targetDirectory = '../.data/';
+        $path = isset($_POST['path']) ? trim($_POST['path'], '/') : '';
+        $file = $_FILES['uploadedFile'];
 
-        if (isset($_POST['path'])) {
-            $targetDirectory .= trim($_POST['path'], '/') . '/';
-        }
+        if ($path && $file && isset($file['name']) && isset($file['tmp_name'])) {
+            $directoryPath = $targetDirectory . $path;
+            $filePath = $directoryPath . '/' . $file['name'];
 
-        if (!file_exists($targetDirectory)) {
-            if (!mkdir($targetDirectory, 0777, true)) {
-                throw new Exception('Failed to create target directory.');
+            if (!file_exists($directoryPath)) {
+                if (!mkdir($directoryPath, 0777, true)) {
+                    throw new Exception('Failed to create target directory.');
+                }
             }
+
+            if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+                throw new Exception('Failed to move uploaded file.');
+            }
+
+            $response['success'] = true;
+            $response['message'] = 'File uploaded successfully!';
+        } else {
+            throw new Exception('No path or file data specified.');
         }
-
-        $targetFile = $targetDirectory . basename($_FILES['uploadedFile']['name']);
-
-        if (!move_uploaded_file($_FILES['uploadedFile']['tmp_name'], $targetFile)) {
-            throw new Exception('Failed to move uploaded file.');
-        }
-
-        $response['success'] = true;
-        $response['message'] = 'File uploaded successfully!';
     } catch (Exception $e) {
         $response['message'] = $e->getMessage();
     }
