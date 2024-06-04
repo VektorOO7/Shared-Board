@@ -290,7 +290,7 @@ nav {
 }
 
 #popup-board-data-form {
-    padding: 20px;
+    padding: var(--popup-padding);
 
     width: var(--popup-width);
     height: var(--popup-height);
@@ -305,22 +305,67 @@ nav {
     text-align: center;
 }
 
-#popup-buttons-div {
-    
+.field-div {
+    text-align: center;
 }
 
-#popup-done-button-div,
+#popup-title-field,
+#popup-description-field {
+    padding: var(--popup-field-padding-sides) var(--popup-field-padding-top-bottom);
+
+    width: var(--popup-field-width);
+
+    border: var(--popup-field-border) solid lightgrey;
+    border-radius: 5px;
+
+    font-size: var(--popup-font);
+}
+
+#popup-title-field {
+    margin-top: 0;
+    margin-bottom: calc(var(--between-popup-element-margin) / 2);
+
+    height: var(--popup-field-height);
+}
+
+#popup-description-field {
+    margin-top: calc(var(--between-popup-element-margin) / 2);
+    margin-bottom: calc(var(--between-popup-element-margin) / 2);
+
+    height: var(--popup-description-field-height);
+
+    resize: none;
+}
+
+#popup-buttons-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0;
+    justify-content: center;
+
+    margin: auto;
+    margin-top: calc(var(--between-popup-element-margin) / 2);
+    margin-bottom: 0;
+
+    width: var(--popup-field-width);
+    height: var(--popup-button-height);
+}
+
+#popup-done-button-div {
+    text-align: left;
+}
+
 #popup-close-button-div {
-    text-align: center;
+    text-align: right;
 }
 
 #popup-done-button,
 #popup-close-button {
     padding: 0;
-    margin: 0 calc(1.5vh);
+    margin: 0;
 
-    width: calc(var(--popup-width) * 0.9);
-    height: var(3vh);
+    width: var(--popup-button-width);
+    height: var(--popup-button-height);
 
     position: relative;
 

@@ -34,32 +34,31 @@ async function loadSession() {
 }
 
 function createBoard(boardData) {
-    const temp_board_count = boardCounter;//fixes the boardCount bug
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
 
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
-    boardTitle.id = 'board-title-' + temp_board_count;
+    boardTitle.id = 'board-title-' + boardCounter;
     boardTitle.textContent = boardData.title;
 
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
-    boardOwner.id = 'board-owner-' + temp_board_count;
+    boardOwner.id = 'board-owner-' + boardCounter;
     boardOwner.textContent = 'Owner: ' + boardData.owner;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
-    boardDescription.id = 'board-description-' + temp_board_count;
+    boardDescription.id = 'board-description-' + boardCounter;
     boardDescription.textContent = boardData.description;
 
     const boardOpen = document.createElement('button');
     boardOpen.classList.add('board-open-button');
-    boardOpen.id = 'board-open-button-' + temp_board_count;
+    boardOpen.id = 'board-open-button-' + boardCounter;
     boardOpen.textContent = "Open";
 
     boardOpen.addEventListener('click', function() {
-        window.location.href = 'board.html?board=' + temp_board_count;
+        window.location.href = 'board.html?board=' + boardCounter;
     });
 
     newBoard.appendChild(boardTitle);
@@ -71,36 +70,70 @@ function createBoard(boardData) {
 
     boardCounter++;
 }
+async function generateUniqueBoardId() {
+    let boardId;
 
-function createNewBoardJSONObject(title, owner, description) {
+    async function isAvailable(boardId) {
+        const response = await fetch('php/check_board_id_availability.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                boardId,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success === true) {
+            return boardId;
+        } else {
+            return false;
+        }
+    }
+
+    while (!boardId) {
+        boardId = crypto.randomUUID();
+
+        const isAvailableResult = await isAvailable(boardId);
+
+        if (isAvailableResult) {
+            boardId = isAvailableResult;
+        }
+    }
+
+    return boardId;
+}
+
+async function createNewBoardJSONObject(title, owner, description) {
     return {
+        'board_id': await generateUniqueBoardId(),
         'title': title,
         'owner': owner,
         'description': description,
-        'board tabs': []
+        'board_tabs': []
     };
 }
 
-function saveBoardToDatabase(boardData) {
-    return fetch('php/write_board_to_db.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(boardData)
-    }).then(response => response.json()).then(data => {
-        if (!data.success) {
-            throw new Error(data.message || 'Unknown error');
-        }
-        return data;
-    }).catch(error => {
-        console.error('Error in saveBoardToDatabase:', error);
-        throw error;
-    });
-}
+async function showPopup() {
+    const boardTitleInput = document.querySelector('#popup-title-field');
+    const boardDescriptionInput = document.querySelector('#popup-description-field');
 
-function showPopup() {
+    if (!boardTitleInput || !boardDescriptionInput) {
+        console.error('Popup title or description field not found');
+        return;
+    }
+
     document.body.classList.add('active-popup');
+
+    // Clear input fields
+    boardTitleInput.value = '';
+    boardDescriptionInput.value = '';
 
     return new Promise((resolve, reject) => {
         function handlePopupClose() {
@@ -110,35 +143,26 @@ function showPopup() {
             popupBoardDataForm.removeEventListener('submit', handlePopupDone);
         }
 
-        function handlePopupDone(event) {
+        async function handlePopupDone(event) {
             event.preventDefault();
 
-            const boardTitle = document.querySelector('#popup-title-field').value;
+            const boardTitle = boardTitleInput.value;
             const boardOwner = userData.username;
-            const boardDescription = document.querySelector('#popup-description-field').value;
+            const boardDescription = boardDescriptionInput.value;
 
-            const boardData = createNewBoardJSONObject(boardTitle, boardOwner, boardDescription);
-            //save to database
-            saveBoardToDatabase(boardData).then(response => {
-                if (response.success) {
-                    createBoard(boardData);
-                    hidePopup();
-                    resolve(boardData);
-                } else {
-                    console.error(response.message);
-                    reject(response.message);
-                }
-            }).catch(error => {
-                console.error('Error saving board:', error);
-                reject('Error saving board');
-            });
+            if (!boardTitle || !boardDescription) {
+                console.error('Title and Description cannot be empty');
+                return;
+            }
 
-            /*createBoard(boardData);
+            const boardData = await createNewBoardJSONObject(boardTitle, boardOwner, boardDescription);
+
+            console.log(boardData);
+
+            createBoard(boardData);
             hidePopup();
-            resolve(boardData);*/
-            //reintroduce after fixing bug
-            //hidePopup();
-            //resolve(boardData);
+
+            resolve(boardData);
             document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
@@ -179,8 +203,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error('The user data from the session is missing!');
     }
 
-    createBoardButton.addEventListener('click', async function() {
-        await showPopup();
+    createBoardButton.addEventListener('click', async () => {
+        try {
+            await showPopup();
+        } catch (error) {
+            if (error != 'Popup closed') {
+                console.error(error);
+            }
+        }
     });
 
     accountButton.addEventListener('click', () => {

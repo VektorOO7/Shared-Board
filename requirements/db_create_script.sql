@@ -9,6 +9,11 @@ CREATE TABLE IF NOT EXISTS Users (
     hashed_password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS Boards (
+    board_id VARCHAR(36) PRIMARY KEY,
+    user_id INT NOT NULL
+);
+
 INSERT INTO Users (username, email, hashed_password) VALUES
 ('admin', 'admin@admin.admin', '$2y$10$o4ESuGCAqBF9pl3umkZr4.WVlTzaoIXs.WxkIxsTM0dJ4..jnXNO.'),
 ('user', 'user@user.user', '$2y$10$YaoqcDMzKfRVHmFbKs6\/5u1pDyaS2IQppv4k5a3OYiu8fbp.3I.J6'),

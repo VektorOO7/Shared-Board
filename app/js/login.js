@@ -4,7 +4,7 @@
 const loginForm = document.getElementById('login-form');
 
 function login(loginData) {
-    console.log(loginData);
+    //console.log(loginData); // for testing purposes only
 
     fetch('php/login.php', {
         method: 'POST',

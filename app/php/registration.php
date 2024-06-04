@@ -10,6 +10,8 @@
     } catch (PDOException $exc) {
         http_response_code(500);
         echo json_encode(["message" => "Failed to make a connection to database!"]);
+
+        exit();
     }
 
     function isUserDataValid($userData) {
