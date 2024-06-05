@@ -47,7 +47,7 @@ function renderBoard(board) {
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
     boardOwner.id = 'board-owner-' + boardCounter;
-    boardOwner.textContent = 'Owner: ' + board.username;
+    boardOwner.textContent = 'Owner: ' + board.owner_username;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
