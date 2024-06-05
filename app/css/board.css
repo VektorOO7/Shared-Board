@@ -78,12 +78,22 @@ nav {
     align-items: center;
 }
 
-#account-button-div {
+#back-button-div {
     width: 100%;
     height: 100%;
 
-    display: grid;
+    display: flex; /* Use flexbox for alignment */
     align-items: center;
+    justify-content: flex-start; /* Align to the left */
+}
+
+#create-board-button-div {
+    width: 100%;
+    height: 100%;
+
+    display: flex; /* Use flexbox for alignment */
+    align-items: center;
+    justify-content: flex-end; /* Align to the right */
 }
 
 #nav-title {
@@ -92,7 +102,6 @@ nav {
 
 #title-text {
     color: var(--text-color);
-
     font-size: var(--title-text-font);
 }
 
@@ -102,9 +111,7 @@ nav {
 
 #username-display {
     padding-right: 0.5vw;
-
     color: var(--text-color);
-
     font-size: var(--username-display-text-font);
 }
 
@@ -113,56 +120,45 @@ nav {
     padding: 0;
     border: none;
     border-radius: 5px;
-
     position: relative;
-
     background: var(--secondary-color);
 }
 
 #create-board-button:hover,
 #account-button:hover {
     background: var(--primary-color);
-
     cursor: pointer;
 }
 
 #create-board-button {
     height: var(--nav-bar-height);
     width: calc(var(--nav-bar-height) * 2.25);
-
-    left: 0;
 }
 
 #account-button {
     height: calc(var(--nav-bar-height) * 0.8);
     width: calc(var(--nav-bar-height) * 0.8);
-
-    border-radius: 50%; /* should make the button round, but it doesn't work! */
-
-    left: calc(100% - calc(var(--nav-bar-height) * 1));
+    border-radius: 50%; /* Should make the button round */
 }
 
 .text {
     color: var(--text-color);
-
     margin: 5px;
-
     font-size: var(--text-font);
 }
 
 #create-board-button-svg {
     height: calc(var(--nav-bar-height) * 0.5);
     width: auto;
-
     fill: var(--text-color);
 }
 
 #account-button-svg {
     width: calc(var(--nav-bar-height) * 0.8);
     height: calc(var(--nav-bar-height) * 0.8);
-
     fill: var(--text-color);
 }
+
 
 /*
     Boards css

@@ -7,17 +7,23 @@ function getQueryParam(param) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const boardId = getQueryParam('board');
-    console.log(boardId);
-    if (boardId) {
+    //console.log(boardId);
+    if (boardId) { 
         fetch(`php/get_board_content.php?board=${boardId}`)
             .then(response => response.json())
             .then(data => {
-                if (data.error) {
+                if (!data.success) {
                     document.getElementById('boardTitle').textContent = 'Error';
-                    document.getElementById('boardDescription').textContent = data.error;
+                    document.getElementById('boardDescription').textContent = data.message;
+                    //console.log(data.fpath);
                 } else {
-                    document.getElementById('boardTitle').textContent = data.title;
-                    document.getElementById('boardDescription').textContent = data.content;
+                    console.log("hey");
+                    const decodedFileContent = atob(data.file);
+                    console.log(decodedFileContent);
+                    // Parse the JSON string
+                    const jsonData = JSON.parse(decodedFileContent);
+                    document.getElementById('boardTitle').textContent = jsonData.board_title;
+                    document.getElementById('boardDescription').textContent = jsonData.description;
                 }
             })
             .catch(error => {
