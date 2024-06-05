@@ -58,5 +58,13 @@ export async function getBoard(boardId, boardTitle) {
 
     const result = await getFile(path, boardTitle + '.json');
 
+    if (result.success) {
+        const decodedFileContent = atob(result.file);
+        return {
+            success: true,
+            file: JSON.parse(decodedFileContent)
+        };
+    }
+
     return result;
 }

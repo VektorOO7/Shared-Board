@@ -35,24 +35,24 @@ async function loadSession() {
     }
 }
 
-function renderBoard(boardData) {
+function renderBoard(board) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
 
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
     boardTitle.id = 'board-title-' + boardCounter;
-    boardTitle.textContent = boardData.title;
+    boardTitle.textContent = board.board_title;
 
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
     boardOwner.id = 'board-owner-' + boardCounter;
-    boardOwner.textContent = 'Owner: ' + boardData.owner;
+    boardOwner.textContent = 'Owner: ' + board.username;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
     boardDescription.id = 'board-description-' + boardCounter;
-    boardDescription.textContent = boardData.description;
+    boardDescription.textContent = board.description;
 
     const boardOpen = document.createElement('button');
     boardOpen.classList.add('board-open-button');
@@ -112,11 +112,11 @@ async function generateUniqueBoardId() {
     return boardId;
 }
 
-async function createNewBoardJSONObject(boardTitle, owner_username, user_id, description) {
+async function createNewBoardJSONObject(boardTitle, username, user_id, description) {
     return {
         'board_id': await generateUniqueBoardId(),
         'board_title': boardTitle,
-        'owner_username': owner_username,
+        'username': username,
         'user_id': user_id,
         'description': description,
         'board_tabs': []
