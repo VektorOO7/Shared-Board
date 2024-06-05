@@ -54,19 +54,90 @@ function renderBoard(board) {
     boardDescription.id = 'board-description-' + boardCounter;
     boardDescription.textContent = board.description;
 
-    const boardOpen = document.createElement('button');
-    boardOpen.classList.add('board-open-button');
-    boardOpen.id = 'board-open-button-' + boardCounter;
-    boardOpen.textContent = "Open";
+    const boardOpenAndEditButtonsDiv = document.createElement('div');
+    boardOpenAndEditButtonsDiv.classList.add('board-open-and-edit-buttons-div');
+    boardOpenAndEditButtonsDiv.id = 'board-open-and-edit-buttons-div-' + boardCounter;
+
+    const boardOpenButtonDiv = document.createElement('div');
+    boardOpenButton.classList.add('board-open-button-div');
+    boardOpenButton.id = 'board-open-button-div-' + boardCounter;
+
+    const boardOpenButton = document.createElement('button');
+    boardOpenButton.classList.add('board-button');
+    boardOpenButton.classList.add('board-open-button');
+    boardOpenButton.id = 'board-open-button-' + boardCounter;
+    boardOpenButton.textContent = "Open";
+
+    boardOpenButtonDiv.appendChild(boardOpenButton);
+
+    const boardEditButtonDiv = document.createElement('div');
+    boardEditButton.classList.add('board-edit-button-div');
+    boardEditButton.id = 'board-edit-button-div-' + boardCounter;
+
+    const boardEditButton = document.createElement('button');
+    boardEditButton.classList.add('board-button');
+    boardEditButton.classList.add('board-edit-button');
+    boardEditButton.id = 'board-edit-button-' + boardCounter;
+    boardEditButton.textContent = "Edit";
+
+    boardEditButtonDiv.appendChild(boardEditButton);
+
+    boardOpenAndEditButtonsDiv.appendChild(boardOpenButtonDiv);
+    boardOpenAndEditButtonsDiv.appendChild(boardEditButtonDiv);
+
+    const boardShareAndDeleteButtonsDiv = document.createElement('div');
+    boardShareAndDeleteButtonsDiv.classList.add('board-share-and-delete-buttons-div');
+    boardShareAndDeleteButtonsDiv.id = 'board-share-and-delete-buttons-div-' + boardCounter;
+
+    const boardShareButtonDiv = document.createElement('div');
+    boardShareButton.classList.add('board-share-button-div');
+    boardShareButton.id = 'board-share-button-div-' + boardCounter;
+
+    const boardShareButton = document.createElement('button');
+    boardShareButton.classList.add('board-button');
+    boardShareButton.classList.add('board-share-button');
+    boardShareButton.id = 'board-share-button-' + boardCounter;
+    boardShareButton.textContent = "Share";
+
+    boardShareButtonDiv.appendChild(boardShareButton);
+
+    const boardDeleteButtonDiv = document.createElement('div');
+    boardDeleteButton.classList.add('board-delete-button-div');
+    boardDeleteButton.id = 'board-delete-button-div-' + boardCounter;
+
+    const boardDeleteButton = document.createElement('button');
+    boardDeleteButton.classList.add('board-button');
+    boardDeleteButton.classList.add('board-delete-button');
+    boardDeleteButton.id = 'board-delete-button-' + boardCounter;
+    boardDeleteButton.textContent = "Delete";
+
+    boardDeleteButtonDiv.appendChild(boardDeleteButton);
+
+    boardShareAndDeleteButtonsDiv.appendChild(boardShareButtonDiv);
+    boardShareAndDeleteButtonsDiv.appendChild(boardDeleteButtonDiv);
 
     boardOpen.addEventListener('click', function() {
-        window.location.href = 'board.html?board=' + board.board_id;
+        //window.location.href = 'board.html?board=' + board.board_id;
+    });
+
+    boardEdit.addEventListener('click', function() {
+        // will be added later
+    });
+
+    boardShare.addEventListener('click', function() {
+        // will be added later
+    });
+
+    boardDelete.addEventListener('click', function() {
+        // will be added later
     });
 
     newBoard.appendChild(boardTitle);
     newBoard.appendChild(boardOwner);
     newBoard.appendChild(boardDescription);
-    newBoard.appendChild(boardOpen);
+
+    newBoard.appendChild(boardOpenAndEditButtonsDiv);
+    newBoard.appendChild(boardShareAndDeleteButtonsDiv);
 
     boardContainer.appendChild(newBoard);
 

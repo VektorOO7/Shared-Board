@@ -226,17 +226,41 @@ nav {
     background-color: var(--secondary-color);
 }
 
-.board-open-button {
+.board-button {
     /*left: 20px; /* Adjust this value to set the distance from the left border */
     margin-left: 10px;
     top: 50%;
+
     border: 1px solid var(--border-color);
     background-color: var(--secondary-color);
+    
     width: calc(var(--board-width)/2.5);
+    
     transform: translateY(-50%);
 }
 
+.board-button:hover {
+    background: var(--secondary-color);
+
+    cursor: pointer;
+}
+
+.board-open-and-edit-buttons-div,
+.board-share-and-delete-buttons-div {
+    /* To be added later */
+}
+
+#board-open-button-div,
+#board-edit-button-div,
+#board-share-button-div,
+#board-delete-button-div, {
+    text-align: center;
+}
+
 .board-open-button,
+.board-edit-button,
+.board-share-button,
+.board-delete-button,
 .board-title,
 .board-owner,
 .board-description {
