@@ -1,0 +1,3 @@
+1. Finish index page (Add buttons index) - victor
+2. Board (load notes, add notes, styles, add pictures in nodes) - bobi
+3. Sharing - if enough time remains

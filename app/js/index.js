@@ -60,7 +60,7 @@ function renderBoard(board) {
     boardOpen.textContent = "Open";
 
     boardOpen.addEventListener('click', function() {
-        window.location.href = 'board.html?board=' + boardCounter;
+        window.location.href = 'board.html?board=' + board.board_id;
     });
 
     newBoard.appendChild(boardTitle);
