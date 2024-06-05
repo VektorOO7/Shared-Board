@@ -179,14 +179,18 @@ nav {
 }
 
 #back-button {
-    background-color: var(--secondary-color);
-    border: none;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    padding: 10px;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: var(--secondary-color);
+
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
@@ -226,6 +230,54 @@ nav {
     background-color: var(--secondary-color);
 }
 
+.board-button,
+.board-title,
+.board-owner,
+.board-description {
+    padding: 3px 5px;
+
+    color: var(--text-color);
+}
+
+.board-title,
+.board-owner,
+.board-description {
+    height: 1em;
+
+    border-bottom: 1px solid var(--border-color);
+
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.board-description {
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.board-open-and-edit-buttons-div,
+.board-share-and-delete-buttons-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0;
+
+    /* height: var(--nav-bar-height); */
+}
+
+.board-open-and-edit-buttons-div .board-button {
+    margin-top: var(--board-top-buttons-margin);
+    margin-bottom: var(--board-bottom-buttons-margin);
+}
+
+.board-button-div {
+    width: 100%;
+    height: 100%;
+
+    text-align: center;
+}
+
 .board-button {
     /*left: 20px; /* Adjust this value to set the distance from the left border */
     margin-left: 10px;
@@ -243,46 +295,6 @@ nav {
     background: var(--secondary-color);
 
     cursor: pointer;
-}
-
-.board-open-and-edit-buttons-div,
-.board-share-and-delete-buttons-div {
-    /* To be added later */
-}
-
-#board-open-button-div,
-#board-edit-button-div,
-#board-share-button-div,
-#board-delete-button-div, {
-    text-align: center;
-}
-
-.board-open-button,
-.board-edit-button,
-.board-share-button,
-.board-delete-button,
-.board-title,
-.board-owner,
-.board-description {
-    padding: 3px 5px;
-
-    color: var(--text-color);
-}
-
-.board-title, .board-owner {
-    height: 1em;
-
-    border-bottom: 1px solid var(--border-color);
-
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.board-description {
-    flex-grow: 1;
-    overflow: auto;
 }
 
 /*

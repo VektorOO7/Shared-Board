@@ -59,8 +59,9 @@ function renderBoard(board) {
     boardOpenAndEditButtonsDiv.id = 'board-open-and-edit-buttons-div-' + boardCounter;
 
     const boardOpenButtonDiv = document.createElement('div');
-    boardOpenButton.classList.add('board-open-button-div');
-    boardOpenButton.id = 'board-open-button-div-' + boardCounter;
+    boardOpenButtonDiv.classList.add('board-button-div');
+    boardOpenButtonDiv.classList.add('board-open-button-div');
+    boardOpenButtonDiv.id = 'board-open-button-div-' + boardCounter;
 
     const boardOpenButton = document.createElement('button');
     boardOpenButton.classList.add('board-button');
@@ -71,8 +72,9 @@ function renderBoard(board) {
     boardOpenButtonDiv.appendChild(boardOpenButton);
 
     const boardEditButtonDiv = document.createElement('div');
-    boardEditButton.classList.add('board-edit-button-div');
-    boardEditButton.id = 'board-edit-button-div-' + boardCounter;
+    boardEditButtonDiv.classList.add('board-button-div');
+    boardEditButtonDiv.classList.add('board-edit-button-div');
+    boardEditButtonDiv.id = 'board-edit-button-div-' + boardCounter;
 
     const boardEditButton = document.createElement('button');
     boardEditButton.classList.add('board-button');
@@ -90,8 +92,9 @@ function renderBoard(board) {
     boardShareAndDeleteButtonsDiv.id = 'board-share-and-delete-buttons-div-' + boardCounter;
 
     const boardShareButtonDiv = document.createElement('div');
-    boardShareButton.classList.add('board-share-button-div');
-    boardShareButton.id = 'board-share-button-div-' + boardCounter;
+    boardShareButtonDiv.classList.add('board-button-div');
+    boardShareButtonDiv.classList.add('board-share-button-div');
+    boardShareButtonDiv.id = 'board-share-button-div-' + boardCounter;
 
     const boardShareButton = document.createElement('button');
     boardShareButton.classList.add('board-button');
@@ -102,8 +105,9 @@ function renderBoard(board) {
     boardShareButtonDiv.appendChild(boardShareButton);
 
     const boardDeleteButtonDiv = document.createElement('div');
-    boardDeleteButton.classList.add('board-delete-button-div');
-    boardDeleteButton.id = 'board-delete-button-div-' + boardCounter;
+    boardDeleteButtonDiv.classList.add('board-button-div');
+    boardDeleteButtonDiv.classList.add('board-delete-button-div');
+    boardDeleteButtonDiv.id = 'board-delete-button-div-' + boardCounter;
 
     const boardDeleteButton = document.createElement('button');
     boardDeleteButton.classList.add('board-button');
@@ -116,19 +120,19 @@ function renderBoard(board) {
     boardShareAndDeleteButtonsDiv.appendChild(boardShareButtonDiv);
     boardShareAndDeleteButtonsDiv.appendChild(boardDeleteButtonDiv);
 
-    boardOpen.addEventListener('click', function() {
+    boardOpenButton.addEventListener('click', function() {
         //window.location.href = 'board.html?board=' + board.board_id;
     });
 
-    boardEdit.addEventListener('click', function() {
+    boardEditButton.addEventListener('click', function() {
         // will be added later
     });
 
-    boardShare.addEventListener('click', function() {
+    boardShareButton.addEventListener('click', function() {
         // will be added later
     });
 
-    boardDelete.addEventListener('click', function() {
+    boardDeleteButton.addEventListener('click', function() {
         // will be added later
     });
 
