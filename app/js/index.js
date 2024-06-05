@@ -35,24 +35,24 @@ async function loadSession() {
     }
 }
 
-function renderBoard(boardData) {
+function renderBoard(board) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
 
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
     boardTitle.id = 'board-title-' + boardCounter;
-    boardTitle.textContent = boardData.title;
+    boardTitle.textContent = board.board_title;
 
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
     boardOwner.id = 'board-owner-' + boardCounter;
-    boardOwner.textContent = 'Owner: ' + boardData.owner;
+    boardOwner.textContent = 'Owner: ' + board.owner_username;
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
     boardDescription.id = 'board-description-' + boardCounter;
-    boardDescription.textContent = boardData.description;
+    boardDescription.textContent = board.description;
 
     const boardOpen = document.createElement('button');
     boardOpen.classList.add('board-open-button');
