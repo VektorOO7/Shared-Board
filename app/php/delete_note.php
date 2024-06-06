@@ -26,20 +26,22 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Validate the input
-$title = $input['title'] ?? null;
-$text = $input['text'] ?? null;
-$board_id = $input['board_id'] ?? null;
+$note_id = $input['note_id'] ?? null;
 
-if (!$title || !$board_id) {
-    echo json_encode(['success' => false, 'message' => 'Title, and board_id are required']);
+if (!$note_id) {
+    echo json_encode(['success' => false, 'message' => 'Note ID is required']);
     exit();
 }
 
 try {
-    $stmt = $connection->prepare('INSERT INTO notes (title, text, board_id) VALUES (:title, :text, :board_id)');
-    $stmt->execute(['title' => $title, 'text' => $text, 'board_id' => $board_id]);
+    $stmt = $connection->prepare('DELETE FROM notes WHERE id = :id');
+    $stmt->execute(['id' => $note_id]);
 
-    echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => ['id' => $connection->lastInsertId(), 'title' => $title, 'text' => $text, 'board_id' => $board_id]]);
+    if ($stmt->rowCount() > 0) {
+        echo json_encode(['success' => true, 'message' => 'Note deleted successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Note not found']);
+    }
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }

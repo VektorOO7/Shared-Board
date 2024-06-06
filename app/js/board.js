@@ -47,6 +47,33 @@ async function getNotes(boardId) {
     }
 }
 
+async function deleteNote(noteId) {
+    try {
+        const response = await fetch('php/delete_note.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ note_id: noteId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            console.log('Note deleted successfully:', result.message);
+            const noteElement = document.getElementById(`note-${noteId}`);
+            if (noteElement) {
+                noteElement.remove();
+            }
+            location.reload();
+        } else {
+            console.error('Error deleting note:', result.message);
+        }
+    } catch (error) {
+        console.error('Error deleting note:', error);
+    }
+}
+
 function renderNote(note) {
     // Create the note container
     const newNote = document.createElement('div');
@@ -74,6 +101,7 @@ function renderNote(note) {
     deleteNoteButton.addEventListener('click', function() {
         // Code to delete the note (e.g., send a request to the server to delete the note)
         console.log('Delete note with ID:', note.id);
+        deleteNote(note.id);
     });
 
     // Append the note title, text, and delete button to the note container
@@ -147,7 +175,7 @@ async function showPopup() {
             //const boarduserId = userData.user_id;
             const noteText = noteTextInput.value;
 
-            if (!noteTitle || !noteText) {
+            if (!noteTitle) {
                 console.error('Title and Description cannot be empty');
                 return;
             }
