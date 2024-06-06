@@ -1,12 +1,91 @@
 
 const backButton = document.querySelector('#back-button');
+
 const newNoteButton = document.querySelector('#create-board-button');
+
 const popupBoardDataForm = document.querySelector('#popup-board-data-form');
+
+const noteContainer = document.querySelector('.board-container');
+
+let noteCounter = 1;
 
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
+
+async function getNotes(boardId) {
+    try {
+        const response = await fetch(`php/get_notes.php?board_id=${boardId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            //console.log('Notes fetched successfully:', result.notes);
+            return {
+                success: true,
+                notes: result.notes
+            };
+        } else {
+            console.error('Error fetching notes:', result.message);
+            return {
+                success: false,
+                message: result.message
+            };
+        }
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+        return {
+            success: false,
+            message: error.message
+        };
+    }
+}
+
+function renderNote(note) {
+    // Create the note container
+    const newNote = document.createElement('div');
+    newNote.classList.add('note');
+
+    // Create the note title element
+    const noteTitle = document.createElement('div');
+    noteTitle.classList.add('note-title');
+    noteTitle.id = 'note-title-' + note.id; // Use note.id for unique ID
+    noteTitle.textContent = note.title; // Use note.title
+
+    // Create the note text element
+    const noteText = document.createElement('div');
+    noteText.classList.add('note-text');
+    noteText.id = 'note-text-' + note.id; // Use note.id for unique ID
+    noteText.textContent = note.text; // Use note.text
+
+    // Create the delete button
+    const deleteNoteButton = document.createElement('button');
+    deleteNoteButton.classList.add('delete-note-button');
+    deleteNoteButton.id = 'delete-note-button-' + note.id; // Use note.id for unique ID
+    deleteNoteButton.textContent = "Delete";
+
+    // Add event listener for the delete button
+    deleteNoteButton.addEventListener('click', function() {
+        // Code to delete the note (e.g., send a request to the server to delete the note)
+        console.log('Delete note with ID:', note.id);
+    });
+
+    // Append the note title, text, and delete button to the note container
+    newNote.appendChild(noteTitle);
+    newNote.appendChild(noteText);
+    newNote.appendChild(deleteNoteButton);
+
+    // Append the new note to the notes container
+    const notesContainer = document.getElementById('notesContainer');
+    notesContainer.appendChild(newNote);
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const boardId = getQueryParam('board');
@@ -21,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     console.log("hey");
                     const decodedFileContent = atob(data.file);
-                    console.log(decodedFileContent);
+                    //console.log(decodedFileContent);
                     // Parse the JSON string
                     const jsonData = JSON.parse(decodedFileContent);
                     document.getElementById('boardTitle').textContent = jsonData.board_title;
@@ -74,7 +153,7 @@ async function showPopup() {
             }
             //checking 
             const $currentBoardId = getQueryParam('board');
-            console.log($currentBoardId);
+            //console.log($currentBoardId);
             try {
                 const response = await fetch('php/save_note.php', {
                     method: 'POST',
@@ -91,6 +170,7 @@ async function showPopup() {
                 const result = await response.json();
                 if (result.success) {
                     console.log('Note saved successfully:', result);
+                    renderNote(result.note);
                     hidePopup();
                     resolve(result.note);
                 } else {
@@ -114,6 +194,22 @@ function hidePopup() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const boardId = getQueryParam('board'); // You should dynamically set this
+
+    // Call getNotes to fetch and load the notes when the page loads
+    try {
+        const result = await getNotes(boardId);
+        if (result.success) {
+            console.log('Notes fetched successfully:', result.notes);
+            // Render the notes on the page
+            result.notes.forEach(note => renderNote(note));
+        } else {
+            console.error('Failed to fetch notes:', result.message);
+        }
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+    }
+    //new notes button
     newNoteButton.addEventListener('click', async () => {
         try {
             await showPopup();
