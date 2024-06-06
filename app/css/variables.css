@@ -49,6 +49,7 @@
 
     --title-text-font: 3vh;
     --username-display-text-font: 2vh;
+    --board-text-font: var(--text-font) * 0.8;
 
     --board-width: 400px;
     --board-height: 300px;

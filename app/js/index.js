@@ -43,17 +43,35 @@ function renderBoard(board) {
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
     boardTitle.id = 'board-title-' + boardCounter;
-    boardTitle.textContent = board.board_title;
+
+    const boardTitleSpan = document.createElement('span');
+    boardTitleSpan.classList.add('board-text');
+    boardTitleSpan.classList.add('board-title-text');
+    boardTitleSpan.textContent = board.board_title;
+
+    boardTitle.appendChild(boardTitleSpan);
 
     const boardOwner = document.createElement('div');
     boardOwner.classList.add('board-owner');
     boardOwner.id = 'board-owner-' + boardCounter;
-    boardOwner.textContent = 'Owner: ' + board.owner_username;
+
+    const boardOwnerSpan = document.createElement('span');
+    boardOwnerSpan.classList.add('board-text');
+    boardOwnerSpan.classList.add('board-owner-text');
+    boardOwnerSpan.textContent = 'Owner: ' + board.owner_username;
+
+    boardOwner.appendChild(boardOwnerSpan);
 
     const boardDescription = document.createElement('div');
     boardDescription.classList.add('board-description');
     boardDescription.id = 'board-description-' + boardCounter;
-    boardDescription.textContent = board.description;
+
+    const boardDescriptionSpan = document.createElement('span');
+    boardDescriptionSpan.classList.add('board-text');
+    boardDescriptionSpan.classList.add('board-description-text');
+    boardDescriptionSpan.textContent = board.description;
+
+    boardDescription.appendChild(boardDescriptionSpan);
 
     const boardOpenAndEditButtonsDiv = document.createElement('div');
     boardOpenAndEditButtonsDiv.classList.add('board-open-and-edit-buttons-div');

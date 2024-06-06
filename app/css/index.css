@@ -240,8 +240,7 @@ nav {
 }
 
 .board-title,
-.board-owner,
-.board-description {
+.board-owner {
     height: 1em;
 
     border-bottom: 1px solid var(--border-color);
@@ -253,8 +252,27 @@ nav {
 }
 
 .board-description {
+    height: 9.5em;
+
+    border-bottom: 1px solid var(--border-color);
+
+    /*
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    */
+}
+
+.board-description {
     flex-grow: 1;
     overflow: auto;
+}
+
+.board-text {
+    color: var(--text-color);
+
+    font-size: var(--board-text-font);
 }
 
 .board-open-and-edit-buttons-div,
@@ -384,7 +402,7 @@ nav {
     resize: none;
 }
 
-#popup-buttons-div {
+.popup-buttons-div {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 0;
@@ -396,6 +414,14 @@ nav {
 
     width: var(--popup-field-width);
     height: var(--popup-button-height);
+}
+
+.popup-done-button-div {
+    text-align: left;
+}
+
+.popup-close-button-div {
+    text-align: right;
 }
 
 .popup-button {
@@ -416,16 +442,7 @@ nav {
     font-size: var(--form-button-font);
 }
 
-.popup-done-button-div {
-    text-align: left;
-}
-
-.popup-close-button-div {
-    text-align: right;
-}
-
-.popup-done-button:hover,
-.popup-close-button:hover {
+.popup-button:hover {
     background: var(--secondary-color);
 
     cursor: pointer;
