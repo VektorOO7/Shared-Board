@@ -60,7 +60,7 @@
 
     --popup-width: 40vw;
     --popup-height: calc(var(--popup-field-height) + var(--popup-description-field-height) + var(--popup-button-height) + (2 * var(--popup-padding)) + (3 * var(--between-popup-element-margin)));
-
+    
     --between-popup-element-margin: 1.5vh;
     --popup-padding: 20px;
 

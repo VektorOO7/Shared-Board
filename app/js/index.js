@@ -7,9 +7,10 @@ const accountButton = document.querySelector('#account-button');
 
 const boardContainer = document.querySelector('.board-container');
 
-const popupBoardDataForm = document.querySelector('#popup-board-data-form');
+const createBoardPopupDataForm = document.querySelector('#create-board-popup-data-form');
+const editBoardPopupDataForm = document.querySelector('#edit-board-popup-data-form');
 
-let boardCounter = 1; //for the database(it strats counting from 1)
+let boardCounter = 1; // for the database(it strats counting from 1)
 
 async function loadSession() {
     try {
@@ -287,27 +288,25 @@ async function loadBoardsFromServer(userId) {
     return { success: true, boards_count: boardsCount, boards: boards };
 }
 
-async function showPopup() {
-    const boardTitleInput = document.querySelector('#popup-title-field');
-    const boardDescriptionInput = document.querySelector('#popup-description-field');
+async function showCreateBoardPopup() {
+    const boardTitleInput = document.querySelector('#create-board-popup-title-field');
+    const boardDescriptionInput = document.querySelector('#create-board-popup-description-field');
 
     if (!boardTitleInput || !boardDescriptionInput) {
         console.error('Popup title or description field not found');
+
         return;
     }
 
-    document.body.classList.add('active-popup');
+    document.body.classList.add('active-create-board-popup');
 
     // Clear input fields
     boardTitleInput.value = '';
     boardDescriptionInput.value = '';
 
     return new Promise((resolve, reject) => {
-        function handlePopupClose() {
-            hidePopup();
-
-            reject('Popup closed');
-            popupBoardDataForm.removeEventListener('submit', handlePopupDone);
+        function hideCreateBoardPopup() {
+            document.body.classList.remove('active-create-board-popup');
         }
 
         async function handlePopupDone(event) {
@@ -325,25 +324,28 @@ async function showPopup() {
 
             const board = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
 
-            console.log(userData); // for testing purposes only
-            console.log(board); // for testing purposes only
+            //console.log(userData); // for testing purposes only
+            //console.log(board); // for testing purposes only
 
             renderBoard(board);
-            hidePopup();
+            hideCreateBoardPopup();
 
             saveBoardOnServer(board)
 
             resolve(board);
-            document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
+            document.getElementById('create-board-popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
-        popupBoardDataForm.addEventListener('submit', handlePopupDone, { once: true });
-        document.getElementById('popup-close-button').addEventListener('click', handlePopupClose, { once: true });
-    });
-}
+        function handlePopupClose() {
+            hideCreateBoardPopup()
 
-function hidePopup() {
-    document.body.classList.remove('active-popup');
+            reject('Create Board Popup closed');
+            createBoardPopupDataForm.removeEventListener('submit', handlePopupDone);
+        }
+
+        createBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
+        document.getElementById('create-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+    });
 }
 
 function logout() {
@@ -402,9 +404,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     createBoardButton.addEventListener('click', async () => {
         try {
-            await showPopup();
+            await showCreateBoardPopup();
         } catch (error) {
-            if (error != 'Popup closed') {
+            if (error != 'Create Board Popup closed') {
                 console.error(error);
             }
         }

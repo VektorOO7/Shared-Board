@@ -305,7 +305,7 @@ nav {
     transition: filter 0.3s ease;
 }
 
-#popup-overlay {
+.popup-overlay {
     display: flex;
     position: fixed;
     top: 0;
@@ -325,7 +325,7 @@ nav {
     transition: visibility 0s, opacity 0.3s ease;
 }
 
-#popup-board-data-form {
+.popup-data-form {
     padding: var(--popup-padding);
 
     width: var(--popup-width);
@@ -341,12 +341,29 @@ nav {
     text-align: center;
 }
 
+#popup-form-title-div {
+    overflow: hidden;
+    text-align: center;
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+#popup-form-title {
+    margin-top: 0;
+    margin-bottom: calc(var(--between-popup-element-margin) / 2);
+
+    color: var(--text-color);
+}
+
 .field-div {
     text-align: center;
 }
 
-#popup-title-field,
-#popup-description-field {
+.popup-title-field,
+.popup-description-field {
+    margin-top: calc(var(--between-popup-element-margin) / 2);
+    margin-bottom: calc(var(--between-popup-element-margin) / 2);;
     padding: var(--popup-field-padding-sides) var(--popup-field-padding-top-bottom);
 
     width: var(--popup-field-width);
@@ -357,17 +374,11 @@ nav {
     font-size: var(--popup-font);
 }
 
-#popup-title-field {
-    margin-top: 0;
-    margin-bottom: calc(var(--between-popup-element-margin) / 2);
-
+.popup-title-field {
     height: var(--popup-field-height);
 }
 
-#popup-description-field {
-    margin-top: calc(var(--between-popup-element-margin) / 2);
-    margin-bottom: calc(var(--between-popup-element-margin) / 2);
-
+.popup-description-field {
     height: var(--popup-description-field-height);
 
     resize: none;
@@ -387,16 +398,7 @@ nav {
     height: var(--popup-button-height);
 }
 
-#popup-done-button-div {
-    text-align: left;
-}
-
-#popup-close-button-div {
-    text-align: right;
-}
-
-#popup-done-button,
-#popup-close-button {
+.popup-button {
     padding: 0;
     margin: 0;
 
@@ -408,23 +410,32 @@ nav {
     border: 1px solid var(--border-color);
     border-radius: 5px;
 
+    color: var(--text-color);
     background: var(--primary-color);
 
     font-size: var(--form-button-font);
 }
 
-#popup-done-button:hover,
-#popup-close-button:hover {
+.popup-done-button-div {
+    text-align: left;
+}
+
+.popup-close-button-div {
+    text-align: right;
+}
+
+.popup-done-button:hover,
+.popup-close-button:hover {
     background: var(--secondary-color);
 
     cursor: pointer;
 }
 
-.active-popup #popup-overlay {
+.active-create-board-popup #create-board-popup-overlay {
     visibility: visible;
     opacity: 1;
 }
 
-.active-popup #behind-overlay-content {
+.active-create-board-popup #behind-overlay-content {
     filter: blur(5px);
 }
