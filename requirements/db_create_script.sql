@@ -13,15 +13,6 @@ CREATE TABLE IF NOT EXISTS boards (
     board_id VARCHAR(36) PRIMARY KEY,
     user_id INT NOT NULL,
 	board_title VARCHAR(255) NOT NULL
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-CREATE TABLE notes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    text TEXT NOT NULL,
-    board_id VARCHAR(255) NOT NULL,
-    FOREIGN KEY (board_id) REFERENCES boards(board_id)
 );
 
 INSERT INTO users (username, email, hashed_password) VALUES
@@ -33,4 +24,3 @@ INSERT INTO boards (board_id, user_id, board_title) VALUES
 ('641ab44f-9f8f-4c07-8ff4-dc54986d8c5b', 1, 'Admin Test Board 1'),
 ('2913fa80-b584-462a-8765-8b0ed9d9af24', 1, 'Admin Test Board 2'),
 ('6f31adc9-83b7-4cc6-9528-b61b83d92a0b', 1, 'Admin Test Board 3');
-

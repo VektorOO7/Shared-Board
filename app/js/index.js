@@ -112,11 +112,11 @@ async function generateUniqueBoardId() {
     return boardId;
 }
 
-async function createNewBoardJSONObject(boardTitle, username, user_id, description) {
+async function createNewBoardJSONObject(boardTitle, owner_username, user_id, description) {
     return {
         'board_id': await generateUniqueBoardId(),
         'board_title': boardTitle,
-        'username': username,
+        'owner_username': owner_username,
         'user_id': user_id,
         'description': description,
         'board_tabs': []
@@ -250,7 +250,8 @@ async function showPopup() {
 
             const board = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
 
-            //console.log(board); // for testing purposes only
+            console.log(userData); // for testing purposes only
+            console.log(board); // for testing purposes only
 
             renderBoard(board);
             hidePopup();
