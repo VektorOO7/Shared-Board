@@ -12,6 +12,8 @@ body {
     min-width: 600px;
 
     background-color: var(--primary-color);
+
+    font-family: Arial, sans-serif;
 }
 
 header {
@@ -108,6 +110,11 @@ nav {
     font-size: var(--username-display-text-font);
 }
 
+#account-button-div {
+    display: inline-flex;
+    align-items: center;
+}
+
 #create-board-button,
 #account-button {
     padding: 0;
@@ -168,43 +175,6 @@ nav {
     Boards css
 */
 
-#boardTitle, #boardDescription {
-    color: var(--text-color);
-    text-align: center;
-}
-
-#account-button-div {
-    display: inline-flex;
-    align-items: center;
-}
-
-#back-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 10px;
-
-    border: none;
-    border-radius: 50%;
-
-    background-color: var(--secondary-color);
-
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#back-button:hover {
-    background-color: var(--primary-color);
-}
-
-#back-button-svg {
-    width: 2.5em;  /* Increased width */
-    height: 2.5em; /* Increased height */
-    fill: white;
-}
-
-
 .board-container {
     display: grid;
     gap: var(--between-board-gap);
@@ -234,40 +204,56 @@ nav {
 .board-title,
 .board-owner,
 .board-description {
-    padding: 3px 5px;
-
     color: var(--text-color);
 }
 
 .board-title,
+.board-owner,
+.board-description {
+    border-bottom: var(--board-element-border) solid var(--border-color);
+}
+
+.board-title,
 .board-owner {
-    height: 1em;
-
-    border-bottom: 1px solid var(--border-color);
-
     text-align: center;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .board-description {
-    height: 9.5em;
+    padding: var(--board-description-margin);
 
-    border-bottom: 1px solid var(--border-color);
+    height: var(--board-description-height);
 
-    overflow: hidden;
+    overflow-y: auto;
 }
 
-.board-description {
-    flex-grow: 1;
-    overflow: auto;
-}
+.board-title-text,
+.board-owner-text,
+.board-description-text {
+    display: block;
 
-.board-text {
     color: var(--text-color);
+}
 
-    font-size: var(--board-text-font);
+.board-title-text {
+    margin: var(--board-title-top-bottom-margin) 0;
+
+    font-size: var(--board-title-font-size);
+}
+
+.board-owner-text {
+    margin: var(--board-owner-top-bottom-margin); 0;
+
+    font-size: var(--board-owner-font-size);
+}
+
+.board-description-text {
+    font-size: var(--board-description-font-size);
+}
+
+.board-description {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--secondary-color);
 }
 
 .board-open-and-edit-buttons-div,
@@ -277,35 +263,49 @@ nav {
     grid-gap: 0;
 }
 
-.board-open-and-edit-buttons-div .board-button {
-    margin-top: var(--board-top-buttons-margin);
-    margin-bottom: var(--board-bottom-buttons-margin);
-}
-
 .board-button-div {
     width: 100%;
-    height: 100%;
+    height: 26px;
 
     text-align: center;
 }
 
+.board-open-button,
+.board-share-button {
+    transform: translateX(5%);
+}
+
+.board-edit-button,
+.board-delete-button {
+    transform: translateX(-5%);
+}
+
 .board-button {
-    /*left: 20px; /* Adjust this value to set the distance from the left border */
-    margin-left: 10px;
-    top: 50%;
+    margin: auto;
+
+    width: calc(var(--board-width) / 2.5);
 
     border: 1px solid var(--border-color);
-    background-color: var(--secondary-color);
-    
-    width: calc(var(--board-width)/2.5);
-    
-    transform: translateY(-50%);
+    border-radius: 5px;
+
+    background: var(--primary-color);
 }
 
 .board-button:hover {
     background: var(--secondary-color);
 
     cursor: pointer;
+}
+
+.board-open-and-edit-buttons-div .board-button {
+    margin-top: var(--board-button-margin);
+    margin-bottom: calc(var(--board-button-margin) / 2);
+}
+
+.board-share-and-delete-buttons-div .board-button {
+    margin: auto;
+    margin-top: calc(var(--board-button-margin) / 2);
+    margin-bottom: var(--board-button-margin);
 }
 
 /*
@@ -393,6 +393,10 @@ nav {
     height: var(--popup-description-field-height);
 
     resize: none;
+}
+
+.delete-popup-form-text {
+    font-size: var(--delete-popup-text-font);
 }
 
 .popup-buttons-div {
