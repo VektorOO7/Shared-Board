@@ -23,6 +23,10 @@ async function getNotes(boardId) {
             }
         });
 
+        if (!response.ok) {
+            throw new Error('Empty response or non-OK status');
+        }
+
         const result = await response.json();
 
         if (result.success) {
