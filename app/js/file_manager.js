@@ -68,3 +68,13 @@ export async function getBoard(boardId, boardTitle) {
 
     return result;
 }
+
+async function deleteFile() {
+    // body...
+
+    // supposed to use delete_file.php
+}
+
+export async function deleteBoard(boardId) {
+    // body...
+}

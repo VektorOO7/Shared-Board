@@ -442,7 +442,8 @@ nav {
 }
 
 .active-create-board-popup #behind-overlay-content,
-.active-edit-board-popup #behind-overlay-content {
+.active-edit-board-popup #behind-overlay-content,
+.active-delete-board-popup #behind-overlay-content {
     filter: blur(5px);
 }
 
@@ -452,6 +453,11 @@ nav {
 }
 
 .active-edit-board-popup #edit-board-popup-overlay {
+    visibility: visible;
+    opacity: 1;
+}
+
+.active-delete-board-popup #delete-board-popup-overlay {
     visibility: visible;
     opacity: 1;
 }

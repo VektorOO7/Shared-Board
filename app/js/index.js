@@ -1,4 +1,4 @@
-import { saveBoard, getBoard } from "./file_manager.js";
+import { saveBoard, getBoard, deleteBoard } from "./file_manager.js";
 
 let userData;
 
@@ -9,6 +9,7 @@ const boardContainer = document.querySelector('.board-container');
 
 const createBoardPopupDataForm = document.querySelector('#create-board-popup-data-form');
 const editBoardPopupDataForm = document.querySelector('#edit-board-popup-data-form');
+const deleteBoardPopupDataForm = document.querySelector('#delete-board-popup-data-form');
 
 let renderedBoards = [];
 let boardCounter = 1; // for the database(it strats counting from 1)
@@ -160,8 +161,14 @@ function renderBoard(board) {
         // will be added later
     });
 
-    boardDeleteButton.addEventListener('click', function() {
-        // will be added later
+    boardDeleteButton.addEventListener('click', async function() {
+        try {
+            await showDeleteBoardPopup(newBoard, board.board_id, board.board_title);
+        } catch (error) {
+            if (error != 'Delete Board Popup closed') {
+                console.error(error);
+            }
+        }
     });
 
     newBoard.appendChild(boardTitle);
@@ -322,6 +329,13 @@ async function loadBoardsFromServer(userId) {
     return { success: true, boards_count: boardsCount, boards: boards };
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function deleteBoardFromServer(boardId, userId) {
+    // supposed to use delete_board_from_database.php
+
+    console.log('Deleted board with id: "' + boardId + '" for user "' + userId + '"');
+}
+
 async function showCreateBoardPopup() {
     const boardTitleInput = document.querySelector('#create-board-popup-title-field');
     const boardDescriptionInput = document.querySelector('#create-board-popup-description-field');
@@ -338,7 +352,7 @@ async function showCreateBoardPopup() {
     boardDescriptionInput.value = '';
 
     return new Promise((resolve, reject) => {
-        function hideCreateBoardPopup() {
+        function hidePopup() {
             document.body.classList.remove('active-create-board-popup');
         }
 
@@ -361,16 +375,16 @@ async function showCreateBoardPopup() {
             //console.log(boardJSON); // for testing purposes only
 
             renderBoard(boardJSON);
-            hideCreateBoardPopup();
-
             saveBoardOnServer(boardJSON);
+
+            hidePopup();
 
             resolve(boardJSON);
             document.getElementById('create-board-popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
         function handlePopupClose() {
-            hideCreateBoardPopup()
+            hidePopup();
 
             reject('Create Board Popup closed');
             createBoardPopupDataForm.removeEventListener('submit', handlePopupDone);
@@ -401,7 +415,7 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
     boardDescriptionInput.value = boardDescriptionSpan.textContent;
 
     return new Promise((resolve, reject) => {
-        function hideCreateBoardPopup() {
+        function hidePopup() {
             document.body.classList.remove('active-edit-board-popup');
         }
 
@@ -425,18 +439,18 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
             //console.log(userData); // for testing purposes only
             //console.log(boardJSON); // for testing purposes only
 
-            renderBoard(boardJSON);
             unrenderBoard(oldBoard);
-            hideCreateBoardPopup();
-
+            renderBoard(boardJSON);
             updateBoardFile(boardJSON);
+
+            hidePopup();
 
             resolve(boardJSON);
             document.getElementById('edit-board-popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
         function handlePopupClose() {
-            hideCreateBoardPopup()
+            hidePopup();
 
             reject('Edit Board Popup closed');
             editBoardPopupDataForm.removeEventListener('submit', handlePopupDone);
@@ -444,6 +458,42 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
 
         editBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
         document.getElementById('edit-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+    });
+}
+
+async function showDeleteBoardPopup(boardJSON, boardId, boardTitle) {
+    document.body.classList.add('active-delete-board-popup');
+
+    return new Promise((resolve, reject) => {
+        function hidePopup() {
+            document.body.classList.remove('active-delete-board-popup');
+        }
+
+        async function handlePopupYes(event) {
+            event.preventDefault();
+
+            //console.log(boardJSON); // for testing purposes only
+
+            unrenderBoard(boardJSON);
+            deleteBoardFromServer(boardId, userData.user_id);
+
+            hidePopup();
+
+            resolve(boardJSON);
+            document.getElementById('delete-board-popup-no-button').removeEventListener('click', handlePopupNo);
+        }
+
+        function handlePopupNo() {
+            hidePopup();
+
+            reject('Delete Board Popup closed');
+            deleteBoardPopupDataForm.removeEventListener('submit', handlePopupYes);
+        }
+
+        document.querySelector("#delete-board-popup-board-title").textContent = boardTitle;
+
+        deleteBoardPopupDataForm.addEventListener('submit', handlePopupYes, { once: true });
+        document.getElementById('delete-board-popup-no-button').addEventListener('click', handlePopupNo, { once: true });
     });
 }
 
