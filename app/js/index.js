@@ -49,7 +49,6 @@ function renderBoard(board) {
     boardTitle.id = 'board-title-' + boardCounter;
 
     const boardTitleSpan = document.createElement('span');
-    boardTitleSpan.classList.add('board-text');
     boardTitleSpan.classList.add('board-title-text');
     boardTitleSpan.textContent = board.board_title;
 
@@ -60,7 +59,6 @@ function renderBoard(board) {
     boardOwner.id = 'board-owner-' + boardCounter;
 
     const boardOwnerSpan = document.createElement('span');
-    boardOwnerSpan.classList.add('board-text');
     boardOwnerSpan.classList.add('board-owner-text');
     boardOwnerSpan.textContent = 'Owner: ' + board.owner_username;
 
@@ -71,7 +69,6 @@ function renderBoard(board) {
     boardDescription.id = 'board-description-' + boardCounter;
 
     const boardDescriptionSpan = document.createElement('span');
-    boardDescriptionSpan.classList.add('board-text');
     boardDescriptionSpan.classList.add('board-description-text');
     boardDescriptionSpan.textContent = board.description;
 
