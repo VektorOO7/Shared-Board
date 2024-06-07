@@ -10,6 +10,7 @@ const boardContainer = document.querySelector('.board-container');
 const createBoardPopupDataForm = document.querySelector('#create-board-popup-data-form');
 const editBoardPopupDataForm = document.querySelector('#edit-board-popup-data-form');
 
+let renderedBoards = [];
 let boardCounter = 1; // for the database(it strats counting from 1)
 
 async function loadSession() {
@@ -39,6 +40,8 @@ async function loadSession() {
 function renderBoard(board) {
     const newBoard = document.createElement('div');
     newBoard.classList.add('board');
+
+    renderedBoards.push(newBoard);
 
     const boardTitle = document.createElement('div');
     boardTitle.classList.add('board-title');
@@ -143,8 +146,14 @@ function renderBoard(board) {
         //window.location.href = 'board.html?board=' + board.board_id;
     });
 
-    boardEditButton.addEventListener('click', function() {
-        // will be added later
+    boardEditButton.addEventListener('click', async function() {
+        try {
+            await showEditBoardPopup(board, boardTitleSpan, boardDescriptionSpan, newBoard);
+        } catch (error) {
+            if (error != 'Edit Board Popup closed') {
+                console.error(error);
+            }
+        }
     });
 
     boardShareButton.addEventListener('click', function() {
@@ -166,6 +175,13 @@ function renderBoard(board) {
 
     boardCounter++;
 }
+
+function unrenderBoard(board) {
+    renderedBoards.splice(renderedBoards.indexOf(board), 1);
+
+    board.remove();
+}
+
 async function generateUniqueBoardId() {
     let boardId;
 
@@ -318,7 +334,6 @@ async function showCreateBoardPopup() {
 
     document.body.classList.add('active-create-board-popup');
 
-    // Clear input fields
     boardTitleInput.value = '';
     boardDescriptionInput.value = '';
 
@@ -340,17 +355,17 @@ async function showCreateBoardPopup() {
                 return;
             }
 
-            const board = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
+            const boardJSON = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
 
             //console.log(userData); // for testing purposes only
-            //console.log(board); // for testing purposes only
+            //console.log(boardJSON); // for testing purposes only
 
-            renderBoard(board);
+            renderBoard(boardJSON);
             hideCreateBoardPopup();
 
-            saveBoardOnServer(board)
+            saveBoardOnServer(boardJSON);
 
-            resolve(board);
+            resolve(boardJSON);
             document.getElementById('create-board-popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
@@ -363,6 +378,72 @@ async function showCreateBoardPopup() {
 
         createBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
         document.getElementById('create-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+    });
+}
+
+async function updateBoardFile(boardJSON) {
+    return await saveBoard(boardJSON);
+}
+
+async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpan, oldBoard) {
+    const boardTitleInput = document.querySelector('#edit-board-popup-title-field');
+    const boardDescriptionInput = document.querySelector('#edit-board-popup-description-field');
+
+    if (!boardTitleInput || !boardDescriptionInput) {
+        console.error('Popup title or description field not found');
+
+        return;
+    }
+
+    document.body.classList.add('active-edit-board-popup');
+
+    boardTitleInput.value = boardTitleSpan.textContent;
+    boardDescriptionInput.value = boardDescriptionSpan.textContent;
+
+    return new Promise((resolve, reject) => {
+        function hideCreateBoardPopup() {
+            document.body.classList.remove('active-edit-board-popup');
+        }
+
+        async function handlePopupDone(event) {
+            event.preventDefault();
+
+            const boardTitle = boardTitleInput.value;
+            const boardDescription = boardDescriptionInput.value;
+
+            if (!boardTitle || !boardDescription) {
+                console.error('Title and Description cannot be empty');
+                return;
+            }
+
+            boardJSON.board_title = boardTitle;
+            boardJSON.description = boardDescription;
+
+            boardTitleSpan.textContent = boardTitle;
+            boardDescriptionSpan.textContent = boardDescription;
+
+            //console.log(userData); // for testing purposes only
+            //console.log(boardJSON); // for testing purposes only
+
+            renderBoard(boardJSON);
+            unrenderBoard(oldBoard);
+            hideCreateBoardPopup();
+
+            updateBoardFile(boardJSON);
+
+            resolve(boardJSON);
+            document.getElementById('edit-board-popup-close-button').removeEventListener('click', handlePopupClose);
+        }
+
+        function handlePopupClose() {
+            hideCreateBoardPopup()
+
+            reject('Edit Board Popup closed');
+            editBoardPopupDataForm.removeEventListener('submit', handlePopupDone);
+        }
+
+        editBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
+        document.getElementById('edit-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
     });
 }
 
