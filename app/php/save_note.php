@@ -7,6 +7,7 @@ try {
 } catch (PDOException $exc) {
     http_response_code(500);
     echo json_encode(["message" => "Failed to make a connection to database!"]);
+    exit();
 }
 
 try {
@@ -17,30 +18,78 @@ try {
     exit();
 }
 
-// Decode the JSON input
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (json_last_error() !== JSON_ERROR_NONE) {
-    echo json_encode(['success' => false, 'message' => 'Invalid JSON input']);
+// Check if the request method is POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method Not Allowed']);
     exit();
 }
 
-// Validate the input
-$title = $input['title'] ?? null;
-$text = $input['text'] ?? null;
-$board_id = $input['board_id'] ?? null;
+
+// Decode the JSON input
+$title = $_POST['title'] ?? null;
+$text = $_POST['description'] ?? null;
+$board_id = $_POST['board_id'] ?? null;
 
 if (!$title || !$board_id) {
-    echo json_encode(['success' => false, 'message' => 'Title, and board_id are required']);
+    echo json_encode(['success' => false, 'message' => 'Title and board_id are required']);
     exit();
 }
 
-try {
-    $stmt = $connection->prepare('INSERT INTO notes (title, text, board_id) VALUES (:title, :text, :board_id)');
-    $stmt->execute(['title' => $title, 'text' => $text, 'board_id' => $board_id]);
+// Validate and handle file upload
+if (isset($_FILES['file'])) { 
+    $file = $_FILES['file'];
+    $fileContent = file_get_contents($file['tmp_name']);
+    $fileType = $file['type'];
+    $fileSize = $file['size'];
+    $fileName = $file['name'];
+    try {
+        $stmt = $connection->prepare('INSERT INTO notes (title, text, board_id, file_name, file_type, file_size, file) 
+        VALUES (:title, :text, :board_id, :file_name, :file_type, :file_size, :file)');
+        $stmt->execute([
+            'title' => $title,
+            'text' => $text,
+            'board_id' => $board_id,
+            'file_name' => $fileName,
+            'file_type' => $fileType,
+            'file_size' => $fileSize,
+            'file' => $fileContent
+        ]);
+        //debugging
+        echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => [
+            'id' => $connection->lastInsertId(),
+            'title' => $title,
+            'text' => $text,
+            'board_id' => $board_id,
+            'file_name' => $fileName,
+            'file_type' => $fileType,
+            'file_size' => $fileSize
+        ]]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    }
+}else{
+    try {
+        $stmt = $connection->prepare('INSERT INTO notes (title, text, board_id) 
+        VALUES (:title, :text, :board_id)');
+        $stmt->execute([
+            'title' => $title,
+            'text' => $text,
+            'board_id' => $board_id,
+        ]);
+        //debugging
+        echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => [
+            'id' => $connection->lastInsertId(),
+            'title' => $title,
+            'text' => $text,
+            'board_id' => $board_id,
+        ]]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    }
 
-    echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => ['id' => $connection->lastInsertId(), 'title' => $title, 'text' => $text, 'board_id' => $board_id]]);
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
+
+
+
 

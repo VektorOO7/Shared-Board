@@ -88,9 +88,14 @@ function renderNote(note) {
     // Create the note text element
     const noteText = document.createElement('div');
     noteText.classList.add('note-text');
-    noteText.id = 'note-text-' + note.id; // Use note.id for unique ID
-    noteText.textContent = note.text; // Use note.text
-
+    noteText.id = 'note-text-' + note.id;
+    noteText.textContent = note.text;
+/*
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('name', 'file');
+    fileInput.setAttribute('id', 'file-' + note.id);
+*/
     // Create the delete button
     const deleteNoteButton = document.createElement('button');
     deleteNoteButton.classList.add('delete-note-button');
@@ -107,6 +112,7 @@ function renderNote(note) {
     // Append the note title, text, and delete button to the note container
     newNote.appendChild(noteTitle);
     newNote.appendChild(noteText);
+    //newNote.appendChild(fileInput);
     newNote.appendChild(deleteNoteButton);
 
     // Append the new note to the notes container
@@ -147,9 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
 async function showPopup() {
     const noteTitleInput = document.querySelector('#popup-title-field');
     const noteTextInput = document.querySelector('#popup-description-field');
+    const noteFileInput = document.querySelector('#file');
 
-    if (!noteTitleInput || !noteTextInput) {
-        console.error('Popup title or description field not found');
+    if (!noteTitleInput) {
+        console.error('Popup title not found');
         return;
     }
 
@@ -162,7 +169,6 @@ async function showPopup() {
     return new Promise((resolve, reject) => {
         function handlePopupClose() {
             hidePopup();
-
             reject('Popup closed');
             popupBoardDataForm.removeEventListener('submit', handlePopupDone);
         }
@@ -171,28 +177,24 @@ async function showPopup() {
             event.preventDefault();
 
             const noteTitle = noteTitleInput.value;
-            //const boardOwnerUsername = userData.username;
-            //const boarduserId = userData.user_id;
             const noteText = noteTextInput.value;
+            const noteFile = noteFileInput.files[0];
 
             if (!noteTitle) {
                 console.error('Title and Description cannot be empty');
                 return;
             }
-            //checking 
-            const $currentBoardId = getQueryParam('board');
-            //console.log($currentBoardId);
+
+            const formData = new FormData();
+            formData.append('title', noteTitle);
+            formData.append('description', noteText);
+            formData.append('board_id', getQueryParam('board'));
+            formData.append('file', noteFile);
+
             try {
                 const response = await fetch('php/save_note.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        title: noteTitle,
-                        text: noteText,
-                        board_id: $currentBoardId//figure out how to get this
-                    })
+                    body: formData
                 });
 
                 const result = await response.json();
@@ -209,6 +211,7 @@ async function showPopup() {
                 console.error('Error saving note:', error);
                 reject(error);
             }
+
             document.getElementById('popup-close-button').removeEventListener('click', handlePopupClose);
         }
 
@@ -216,6 +219,8 @@ async function showPopup() {
         document.getElementById('popup-close-button').addEventListener('click', handlePopupClose, { once: true });
     });
 }
+
+
 
 function hidePopup() {
     document.body.classList.remove('active-popup');

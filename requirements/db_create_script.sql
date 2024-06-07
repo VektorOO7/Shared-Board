@@ -21,6 +21,10 @@ CREATE TABLE notes (
     title VARCHAR(255) NOT NULL,
     text TEXT NOT NULL,
     board_id VARCHAR(255) NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file LONGBLOB NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    file_size INT NOT NULL,
     FOREIGN KEY (board_id) REFERENCES boards(board_id)
 );
 
