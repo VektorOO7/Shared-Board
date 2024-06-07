@@ -38,29 +38,51 @@
     --form-login-button-width: calc(var(--form-width) * 0.9);
     --form-login-button-height: 7vh;
     
-    --form-field-width: calc(var(--form-login-button-width) - 2 * calc(var(--form-field-padding-sides) + var(--form-field-border)));
-    --form-field-height: calc(var(--form-login-button-height) - 2 * calc(var(--form-field-padding-top-bottom) + var(--form-field-border)));
+    --form-field-width: calc(var(--form-login-button-width) - 2 * calc(var(--form-field-padding-sides) +
+        var(--form-field-border)));
+    --form-field-height: calc(var(--form-login-button-height) - 2 * calc(var(--form-field-padding-top-bottom) +
+        var(--form-field-border)));
 
     /*
-        index.css variables
+        index.css general variables
     */
 
     --nav-bar-height: 9vh;
 
     --title-text-font: 3vh;
     --username-display-text-font: 2vh;
-    --board-text-font: var(--text-font) * 0.8;
 
-    --board-width: 400px;
-    --board-height: 300px;
+    /*
+        index.css board variables
+    */
+
+    --board-width: 350px;
+    --board-height: calc(var(--board-title-font-size) + (2 * var(--board-title-top-bottom-margin)) +
+        var(--board-element-border) + var(--board-owner-font-size) + (2 * var(--board-owner-top-bottom-margin)) +
+        var(--board-element-border) + var(--board-description-height) + (2 * var(--board-description-margin)) +
+        var(--board-element-border) + (2 * (var(--borad-button-height) + (1.5 * var(--board-description-margin)))));
     --between-board-gap: 20px;
+    --board-element-border: 1px;
 
-    --board-top-buttons-margin-constant: 1.1vh;
-    --board-top-buttons-margin: calc(var(--board-top-buttons-margin-constant) + 1vh);
-    --board-bottom-buttons-margin: 1vh;
+    --board-title-font-size: 22px;
+    --board-owner-font-size: 18px;
+    --board-description-font-size: 16px;
+
+    --board-title-top-bottom-margin: calc(var(--board-title-font-size) / 2);
+    --board-owner-top-bottom-margin: calc(var(--board-owner-font-size) / 3.6);
+    --board-description-margin: 5px;
+
+    --board-description-height: 15.5em;
+    --borad-button-height: 19px;
+    --board-button-margin: 5px;
+
+    /*
+        index.css popup variables
+    */
 
     --popup-width: 40vw;
-    --popup-height: calc(var(--popup-field-height) + var(--popup-description-field-height) + var(--popup-button-height) + (2 * var(--popup-padding)) + (3 * var(--between-popup-element-margin)));
+    --popup-height: calc(var(--popup-field-height) + var(--popup-description-field-height) +
+        var(--popup-button-height) + (2 * var(--popup-padding)) + (3 * var(--between-popup-element-margin)));
     
     --between-popup-element-margin: 1.5vh;
     --popup-padding: 20px;
@@ -71,9 +93,10 @@
 
     --popup-field-width: calc(var(--popup-width) * 0.8);
     --popup-field-height: 2.22vh;
-    --popup-description-field-height: calc(var(--popup-field-height) * 10);
+    --popup-description-field-height: calc(var(--popup-field-height) * 20);
     --popup-button-height: var(--popup-field-true-height);
     --popup-button-width: calc(var(--popup-width) * 0.35);
 
     --popup-font: var(--form-font);
+    --delete-popup-text-font: 22px;
 }
