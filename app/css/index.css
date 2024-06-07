@@ -179,14 +179,18 @@ nav {
 }
 
 #back-button {
-    background-color: var(--secondary-color);
-    border: none;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    padding: 10px;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: var(--secondary-color);
+
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
@@ -226,17 +230,7 @@ nav {
     background-color: var(--secondary-color);
 }
 
-.board-open-button {
-    /*left: 20px; /* Adjust this value to set the distance from the left border */
-    margin-left: 10px;
-    top: 50%;
-    border: 1px solid var(--border-color);
-    background-color: var(--secondary-color);
-    width: calc(var(--board-width)/2.5);
-    transform: translateY(-50%);
-}
-
-.board-open-button,
+.board-button,
 .board-title,
 .board-owner,
 .board-description {
@@ -245,7 +239,8 @@ nav {
     color: var(--text-color);
 }
 
-.board-title, .board-owner {
+.board-title,
+.board-owner {
     height: 1em;
 
     border-bottom: 1px solid var(--border-color);
@@ -257,8 +252,60 @@ nav {
 }
 
 .board-description {
+    height: 9.5em;
+
+    border-bottom: 1px solid var(--border-color);
+
+    overflow: hidden;
+}
+
+.board-description {
     flex-grow: 1;
     overflow: auto;
+}
+
+.board-text {
+    color: var(--text-color);
+
+    font-size: var(--board-text-font);
+}
+
+.board-open-and-edit-buttons-div,
+.board-share-and-delete-buttons-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0;
+}
+
+.board-open-and-edit-buttons-div .board-button {
+    margin-top: var(--board-top-buttons-margin);
+    margin-bottom: var(--board-bottom-buttons-margin);
+}
+
+.board-button-div {
+    width: 100%;
+    height: 100%;
+
+    text-align: center;
+}
+
+.board-button {
+    /*left: 20px; /* Adjust this value to set the distance from the left border */
+    margin-left: 10px;
+    top: 50%;
+
+    border: 1px solid var(--border-color);
+    background-color: var(--secondary-color);
+    
+    width: calc(var(--board-width)/2.5);
+    
+    transform: translateY(-50%);
+}
+
+.board-button:hover {
+    background: var(--secondary-color);
+
+    cursor: pointer;
 }
 
 /*
@@ -269,7 +316,7 @@ nav {
     transition: filter 0.3s ease;
 }
 
-#popup-overlay {
+.popup-overlay {
     display: flex;
     position: fixed;
     top: 0;
@@ -289,7 +336,7 @@ nav {
     transition: visibility 0s, opacity 0.3s ease;
 }
 
-#popup-board-data-form {
+.popup-data-form {
     padding: var(--popup-padding);
 
     width: var(--popup-width);
@@ -305,12 +352,29 @@ nav {
     text-align: center;
 }
 
+#popup-form-title-div {
+    overflow: hidden;
+    text-align: center;
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+#popup-form-title {
+    margin-top: 0;
+    margin-bottom: calc(var(--between-popup-element-margin) / 2);
+
+    color: var(--text-color);
+}
+
 .field-div {
     text-align: center;
 }
 
-#popup-title-field,
-#popup-description-field {
+.popup-title-field,
+.popup-description-field {
+    margin-top: calc(var(--between-popup-element-margin) / 2);
+    margin-bottom: calc(var(--between-popup-element-margin) / 2);;
     padding: var(--popup-field-padding-sides) var(--popup-field-padding-top-bottom);
 
     width: var(--popup-field-width);
@@ -321,23 +385,17 @@ nav {
     font-size: var(--popup-font);
 }
 
-#popup-title-field {
-    margin-top: 0;
-    margin-bottom: calc(var(--between-popup-element-margin) / 2);
-
+.popup-title-field {
     height: var(--popup-field-height);
 }
 
-#popup-description-field {
-    margin-top: calc(var(--between-popup-element-margin) / 2);
-    margin-bottom: calc(var(--between-popup-element-margin) / 2);
-
+.popup-description-field {
     height: var(--popup-description-field-height);
 
     resize: none;
 }
 
-#popup-buttons-div {
+.popup-buttons-div {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 0;
@@ -351,16 +409,15 @@ nav {
     height: var(--popup-button-height);
 }
 
-#popup-done-button-div {
+.popup-done-button-div {
     text-align: left;
 }
 
-#popup-close-button-div {
+.popup-close-button-div {
     text-align: right;
 }
 
-#popup-done-button,
-#popup-close-button {
+.popup-button {
     padding: 0;
     margin: 0;
 
@@ -372,23 +429,35 @@ nav {
     border: 1px solid var(--border-color);
     border-radius: 5px;
 
+    color: var(--text-color);
     background: var(--primary-color);
 
     font-size: var(--form-button-font);
 }
 
-#popup-done-button:hover,
-#popup-close-button:hover {
+.popup-button:hover {
     background: var(--secondary-color);
 
     cursor: pointer;
 }
 
-.active-popup #popup-overlay {
+.active-create-board-popup #behind-overlay-content,
+.active-edit-board-popup #behind-overlay-content,
+.active-delete-board-popup #behind-overlay-content {
+    filter: blur(5px);
+}
+
+.active-create-board-popup #create-board-popup-overlay {
     visibility: visible;
     opacity: 1;
 }
 
-.active-popup #behind-overlay-content {
-    filter: blur(5px);
+.active-edit-board-popup #edit-board-popup-overlay {
+    visibility: visible;
+    opacity: 1;
+}
+
+.active-delete-board-popup #delete-board-popup-overlay {
+    visibility: visible;
+    opacity: 1;
 }

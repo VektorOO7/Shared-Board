@@ -49,14 +49,19 @@
 
     --title-text-font: 3vh;
     --username-display-text-font: 2vh;
+    --board-text-font: var(--text-font) * 0.8;
 
     --board-width: 400px;
     --board-height: 300px;
     --between-board-gap: 20px;
 
+    --board-top-buttons-margin-constant: 1.1vh;
+    --board-top-buttons-margin: calc(var(--board-top-buttons-margin-constant) + 1vh);
+    --board-bottom-buttons-margin: 1vh;
+
     --popup-width: 40vw;
     --popup-height: calc(var(--popup-field-height) + var(--popup-description-field-height) + var(--popup-button-height) + (2 * var(--popup-padding)) + (3 * var(--between-popup-element-margin)));
-
+    
     --between-popup-element-margin: 1.5vh;
     --popup-padding: 20px;
 
