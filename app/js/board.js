@@ -94,12 +94,42 @@ function renderNote(note) {
     noteText.classList.add('note-text');
     noteText.id = 'note-text-' + note.id;
     noteText.textContent = note.text;
-/*
-    const fileInput = document.createElement('input');
-    fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('name', 'file');
-    fileInput.setAttribute('id', 'file-' + note.id);
-*/
+
+    // Check if a file is attached to the note
+    if (note.file) {
+        // Create an element to display the file
+        const fileDisplay = document.createElement('div');
+        fileDisplay.classList.add('file-display');
+
+        // Check if the file is an image
+        if (note.file && note.file.type /*&& note.file.type.startsWith('image/')*/) {
+            // If it's an image, create an <img> tag to display it
+            const image = document.createElement('img');
+            image.src = 'data:' + note.file.type + ';base64,' + note.file.content; // Note: Assuming the file content is base64 encoded
+            fileDisplay.appendChild(image);
+
+             // If it's not an image, create a download link
+            
+             const downloadLink = document.createElement('a');
+             downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // Note: Assuming the file content is base64 encoded
+             downloadLink.download = note.file.name;
+             downloadLink.textContent = 'Download File';
+             fileDisplay.appendChild(downloadLink);
+
+        } /*else if(note.file.type.startsWith('image/')){
+            // If it's not an image, create a download link
+            
+            const downloadLink = document.createElement('a');
+            downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // Note: Assuming the file content is base64 encoded
+            downloadLink.download = note.file.name;
+            downloadLink.textContent = 'Download File';
+            fileDisplay.appendChild(downloadLink);
+        }*/
+
+        // Append the file display to the note container
+        newNote.appendChild(fileDisplay);
+    }
+
     // Create the delete button
     const deleteNoteButton = document.createElement('button');
     deleteNoteButton.classList.add('delete-note-button');
@@ -116,7 +146,6 @@ function renderNote(note) {
     // Append the note title, text, and delete button to the note container
     newNote.appendChild(noteTitle);
     newNote.appendChild(noteText);
-    //newNote.appendChild(fileInput);
     newNote.appendChild(deleteNoteButton);
 
     // Append the new note to the notes container
