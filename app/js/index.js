@@ -141,7 +141,7 @@ function renderBoard(board) {
     boardShareAndDeleteButtonsDiv.appendChild(boardDeleteButtonDiv);
 
     boardOpenButton.addEventListener('click', function() {
-        //window.location.href = 'board.html?board=' + board.board_id;
+        window.location.href = 'board.html?board=' + board.board_id;
     });
 
     boardEditButton.addEventListener('click', async function() {

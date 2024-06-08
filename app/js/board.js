@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     console.log("hey");
                     const decodedFileContent = atob(data.file);
-                    //console.log(decodedFileContent);
+                    console.log(decodedFileContent);
                     // Parse the JSON string
                     const jsonData = JSON.parse(decodedFileContent);
                     document.getElementById('boardTitle').textContent = jsonData.board_title;
