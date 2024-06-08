@@ -1,4 +1,3 @@
-
 const backButton = document.querySelector('#back-button');
 
 const newNoteButton = document.querySelector('#create-board-button');
@@ -156,14 +155,14 @@ function renderNote(note) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const boardId = getQueryParam('board');
-    //console.log(boardId);
-    if (boardId) { 
+    console.log(boardId);
+    if (boardId) {
         fetch(`php/get_board_content.php?board=${boardId}`)
             .then(response => response.json())
             .then(data => {
-                if (!data.success) {
+                if (data.error) {
                     document.getElementById('boardTitle').textContent = 'Error';
-                    document.getElementById('boardDescription').textContent = data.message;
+                    document.getElementById('boardDescription').textContent = data.error;
                 } else {
                     console.log("hey");
                     const decodedFileContent = atob(data.file);

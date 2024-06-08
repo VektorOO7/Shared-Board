@@ -68,24 +68,80 @@
             </main>
         </div>
 
-        <div id="popup-overlay">
-            <form id="popup-board-data-form">
+        <div class="popup-overlay" id="create-board-popup-overlay">
+            <form class="popup-data-form" id="create-board-popup-data-form">
+                <div id="popup-form-title-div">
+                    <h1 id="popup-form-title">Create new board</h1>
+                </div>
+
                 <div id="popup-form-body-div">
                     <div class="field-div">
-                        <input id="popup-title-field" type="text" name="title" placeholder="Board Title">
+                        <input class="popup-title-field" id="create-board-popup-title-field" type="text" name="title" placeholder="Board Title">
                     </div>
 
                     <div class="field-div">
-                        <textarea id="popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
+                        <textarea class="popup-description-field" id="create-board-popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
                     </div>
 
-                    <div id="popup-buttons-div">
+                    <div class="popup-buttons-div">
                         <div id="popup-done-button-div">
-                            <button id="popup-done-button" type="submit" class="text">Done</button>
+                            <button class="popup-button popup-done-button" id="create-board-popup-done-button" type="submit">Done</button>
                         </div>
                         
                         <div id="popup-close-button-div">
-                            <button id="popup-close-button" type="button" class="text">Cancel</button>
+                            <button class="popup-button popup-close-button" id="create-board-popup-close-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="edit-board-popup-overlay">
+            <form class="popup-data-form" id="edit-board-popup-data-form">
+                <div id="popup-form-title-div">
+                    <h1 id="popup-form-title">Create new board</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div class="field-div">
+                        <input class="popup-title-field" id="edit-board-popup-title-field" type="text" name="title" placeholder="Board Title" maxlength="32">
+                    </div>
+
+                    <div class="field-div">
+                        <textarea class="popup-description-field" id="edit-board-popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-done-button-div">
+                            <button class="popup-button popup-done-button" id="edit-board-popup-done-button" type="submit">Done</button>
+                        </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button class="popup-button popup-close-button" id="edit-board-popup-close-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="delete-board-popup-overlay">
+            <form class="popup-data-form" id="delete-board-popup-data-form">
+                <div id="popup-form-title-div">
+                    <h1 id="popup-form-title">Delete board</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div id="popup-form-text-div">
+                        <span class="delete-popup-form-text">Are you sure you want to delete the '<span id="delete-board-popup-board-title"></span>' board?</span>
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-yes-button-div">
+                            <button class="popup-button popup-yes-button" id="delete-board-popup-yes-button" type="submit">Yes</button>
+                        </div>
+                        
+                        <div id="popup-no-button-div">
+                            <button class="popup-button popup-no-button" id="delete-board-popup-no-button" type="button">No</button>
                         </div>
                     </div>
                 </div>
