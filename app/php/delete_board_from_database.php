@@ -75,15 +75,12 @@ try {
         exit();
     }
 
-    // Delete notes associated with the board
     $stmt = $connection->prepare('DELETE FROM notes WHERE board_id = :board_id');
     $stmt->execute(['board_id' => $board_id]);
 
-    // Delete the board
     $stmt = $connection->prepare('DELETE FROM boards WHERE board_id = :board_id');
     $stmt->execute(['board_id' => $board_id]);
 
-    // Delete associated directory and files
     $dir_path = realpath(dirname(__FILE__) . "/../.data/{$board_id}");
     if (is_dir($dir_path)) {
         if (deleteDirectory($dir_path)) {

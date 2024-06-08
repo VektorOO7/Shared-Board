@@ -14,7 +14,7 @@ function readJsonFile($boardId, $board_title){
     }
     $fileContent = file_get_contents($filePath);
 
-    // Encode the file content in base64
+    // Encode the file content in base64!!!
     $encodedContent = base64_encode($fileContent);
 
     return [
@@ -49,7 +49,6 @@ $user_id = $user['user_id'];
 if (isset($_GET['board'])) {
     $boardId = $_GET['board'];
     $stmt = $connection->prepare('SELECT board_title, user_id FROM boards WHERE board_id = :id');
-    //$stmt = $connection->prepare('SELECT board_title, content, user_id FROM boards WHERE id = :id');
     $stmt->execute(['id' => $boardId]);
     $board = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($board) {
@@ -58,21 +57,13 @@ if (isset($_GET['board'])) {
             $board_title = $board['board_title'];
             $result = readJsonFile($boardId, $board_title);
             echo json_encode($result);
-            /*echo json_encode([
-                'success' => true,
-                'board_title' => $board['board_title'],
-                //'content' => $board['content']
-            ]);*/
         } else {
             echo json_encode(['success' => false, 'error' => 'User not authorized to view this board']);
-            //echo json_encode(['error' => 'User not authorized to view this board']);
         }
     } else {
         echo json_encode(['success' => false, 'error' => 'Board not found']);
-        //echo json_encode(['error' => 'Board not found']);
     }
 } else {
     echo json_encode(['success' => false, 'error' => 'No board ID provided']);
-    //echo json_encode(['error' => 'No board ID provided']);
 }
 

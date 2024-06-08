@@ -29,7 +29,6 @@ async function getNotes(boardId) {
         const result = await response.json();
 
         if (result.success) {
-            //console.log('Notes fetched successfully:', result.notes);
             return {
                 success: true,
                 notes: result.notes
@@ -78,76 +77,63 @@ async function deleteNote(noteId) {
 }
 
 function renderNote(note) {
-    // Create the note container
     const newNote = document.createElement('div');
     newNote.classList.add('note');
 
-    // Create the note title element
     const noteTitle = document.createElement('div');
     noteTitle.classList.add('note-title');
-    noteTitle.id = 'note-title-' + note.id; // Use note.id for unique ID
-    noteTitle.textContent = note.title; // Use note.title
+    noteTitle.id = 'note-title-' + note.id;
+    noteTitle.textContent = note.title;
 
-    // Create the note text element
     const noteText = document.createElement('div');
     noteText.classList.add('note-text');
     noteText.id = 'note-text-' + note.id;
     noteText.textContent = note.text;
 
-    // Check if a file is attached to the note
     if (note.file) {
-        // Create an element to display the file
         const fileDisplay = document.createElement('div');
         fileDisplay.classList.add('file-display');
 
-        // Check if the file is an image
         if (note.file && note.file.type /*&& note.file.type.startsWith('image/')*/) {
             // If it's an image, create an <img> tag to display it
             const image = document.createElement('img');
-            image.src = 'data:' + note.file.type + ';base64,' + note.file.content; // Note: Assuming the file content is base64 encoded
+            image.src = 'data:' + note.file.type + ';base64,' + note.file.content; 
             fileDisplay.appendChild(image);
 
              // If it's not an image, create a download link
             
              const downloadLink = document.createElement('a');
-             downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // Note: Assuming the file content is base64 encoded
+             downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // The file content schould be base64 encoded
              downloadLink.download = note.file.name;
              downloadLink.textContent = 'Download File';
              fileDisplay.appendChild(downloadLink);
 
         } /*else if(note.file.type.startsWith('image/')){
-            // If it's not an image, create a download link
             
             const downloadLink = document.createElement('a');
-            downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // Note: Assuming the file content is base64 encoded
+            downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content;
             downloadLink.download = note.file.name;
             downloadLink.textContent = 'Download File';
             fileDisplay.appendChild(downloadLink);
         }*/
 
-        // Append the file display to the note container
         newNote.appendChild(fileDisplay);
     }
 
-    // Create the delete button
     const deleteNoteButton = document.createElement('button');
     deleteNoteButton.classList.add('delete-note-button');
-    deleteNoteButton.id = 'delete-note-button-' + note.id; // Use note.id for unique ID
+    deleteNoteButton.id = 'delete-note-button-' + note.id;
     deleteNoteButton.textContent = "Delete";
 
-    // Add event listener for the delete button
     deleteNoteButton.addEventListener('click', function() {
-        // Code to delete the note (e.g., send a request to the server to delete the note)
         console.log('Delete note with ID:', note.id);
         deleteNote(note.id);
     });
 
-    // Append the note title, text, and delete button to the note container
     newNote.appendChild(noteTitle);
     newNote.appendChild(noteText);
     newNote.appendChild(deleteNoteButton);
 
-    // Append the new note to the notes container
     const notesContainer = document.getElementById('notesContainer');
     notesContainer.appendChild(newNote);
 }
@@ -259,14 +245,12 @@ function hidePopup() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const boardId = getQueryParam('board'); // You should dynamically set this
+    const boardId = getQueryParam('board');
 
-    // Call getNotes to fetch and load the notes when the page loads
     try {
         const result = await getNotes(boardId);
         if (result.success) {
             console.log('Notes fetched successfully:', result.notes);
-            // Render the notes on the page
             result.notes.forEach(note => renderNote(note));
         } else {
             console.error('Failed to fetch notes:', result.message);
@@ -274,7 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         console.error('Error fetching notes:', error);
     }
-    //new notes button
+
     newNoteButton.addEventListener('click', async () => {
         try {
             await showPopup();

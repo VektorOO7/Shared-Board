@@ -18,7 +18,6 @@ try {
     exit();
 }
 
-// Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method Not Allowed']);
@@ -26,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 
-// Decode the JSON input
 $title = $_POST['title'] ?? null;
 $text = $_POST['description'] ?? null;
 $board_id = $_POST['board_id'] ?? null;
@@ -36,7 +34,6 @@ if (!$title || !$board_id) {
     exit();
 }
 
-// Validate and handle file upload
 if (isset($_FILES['file'])) { 
     $file = $_FILES['file'];
     $fileContent = file_get_contents($file['tmp_name']);
@@ -56,7 +53,7 @@ if (isset($_FILES['file'])) {
             'file' => $fileContent
         ]);
         //debugging
-        echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => [
+        /*echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => [
             'id' => $connection->lastInsertId(),
             'title' => $title,
             'text' => $text,
@@ -64,7 +61,7 @@ if (isset($_FILES['file'])) {
             'file_name' => $fileName,
             'file_type' => $fileType,
             'file_size' => $fileSize
-        ]]);
+        ]]);*/
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
     }
@@ -78,12 +75,12 @@ if (isset($_FILES['file'])) {
             'board_id' => $board_id,
         ]);
         //debugging
-        echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => [
+        /*echo json_encode(['success' => true, 'message' => 'Note saved successfully', 'note' => [
             'id' => $connection->lastInsertId(),
             'title' => $title,
             'text' => $text,
             'board_id' => $board_id,
-        ]]);
+        ]]);*/
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
     }
