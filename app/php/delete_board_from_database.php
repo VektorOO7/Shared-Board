@@ -36,9 +36,36 @@ if (!isset($input['board_id']) || !isset($input['user_id'])) {
 $board_id = $input['board_id'];
 $user_id = $input['user_id'];
 
+// Function to delete a directory and its contents
+function deleteDirectory($dir) {
+    if (!file_exists($dir)) {
+        return true;
+    }
+
+    if (!is_dir($dir)) {
+        return unlink($dir);
+    }
+
+    $items = scandir($dir);
+    foreach ($items as $item) {
+        if ($item == '.' || $item == '..') {
+            continue;
+        }
+
+        $path = $dir . DIRECTORY_SEPARATOR . $item;
+        if (is_dir($path)) {
+            deleteDirectory($path);
+        } else {
+            unlink($path);
+        }
+    }
+
+    return rmdir($dir);
+}
+
 // Check if the user is the owner of the board
 try {
-    $stmt = $connection->prepare('SELECT user_id FROM boards WHERE board_id = :board_id');
+    $stmt = $connection->prepare('SELECT user_id, board_title FROM boards WHERE board_id = :board_id');
     $stmt->execute(['board_id' => $board_id]);
     $board = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -56,9 +83,19 @@ try {
     $stmt = $connection->prepare('DELETE FROM boards WHERE board_id = :board_id');
     $stmt->execute(['board_id' => $board_id]);
 
-    echo json_encode(['success' => true, 'message' => 'Board and associated notes deleted successfully']);
+    // Delete associated directory and files
+    $dir_path = realpath(dirname(__FILE__) . "/../.data/{$board_id}");
+    if (is_dir($dir_path)) {
+        if (deleteDirectory($dir_path)) {
+            echo json_encode(['success' => true, 'message' => 'Board and associated notes and files deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete the directory']);
+        }
+    } else {
+        echo json_encode(['success' => true, 'message' => 'Board and associated notes deleted, but no directory found']);
+    }
+
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
-?>
