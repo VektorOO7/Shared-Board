@@ -1,6 +1,6 @@
 const backButton = document.querySelector('#back-button');
 
-const newNoteButton = document.querySelector('#create-board-button');
+const newNoteButton = document.querySelector('#create-note-button');
 
 const popupBoardDataForm = document.querySelector('#popup-board-data-form');
 
@@ -8,9 +8,17 @@ const noteContainer = document.querySelector('.board-container');
 
 let noteCounter = 1;
 
+let renderedNotes = [];
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
+}
+
+function unrenderNote(note) {
+    renderedNotes.splice(renderedNotes.indexOf(note), 1);
+
+    note.remove();
 }
 
 async function getNotes(boardId) {
@@ -63,9 +71,10 @@ async function deleteNote(noteId) {
 
         if (result.success) {
             console.log('Note deleted successfully:', result.message);
-            const noteElement = document.getElementById(`note-${noteId}`);
+            const noteElement = document.getElementById('note-' + noteId);
             if (noteElement) {
-                noteElement.remove();
+                unrenderNote(noteElement);
+                //noteElement.remove();
             }
             location.reload();
         } else {
@@ -79,6 +88,7 @@ async function deleteNote(noteId) {
 function renderNote(note) {
     const newNote = document.createElement('div');
     newNote.classList.add('note');
+    renderedNotes.push(newNote);
 
     const noteTitle = document.createElement('div');
     noteTitle.classList.add('note-title');
@@ -199,7 +209,7 @@ async function showPopup() {
             const noteFile = noteFileInput.files[0];
 
             if (!noteTitle) {
-                console.error('Title and Description cannot be empty');
+                console.error('Title cannot be empty');
                 return;
             }
 
@@ -217,10 +227,11 @@ async function showPopup() {
 
                 const result = await response.json();
                 if (result.success) {
-                    console.log('Note saved successfully:', result);
+                    //console.log('Note saved successfully:', result);
                     renderNote(result.note);
                     hidePopup();
-                    resolve(result.note);
+                    location.reload();
+                    //resolve(result.note);
                 } else {
                     console.error('Error saving note:', result.message);
                     reject(result.message);
