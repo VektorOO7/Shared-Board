@@ -9,89 +9,112 @@
         <script src="./js/board.js" defer></script>
 
         <title>Board</title>
-
-        <script type="text/javascript">
-
-        </script>
     </head>
+
     <body>
-        <header>
-            <nav>
-                <div class="grid-element">
-                    <div id="create-note-button-div">
-                        <button id="create-note-button">
-                            <svg class="bi bi-plus-lg" id="create-note-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                            </svg>
 
-                            <p class="text">Create new Note</p>
-                        </button>
-                    </div>
-                </div>
+        <div id="behind-overlay-content">
+            <header>
+                <nav>
+                    <div class="grid-element">
+                        <div id="create-note-button-div">
+                            <button id="create-note-button">
+                                <svg class="bi bi-plus-lg" id="create-note-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                </svg>
 
-                <div class="grid-element">
-                    <div id="nav-title">
-                        <!--<h1 id="title-text">Board</h1>!-->
-                        <h1 id="boardTitle">Loading...</h1>
-                    </div>
-                </div>
-
-                <div class="grid-element" id="dropdown-menu-div">
-                    <div class="grid-sub-elements" id="username-display-div">
-                        <span id="username-display"></span>
-                    </div>
-
-                    <div class="grid-sub-elements" id="account-button-div">
-                        <button id="back-button">
-                            <svg class="bi bi-arrow-right-circle" id="back-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zM1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8z"/>
-                                <path fill-rule="evenodd" d="M4.646 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3z"/>
-                                <path fill-rule="evenodd" d="M10.5 8a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1h4z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </nav>
-        </header>
-
-        <main>
-            <div id="boardContent">
-                <p id="boardDescription">Please wait while we load the content.</p>
-            </div>
-            <div id="notesContainer">
-
-            </div>
-            <div id="popup-overlay">
-                <form id="popup-board-data-form">
-                    <div id="popup-form-title-div">
-                        <h1 id="popup-form-title">Create new Note</h1>
-                    </div>
-                    <div id="popup-form-body-div">
-                        <div class="field-div">
-                            <input id="popup-title-field" type="text" name="title" placeholder="Note Title">
+                                <p class="text">Create new Note</p>
+                            </button>
                         </div>
+                    </div>
+
+                    <div class="grid-element">
+                        <div id="nav-title">
+                            <h1 id="board-title-text">Loading...</h1>
+                        </div>
+                    </div>
+
+                    <div class="grid-element">
+                        <div id="back-button-div">
+                            <button id="back-button">
+                                <svg class="bi bi-arrow-left" id="back-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                                </svg>
+
+                                <p class="text">Back</p>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <main>
+                <div id="notes-container">
+                </div>
+            </main>
+        </div>
+
+        <div id="popup-overlay">
+            <form id="popup-board-data-form">
+                <div id="popup-form-body-div">
+                    <div class="field-div">
+                        <input id="popup-title-field" type="text" name="title" placeholder="Note Title">
+                    </div>
     
-                        <div class="field-div">
-                            <textarea id="popup-description-field" name="description" rows="4"
-                             cols="50" placeholder="Note text">
-                            </textarea>
+                    <div class="field-div">
+                        <textarea id="popup-description-field" name="description" rows="4"
+                         cols="50" placeholder="Note text">
+                        </textarea>
+                    </div>
+                    <div class="file-input">
+                        <label for="file">Choose a file:</label>
+                        <input type="file" name="file" id="file">
+                    </div>
+                    <div id="popup-buttons-div">
+                        <div id="popup-done-button-div">
+                            <button id="popup-done-button" type="submit" class="text">Done</button>
                         </div>
-                        <div class="file-input">
-                            <label for="file">Choose a file:</label>
-                            <input type="file" name="file" id="file">
-                        </div>
-                        <div id="popup-buttons-div">
-                            <div id="popup-done-button-div">
-                                <button id="popup-done-button" type="submit" class="text">Done</button>
-                            </div>
-                            
-                            <div id="popup-close-button-div">
-                                <button id="popup-close-button" type="button" class="text">Cancel</button>
-                            </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button id="popup-close-button" type="button" class="text">Cancel</button>
                         </div>
                     </div>
-                </form>
-            </div>
-        </main>
+                </div>
+            </form>
+        </div>
+
+        <!--
+        <div class="popup-overlay" id="create-note-popup-overlay">
+            <form class="popup-data-form" id="create-note-popup-data-form">
+                <div id="popup-form-title-div">
+                    <h1 id="popup-form-title">Create new note</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div class="field-div">
+                        <input class="popup-title-field" id="create-note-popup-title-field" type="text" name="title" placeholder="Note Title">
+                    </div>
+
+                    <div class="field-div">
+                        <textarea class="popup-description-field" id="create-note-popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
+                    </div>
+
+                    <div class="file-input">
+                        <input type="file" name="file" id="file">
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-done-button-div">
+                            <button class="popup-button popup-done-button" id="create-note-popup-done-button" type="submit">Done</button>
+                        </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button class="popup-button popup-close-button" id="create-note-popup-close-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        -->
     </body>
 </html>
