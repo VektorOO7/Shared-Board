@@ -1,6 +1,3 @@
-
-
-
 /*
     Main elements css
 */
@@ -8,9 +5,7 @@
 body {
     margin: 0;
     height: 100vh;
-
     min-width: 600px;
-
     background-color: var(--primary-color);
 }
 
@@ -18,22 +13,17 @@ header {
     margin: 0;
     padding: 8px 8px 8px 8px;
     border-bottom: 2px solid var(--border-color);
-
     min-height: 56px;
-
     background: var(--secondary-color);
 }
 
 main {
     margin: 0px 0px 8px 0px;
     padding: 0px 8px 0px 8px;
-
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
-
     height: calc(100vh - var(--nav-bar-height));
-
     background-color: var(--primary-color);
 }
 
@@ -41,9 +31,7 @@ nav {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 0;
-
     height: var(--nav-bar-height);
-
     background-color: var(--secondary-color);
 }
 
@@ -57,8 +45,28 @@ nav {
 }
 
 #create-note-button-div,
-#back-button-div,
 #nav-title {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    align-items: center;
+}
+
+#dropdown-menu-div {
+    display: grid;
+    grid-template-columns: 1fr var(--nav-bar-height);
+    grid-gap: 0;
+
+    height: var(--nav-bar-height);
+}
+
+.grid-sub-elements {
+    display: grid;
+    align-items: center;
+}
+
+#back-button-div {
     width: 100%;
     height: 100%;
 
@@ -68,25 +76,42 @@ nav {
 
 #nav-title {
     text-align: center;
+    color: var(--text-color);
+    font-family: var(--text-font); 
+
 }
 
-#board-title-text {
+#title-text {
     color: var(--text-color);
 
     font-size: var(--title-text-font);
 }
 
+#username-display-div {
+    text-align: right;
+}
+
+#username-display {
+    padding-right: 0.5vw;
+
+    color: var(--text-color);
+
+    font-size: var(--username-display-text-font);
+}
+
+#back-button-div {
+    display: inline-flex;
+    align-items: center;
+}
+
 #create-note-button,
 #back-button {
     padding: 0;
-
-    height: var(--nav-bar-height);
-
     border: none;
     border-radius: 5px;
-    
+
     position: relative;
-    
+
     background: var(--secondary-color);
 }
 
@@ -98,23 +123,26 @@ nav {
 }
 
 #create-note-button {
+    height: var(--nav-bar-height);
     width: calc(var(--nav-bar-height) * 2.25);
 
     left: 0;
 }
 
-
-#back-button {
-    width: calc(var(--nav-bar-height) * 1);
+#back-button {/*arrow is very small for some reason*/
+    height: calc(var(--nav-bar-height) * 1.09);
+    width: calc(var(--nav-bar-height) * 1.09);
+    background-color: var(--secondary-color);
+    border: none;
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
 
     left: calc(100% - calc(var(--nav-bar-height) * 1));
-}
-
-#create-note-button-svg,
-#back-button-svg {
-    height: calc(var(--nav-bar-height) * 0.5);
-    width: auto;
-    fill: var(--text-color);
 }
 
 .text {
@@ -125,73 +153,95 @@ nav {
     font-size: var(--text-font);
 }
 
-/*
-    Boards css
-*/
+#create-note-button-svg {
+    height: calc(var(--nav-bar-height) * 0.5);
+    width: auto;
 
-/*****************************************************************************************************************************************************************************/
-
-#board-title-text {
-    color: var(--text-color); /* Ensures the text color matches the global text color */
-    text-align: center;
+    fill: var(--text-color);
 }
 
+#back-button-svg {/*arrow size is controlled in #back-button*/
+    width: calc(var(--nav-bar-height) * 0.8);
+    height: calc(var(--nav-bar-height) * 0.8);
+
+
+    fill: var(--text-color);
+}
+/*Notes-css*/
+
+/* Container for the notes */
 .notes-container {
     display: grid;
-    gap: var(--between-note-gap);
-    padding: var(--between-note-gap);
-    grid-template-columns: repeat(auto-fill, minmax(var(--note-width), 1fr));
+    gap: var(--between-board-gap);
+    padding: var(--between-board-gap);
+    grid-template-columns: repeat(auto-fill, minmax(var(--board-width), 1fr));
     justify-items: center;
     background-color: var(--primary-color);
 }
 
+/* Note styling */
 .note {
     display: flex;
     flex-direction: column;
-    width: var(--note-width);
-    height: var(--note-height);
+    width: calc(var(--board-width)+100);
+    height: calc(var(--board-height)+100);
     border: 1px solid var(--border-color);
     border-radius: 5px;
     background-color: var(--secondary-color);
+    overflow: hidden;
+    margin:10px;
 }
 
 .note-title,
-.note-text,
-.note-description {
-    padding: 3px 5px;
+.note-text{
+
     color: var(--text-color);
 }
 
 .note-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-    height: 1em;
-    border-bottom: 1px solid var(--border-color);
     text-align: center;
+    padding: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 30px;
 }
 
 .note-text {
-    margin-bottom: 10px;
+    padding: 10px; 
     flex-grow: 1;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--secondary-color);
 }
 
-.file-display img {
-    max-width: 100%;
-    height: auto;
-    display: block;
+.file-display {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: 100%;
     margin: 10px 0;
+}
+
+
+.file-display img {
+    width: 250px;
+    height: 250px;
+    display: block;
+ 
 }
 
 .file-display a {
     display: block;
-    margin: 10px 0;
+    margin: 10px auto;
     color: #007bff;
     text-decoration: none;
+    font-size: 12px; /* Adjust font size to fit better with the smaller images */
 }
 
 .file-display a:hover {
@@ -199,17 +249,29 @@ nav {
 }
 
 .delete-note-button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     padding: 5px 10px;
+    margin: 5px;
     border-radius: 3px;
     cursor: pointer;
+    align-self: center;
 }
 
 .delete-note-button:hover {
-    background-color: #ff0000;
+    background-color: var(--primary-color);
 }
+
+/* Button container styling */
+.board-delete-buttons-div {
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: space-around; /* Space buttons evenly */
+    padding: 5px; /* Add padding */
+}
+
+
+
 
 /*Popup css*/
 
@@ -222,8 +284,8 @@ nav {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 80%;  /* Adjust width as needed */
-    height: 80%; /* Adjust height as needed */
+    width: 80%;
+    height: 80%;
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
@@ -231,9 +293,9 @@ nav {
     opacity: 0;
     transition: visibility 0s, opacity 0.3s ease;
     background: var(--secondary-color);
-    transform: translate(-50%, -50%); /* Center the overlay */
-    border-radius: 10%; /* Optional: to make rounded corners */
-    border: 2px solid var(--border-color); /* Add border */
+    transform: translate(-50%, -50%);
+    border-radius: 10%;
+    border: 2px solid var(--border-color);
 }
 
 #popup-form-title-div {
@@ -254,16 +316,13 @@ nav {
 
 #popup-note-data-form {
     padding: var(--popup-padding);
-
     width: var(--popup-width);
     height: var(--popup-height);
-
     border: var(--form-field-border) solid var(--border-color);
     border-radius: 8px;
-    
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);   
     color: var(--text-color);
     background: var(--secondary-color);
-
     text-align: center;
 }
 
@@ -274,29 +333,24 @@ nav {
 #popup-title-field,
 #popup-description-field {
     padding: var(--popup-field-padding-sides) var(--popup-field-padding-top-bottom);
-
     width: var(--popup-field-width);
-
     border: var(--popup-field-border) solid lightgrey;
     border-radius: 5px;
-
     font-size: var(--popup-font);
 }
 
 #popup-title-field {
     margin-top: 0;
     margin-bottom: calc(var(--between-popup-element-margin) / 2);
-
     height: var(--popup-field-height);
 }
 
 #popup-description-field {
     margin-top: calc(var(--between-popup-element-margin) / 2);
     margin-bottom: calc(var(--between-popup-element-margin) / 2);
-
     height: var(--popup-description-field-height);
-
     resize: none;
+    
 }
 
 #popup-buttons-div {
@@ -304,11 +358,9 @@ nav {
     grid-template-columns: 1fr 1fr;
     grid-gap: 0;
     justify-content: center;
-
     margin: auto;
     margin-top: calc(var(--between-popup-element-margin) / 2);
     margin-bottom: 0;
-
     width: var(--popup-field-width);
     height: var(--popup-button-height);
 }
@@ -325,24 +377,18 @@ nav {
 #popup-close-button {
     padding: 0;
     margin: 0;
-
     width: var(--popup-button-width);
     height: var(--popup-button-height);
-
     position: relative;
-
     border: 1px solid var(--border-color);
     border-radius: 5px;
-
     background: var(--primary-color);
-
     font-size: var(--form-button-font);
 }
 
 #popup-done-button:hover,
 #popup-close-button:hover {
     background: var(--secondary-color);
-
     cursor: pointer;
 }
 

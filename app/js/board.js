@@ -99,6 +99,9 @@ function renderNote(note) {
     noteText.id = 'note-text-' + note.id;
     noteText.textContent = note.text;
 
+    newNote.appendChild(noteTitle);
+    newNote.appendChild(noteText);
+   
     if (note.file) {
         const fileDisplay = document.createElement('div');
         fileDisplay.classList.add('file-display');
@@ -128,11 +131,7 @@ function renderNote(note) {
         //console.log('Delete note with ID:', note.id); Debugging
         deleteNote(note.id);
     });
-
-    newNote.appendChild(noteTitle);
-    newNote.appendChild(noteText);
     newNote.appendChild(deleteNoteButton);
-
     const notesContainer = document.getElementById('notes-container');
     notesContainer.appendChild(newNote);
 }
