@@ -225,6 +225,12 @@ nav {
     height: var(--board-description-height);
 
     overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--secondary-color);
 }
 
 .board-title-text,
@@ -249,11 +255,6 @@ nav {
 
 .board-description-text {
     font-size: var(--board-description-font-size);
-}
-
-.board-description {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-color) var(--secondary-color);
 }
 
 .board-open-and-edit-buttons-div,
