@@ -54,5 +54,13 @@ INSERT INTO boards (board_id, user_id, board_title, board_share_password) VALUES
 ('3c5c110c-3c3d-41cf-8189-ba911636d9ed', 1, 'Lorem ipsum dolor sit amet, cons', 'cearrzYNCm'),
 ('6892fe41-95ad-4ad3-a9d3-b60c84cb988a', 2, 'Shared Board', 'cvG03HQtIG');
 
+INSERT INTO notes (title, text, board_id, file_name, file, file_type, file_size) VALUES
+('Lorem ipsum', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent purus ante, porta sit amet est a, porttitor vulputate enim. Curabitur ut dui elit. Aliquam at congue metus. Aenean tempus, nulla laoreet ultricies rutrum, lorem nibh posuere augue, in ornare eros nulla at erat. Suspendisse vel purus lectus. Aenean sit amet consequat leo. Etiam at nisi eget massa sollicitudin molestie.',
+'641ab44f-9f8f-4c07-8ff4-dc54986d8c5b', NULL, NULL, NULL, NUll),
+('Lorem ipsum 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent purus ante, porta sit amet est a, porttitor vulputate enim. Curabitur ut dui elit. Aliquam at congue metus. Aenean tempus, nulla laoreet ultricies rutrum, lorem nibh posuere augue, in ornare eros nulla at erat. Suspendisse vel purus lectus. Aenean sit amet consequat leo. Etiam at nisi eget massa sollicitudin molestie.',
+'641ab44f-9f8f-4c07-8ff4-dc54986d8c5b', NULL, NULL, NULL, NUll),
+('Lorem ipsum 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing. Praesent purus ante, porta sit amet est a, porttitor vulputate enim. Curabitur ut dui elit. Aliquam at congue metus. Aenean tempus, nulla laoreet ultricies rutrum, lorem nibh posuere augue, in ornare eros nulla at erat. Suspendisse vel purus lectus. Aenean sit amet consequat leo. Etiam at nisi eget massa sollicitudin molestie.',
+'2913fa80-b584-462a-8765-8b0ed9d9af24', NULL, NULL, NULL, NUll),;
+
 /* This will share the 'Shared Board' of 'user' with 'test' */
 INSERT INTO shared_boards (board_id, user_id) VALUES ('6892fe41-95ad-4ad3-a9d3-b60c84cb988a', 3);
