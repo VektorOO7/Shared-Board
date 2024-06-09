@@ -36,7 +36,6 @@ if (!isset($input['board_id']) || !isset($input['user_id'])) {
 $board_id = $input['board_id'];
 $user_id = $input['user_id'];
 
-// Function to delete a directory and its contents
 function deleteDirectory($dir) {
     if (!file_exists($dir)) {
         return true;
@@ -63,7 +62,6 @@ function deleteDirectory($dir) {
     return rmdir($dir);
 }
 
-// Check if the user is the owner of the board
 try {
     $stmt = $connection->prepare('SELECT user_id, board_title FROM boards WHERE board_id = :board_id');
     $stmt->execute(['board_id' => $board_id]);
