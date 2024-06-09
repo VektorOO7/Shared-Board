@@ -13,6 +13,19 @@ CREATE TABLE IF NOT EXISTS boards (
     board_id VARCHAR(36) PRIMARY KEY,
     user_id INT NOT NULL,
 	board_title VARCHAR(32) NOT NULL
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE notes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    text TEXT NOT NULL,
+    board_id VARCHAR(255) NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file LONGBLOB NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    file_size INT NOT NULL,
+    FOREIGN KEY (board_id) REFERENCES boards(board_id)
 );
 
 INSERT INTO users (username, email, hashed_password) VALUES

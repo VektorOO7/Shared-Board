@@ -141,7 +141,7 @@ function renderBoard(board) {
     boardShareAndDeleteButtonsDiv.appendChild(boardDeleteButtonDiv);
 
     boardOpenButton.addEventListener('click', function() {
-        //window.location.href = 'board.html?board=' + board.board_id;
+        window.location.href = 'board.html?board=' + board.board_id;
     });
 
     boardEditButton.addEventListener('click', async function() {
@@ -329,7 +329,30 @@ async function loadBoardsFromServer(userId) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function deleteBoardFromServer(boardId, userId) {
     // supposed to use delete_board_from_database.php
+    try {
+        const response = await fetch('php/delete_board_from_database.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ board_id: boardId, user_id: userId })
+        });
 
+        const data = await response.json();
+
+        if (data.success) {
+            console.log('Board deleted successfully');
+            // Remove the board element from the DOM
+            const boardElement = document.getElementById('board-' + boardId);
+            if (boardElement) {
+                boardElement.remove();
+            }
+        } else {
+            console.error('Error deleting board:', data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
     console.log('Deleted board with id: "' + boardId + '" for user "' + userId + '"');
 }
 
