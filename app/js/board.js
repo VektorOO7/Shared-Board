@@ -144,7 +144,7 @@ function renderNote(note) {
     newNote.appendChild(noteText);
     newNote.appendChild(deleteNoteButton);
 
-    const notesContainer = document.getElementById('notesContainer');
+    const notesContainer = document.getElementById('notes-container');
     notesContainer.appendChild(newNote);
 }
 
@@ -157,24 +157,21 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    document.getElementById('boardTitle').textContent = 'Error';
-                    document.getElementById('boardDescription').textContent = data.error;
+                    document.getElementById('board-title-text').textContent = 'Error';
                 } else {
                     console.log("hey");
                     const decodedFileContent = atob(data.file);
                     console.log(decodedFileContent);
                     // Parse the JSON string
                     const jsonData = JSON.parse(decodedFileContent);
-                    document.getElementById('boardTitle').textContent = jsonData.board_title;
-                    document.getElementById('boardDescription').textContent = jsonData.description;
+                    document.getElementById('board-title-text').textContent = jsonData.board_title;
                 }
             })
             .catch(error => {
                 console.error('Error fetching board content:', error);
             });
     } else {
-        document.getElementById('boardTitle').textContent = 'Error';
-        document.getElementById('boardDescription').textContent = 'No board ID provided in the URL.';
+        document.getElementById('board-title-text').textContent = 'Error';
     }
 });
 

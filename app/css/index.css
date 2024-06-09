@@ -225,20 +225,12 @@ nav {
     height: var(--board-description-height);
 
     overflow-y: auto;
-    overflow-x: hidden;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-color) var(--secondary-color);
 }
 
 .board-title-text,
 .board-owner-text,
 .board-description-text {
     display: block;
-
-    color: var(--text-color);
 }
 
 .board-title-text {
@@ -255,6 +247,11 @@ nav {
 
 .board-description-text {
     font-size: var(--board-description-font-size);
+}
+
+.board-description {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--secondary-color);
 }
 
 .board-open-and-edit-buttons-div,
@@ -347,7 +344,6 @@ nav {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     
-    color: var(--text-color);
     background: var(--secondary-color);
 
     text-align: center;
