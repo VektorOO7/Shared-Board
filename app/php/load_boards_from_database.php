@@ -30,9 +30,9 @@
         $db = new DB();
         $conn = $db->getConnection();
 
-        $sql = "SELECT board_id, board_title, board_share_password FROM boards WHERE user_id = ?";
+        $sql = "SELECT board_id, board_title, board_share_password FROM boards WHERE user_id = ? UNION SELECT b.board_id, b.board_title, b.board_share_password FROM boards b JOIN shared_boards sb ON b.board_id = sb.board_id WHERE sb.user_id = ?;";
         $stmnt = $conn->prepare($sql);
-        $stmnt->execute([$userId]);
+        $stmnt->execute([$userId, $userId]);
 
         $boardsData = $stmnt->fetchAll(PDO::FETCH_ASSOC);
         $boardCount = count($boardsData);

@@ -53,3 +53,6 @@ INSERT INTO boards (board_id, user_id, board_title, board_share_password) VALUES
 ('6f31adc9-83b7-4cc6-9528-b61b83d92a0b', 1, 'Admin Test Board 3', 'bTcOyinxlM'),
 ('3c5c110c-3c3d-41cf-8189-ba911636d9ed', 1, 'Lorem ipsum dolor sit amet, cons', 'cearrzYNCm'),
 ('6892fe41-95ad-4ad3-a9d3-b60c84cb988a', 2, 'Shared Board', 'cvG03HQtIG');
+
+/* This will share the 'Shared Board' of 'user' with 'test' */
+INSERT INTO shared_boards (board_id, user_id) VALUES ('6892fe41-95ad-4ad3-a9d3-b60c84cb988a', 3);
