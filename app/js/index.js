@@ -156,6 +156,9 @@ function renderBoard(board) {
 
     boardShareButton.addEventListener('click', function() {
         // will be added later
+
+        //  => the password link
+        window.location.href = 'board.html?board=' + board.board_id + '&share-password=' + board.board_share_password;
     });
 
     boardDeleteButton.addEventListener('click', async function() {
@@ -226,9 +229,24 @@ async function generateUniqueBoardId() {
     return boardId;
 }
 
+function generateSharePassword() {
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    const length = 10;
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+
+        result += characters[randomIndex];
+    }
+
+    return result;
+}
+
 async function createNewBoardJSONObject(boardTitle, owner_username, user_id, description) {
     return {
         'board_id': await generateUniqueBoardId(),
+        'board_share_password': generateSharePassword(),
         'board_title': boardTitle,
         'owner_username': owner_username,
         'user_id': user_id,
@@ -239,13 +257,13 @@ async function createNewBoardJSONObject(boardTitle, owner_username, user_id, des
 
 // returns a promise with: success & message
 async function saveBoardOnServer(boardJSON) {
-    async function sendBoardDataToDatabase(boardId, userId, boardTitle) {
+    async function sendBoardDataToDatabase(boardId, userId, boardTitle, boardSharePassword) {
         const response = await fetch('php/save_board_to_database.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle })
+            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle, board_share_password: boardSharePassword })
         });
 
         const result = await response.json();
@@ -262,8 +280,9 @@ async function saveBoardOnServer(boardJSON) {
     const boardId = boardJSON.board_id;
     const userId = boardJSON.user_id;
     const boardTitle = boardJSON.board_title;
+    const boardSharePassword = boardJSON.board_share_password;
 
-    if (await sendBoardDataToDatabase(boardId, userId, boardTitle)) {
+    if (await sendBoardDataToDatabase(boardId, userId, boardTitle, boardSharePassword)) {
         const result = await saveBoard(boardJSON);
 
         return result;
@@ -290,7 +309,7 @@ async function loadBoardsFromServer(userId) {
         if (result.success) {
             return {
                 boards_count: result.count,
-                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title }))
+                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title, board_share_password: board.board_share_password }))
             };
         } else {
             console.error(result.message);

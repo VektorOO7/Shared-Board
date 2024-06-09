@@ -31,7 +31,7 @@
         $db = new DB();
         $conn = $db->getConnection();
 
-        $sql = "SELECT board_id, board_title FROM boards WHERE user_id = ?";
+        $sql = "SELECT board_id, board_title, board_share_password FROM boards WHERE user_id = ?";
         $stmnt = $conn->prepare($sql);
         $stmnt->execute([$userId]);
 
