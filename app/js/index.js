@@ -12,7 +12,7 @@ const editBoardPopupDataForm = document.querySelector('#edit-board-popup-data-fo
 const deleteBoardPopupDataForm = document.querySelector('#delete-board-popup-data-form');
 
 let renderedBoards = [];
-let boardCounter = 1; // for the database(it strats counting from 1)
+let boardCounter = 1; 
 
 async function loadSession() {
     try {
@@ -25,11 +25,9 @@ async function loadSession() {
         const data = await response.json();
 
         if (!data.active) {
-            // console.log('Session is not active');
 
             window.location.href = 'login.html';
         } else {
-            // console.log('Session is active', data.user);
 
             userData = data.user;
         }
@@ -347,7 +345,6 @@ async function loadBoardsFromServer(userId) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function deleteBoardFromServer(boardId, userId) {
-    // supposed to use delete_board_from_database.php
     try {
         const response = await fetch('php/delete_board_from_database.php', {
             method: 'POST',

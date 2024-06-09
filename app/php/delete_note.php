@@ -17,7 +17,6 @@ try {
     exit();
 }
 
-// Decode the JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (json_last_error() !== JSON_ERROR_NONE) {
@@ -25,7 +24,6 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     exit();
 }
 
-// Validate the input
 $note_id = $input['note_id'] ?? null;
 
 if (!$note_id) {

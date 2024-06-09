@@ -70,11 +70,10 @@ async function deleteNote(noteId) {
         const result = await response.json();
 
         if (result.success) {
-            console.log('Note deleted successfully:', result.message);
+            //console.log('Note deleted successfully:', result.message); debugging
             const noteElement = document.getElementById('note-' + noteId);
             if (noteElement) {
                 unrenderNote(noteElement);
-                //noteElement.remove();
             }
             location.reload();
         } else {
@@ -105,27 +104,17 @@ function renderNote(note) {
         fileDisplay.classList.add('file-display');
 
         if (note.file && note.file.type /*&& note.file.type.startsWith('image/')*/) {
-            // If it's an image, create an <img> tag to display it
             const image = document.createElement('img');
             image.src = 'data:' + note.file.type + ';base64,' + note.file.content; 
             fileDisplay.appendChild(image);
 
-             // If it's not an image, create a download link
-            
              const downloadLink = document.createElement('a');
              downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // The file content schould be base64 encoded
              downloadLink.download = note.file.name;
              downloadLink.textContent = 'Download File';
              fileDisplay.appendChild(downloadLink);
 
-        } /*else if(note.file.type.startsWith('image/')){
-            
-            const downloadLink = document.createElement('a');
-            downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content;
-            downloadLink.download = note.file.name;
-            downloadLink.textContent = 'Download File';
-            fileDisplay.appendChild(downloadLink);
-        }*/
+        }
 
         newNote.appendChild(fileDisplay);
     }
@@ -136,7 +125,7 @@ function renderNote(note) {
     deleteNoteButton.textContent = "Delete";
 
     deleteNoteButton.addEventListener('click', function() {
-        console.log('Delete note with ID:', note.id);
+        //console.log('Delete note with ID:', note.id); Debugging
         deleteNote(note.id);
     });
 
@@ -151,7 +140,7 @@ function renderNote(note) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const boardId = getQueryParam('board');
-    console.log(boardId);
+    //console.log(boardId); debugging
     if (boardId) {
         fetch(`php/get_board_content.php?board=${boardId}`)
             .then(response => response.json())
@@ -159,10 +148,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.error) {
                     document.getElementById('board-title-text').textContent = 'Error';
                 } else {
-                    console.log("hey");
                     const decodedFileContent = atob(data.file);
-                    console.log(decodedFileContent);
-                    // Parse the JSON string
+                    //console.log(decodedFileContent); debugging
+                    
                     const jsonData = JSON.parse(decodedFileContent);
                     document.getElementById('board-title-text').textContent = jsonData.board_title;
                 }
@@ -258,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         const result = await getNotes(boardId);
         if (result.success) {
-            console.log('Notes fetched successfully:', result.notes);
+            //console.log('Notes fetched successfully:', result.notes); debugging
             result.notes.forEach(note => renderNote(note));
         } else {
             console.error('Failed to fetch notes:', result.message);
