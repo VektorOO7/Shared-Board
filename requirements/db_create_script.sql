@@ -47,9 +47,9 @@ INSERT INTO users (username, email, hashed_password) VALUES
 ('user', 'user@user.user', '$2y$10$YaoqcDMzKfRVHmFbKs6\/5u1pDyaS2IQppv4k5a3OYiu8fbp.3I.J6'),
 ('test', 'test@test.test', '$2y$10$BxFSktxwOdAXJSNYiSNIRO2c93CiTn4KHTTyoPVMjErx0hwfAzI0S');
 
-INSERT INTO boards (board_id, user_id, board_title) VALUES
-('641ab44f-9f8f-4c07-8ff4-dc54986d8c5b', 1, 'Admin Test Board 1'),
-('2913fa80-b584-462a-8765-8b0ed9d9af24', 1, 'Admin Test Board 2'),
-('6f31adc9-83b7-4cc6-9528-b61b83d92a0b', 1, 'Admin Test Board 3'),
-('3c5c110c-3c3d-41cf-8189-ba911636d9ed', 1, 'Lorem ipsum dolor sit amet, cons'),
-('6892fe41-95ad-4ad3-a9d3-b60c84cb988a', 2, 'Shared Board');
+INSERT INTO boards (board_id, user_id, board_title, board_share_password) VALUES
+('641ab44f-9f8f-4c07-8ff4-dc54986d8c5b', 1, 'Admin Test Board 1', 'CnEVohEukW'),
+('2913fa80-b584-462a-8765-8b0ed9d9af24', 1, 'Admin Test Board 2', 'dlUEVmGerS'),
+('6f31adc9-83b7-4cc6-9528-b61b83d92a0b', 1, 'Admin Test Board 3', 'bTcOyinxlM'),
+('3c5c110c-3c3d-41cf-8189-ba911636d9ed', 1, 'Lorem ipsum dolor sit amet, cons', 'cearrzYNCm'),
+('6892fe41-95ad-4ad3-a9d3-b60c84cb988a', 2, 'Shared Board', 'cvG03HQtIG');
