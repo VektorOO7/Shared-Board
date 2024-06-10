@@ -259,7 +259,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         //console.log(userId); // debugging
 
         if (sharePassword !== null) {
-            const sharedBoardResult = tryGettingSharedBoard(boardId, sharePassword, userId);
+            const sharedBoardResult = await tryGettingSharedBoard(boardId, sharePassword, userId);
+
+            console.log('Shared Board Result:', sharedBoardResult); // debugging
 
             if (!sharedBoardResult.success) {
                 console.error(sharedBoardResult.message);
@@ -269,6 +271,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (boardId) {
             try {
                 const result = await getBoardContent(boardId, userData.userId);
+
+                //console.log('Result:', result); // debugging
 
                 document.getElementById('board-title-text').textContent = result.board_title;
 

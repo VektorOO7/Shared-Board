@@ -2,14 +2,13 @@
     
     error_reporting(0);
     ini_set('display_errors', 0);
-    
-    function get_content($connection, $board, $userId) {
+
+    function get_content($connection, $boardId, $boardTitle, $userId) {
         $result = [];
-        $result['board_title'] = $board['board_title'];
 
         try {
             $stmt = $connection->prepare('SELECT * FROM notes WHERE board_id = :board_id');
-            $stmt->execute(['board_id' => $board['board_id']]);
+            $stmt->execute(['board_id' => $boardId]);
             $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($notes as &$note) {
@@ -30,13 +29,14 @@
                 ];
             }
 
-            $result['notes'] = $notes;
             $result['success'] = true;
-            $result['message'] = $notes;
+            $result['message'] = 'Notes fetched successfully';
+            $result['board_title'] = $boardTitle;
+            $result['notes'] = $notes;
         } catch (PDOException $e) {
             $result['success'] = false;
-            $result['board_title'] = 'Error';
             $result['message'] = 'Database error: ' . $e->getMessage();
+            $result['board_title'] = 'Error';
         }
 
         return $result;
@@ -85,7 +85,7 @@
 
             if ($board) {
                 if ($board['user_id'] == $user_id || in_array($user_id, $userIds)) {
-                    echo json_encode(get_content($connection, $board, $user_id));
+                    echo json_encode(get_content($connection, $boardId, $board['board_title'], $user_id));
                 } else {
                     echo json_encode(['success' => false, 'board_title' => 'Error', 'message' => 'User not authorized to view this board']);
                 }
