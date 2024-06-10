@@ -30,7 +30,7 @@ async function loadSession() {
 
         const data = await response.json();
 
-        //console.log('data:', data); debug
+        //console.log('data:', data); // debug
 
         if (!data.active) {
             window.location.href = 'login.html';
@@ -212,8 +212,6 @@ function hidePopup() {
 }
 
 async function tryGettingSharedBoard(boardId, sharePassword, userId) {
-    console.log('UserId = ' + userId);
-
     try {
         const response = await fetch('php/share_board.php', {
             method: 'POST',
@@ -222,8 +220,6 @@ async function tryGettingSharedBoard(boardId, sharePassword, userId) {
             },
             body: JSON.stringify({ board_id: boardId, board_share_password: sharePassword, user_id: userId })
         });
-
-        console.log('Sent data: ' + JSON.stringify({ board_id: boardId, board_share_password: sharePassword, user_id: userId })); 
 
         return await response.json();
     } catch (error) {
@@ -262,20 +258,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadSession();
     //console.log("here should be the uset" + userData);
 
+    //console.log(userData); // debug
+
     if (userData) {
         const boardId = getQueryParam('board');
         let sharePassword = getQueryParam('share-password');
-        console.log(sharePassword);
-        const userId = userData.userId;
-
+        const userId = userData.user_id;
+        
         //console.log(boardId); // debugging
         //console.log(sharePassword); // debugging
         //console.log(userId); // debugging
 
         if (sharePassword !== null) {
             const sharedBoardResult = await tryGettingSharedBoard(boardId, sharePassword, userId);
-
-            console.log('Shared Board Result:', sharedBoardResult); // debugging
 
             if (!sharedBoardResult.success) {
                 console.error(sharedBoardResult.message);

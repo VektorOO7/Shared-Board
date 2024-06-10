@@ -1,8 +1,7 @@
 <?php
     
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+    error_reporting(0);
+    ini_set('display_errors', 0);
 
     try {
         require_once("../db/db.php");
@@ -29,7 +28,7 @@
         $conn = $db->getConnection();
 
         $stmt = $conn->prepare('SELECT * FROM boards WHERE board_id = :board_id AND board_share_password = :board_share_password');
-        $stmt->execute(['board_id' => $input['board_id'], 'board_share_password' => $input['board_share_password']]);
+        $stmt->execute(['board_id' => $inputData['board_id'], 'board_share_password' => $inputData['board_share_password']]);
         $board = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$board) {
@@ -40,7 +39,7 @@
         }
 
         $stmt = $conn->prepare('SELECT * FROM shared_boards WHERE board_id = :board_id AND user_id = :user_id');
-        $stmt->execute(['board_id' => $input['board_id'], 'user_id' => $input['user_id']]);
+        $stmt->execute(['board_id' => $inputData['board_id'], 'user_id' => $inputData['user_id']]);
         $shared_board = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($shared_board) {
@@ -50,7 +49,7 @@
         }
         
         $stmt = $conn->prepare('INSERT INTO shared_boards (board_id, user_id) VALUES (?, ?)');
-        $stmt->execute([$input['board_id'], $input['user_id']]);
+        $stmt->execute([$inputData['board_id'], $inputData['user_id']]);
 
         echo json_encode(['success' => true, "message" => "Successfully shared the board in the database!"]);
     } catch (PDOException $e) {
