@@ -24,23 +24,25 @@ async function loadSession() {
             }
         });
 
-        console.log('response: ' + response);
-        console.log('response.json(): ' + response.json());
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
         const data = await response.json();
 
-        console.log('data: ' + data);
-        //console.log('data.json(): ' + data.json());
+        //console.log('data:', data); debug
 
         if (!data.active) {
-            //window.location.href = 'login.html';
+            window.location.href = 'login.html';
         } else {
+            //console.log("Session active, user data:", data.user); debug
             userData = data.user;
         }
     } catch (error) {
         console.error('Error checking session:', error);
     }
 }
+
 
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
