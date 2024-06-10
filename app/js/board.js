@@ -260,10 +260,12 @@ async function getBoardContent(boardId) {
 
 document.addEventListener('DOMContentLoaded', async function() {
     await loadSession();
+    //console.log("here should be the uset" + userData);
 
     if (userData) {
         const boardId = getQueryParam('board');
         let sharePassword = getQueryParam('share-password');
+        console.log(sharePassword);
         const userId = userData.userId;
 
         //console.log(boardId); // debugging

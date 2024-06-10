@@ -186,22 +186,26 @@ nav {
 
 
 .file-display img {
-    width: 250px;
-    height: 250px;
-    display: block;
- 
+    width: 100%;
+    height: auto;
+    max-width: 300px;
 }
 
 .file-display a {
-    display: block;
-    margin: 10px auto;
-    color: #007bff;
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: var(--secondary-color); 
+    color: var(--text-color);
+    text-align: center;
     text-decoration: none;
-    font-size: 12px; /* Adjust font size to fit better with the smaller images */
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .file-display a:hover {
-    text-decoration: underline;
+    background-color: var(--primary-color);
 }
 
 .delete-note-button {
@@ -209,6 +213,7 @@ nav {
     color: var(--text-color);
     border: 1px solid var(--border-color);
     padding: 5px 10px;
+    font-size: 16px;
     margin: 5px;
     border-radius: 3px;
     cursor: pointer;
