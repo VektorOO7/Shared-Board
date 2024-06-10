@@ -17,7 +17,7 @@ let boardCounter = 1;
 
 async function loadSession() {
     try {
-        const response = await fetch('php/index.php', {
+        const response = await fetch('php/session.php', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

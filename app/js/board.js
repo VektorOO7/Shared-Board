@@ -17,17 +17,23 @@ let renderedNotes = [];
 
 async function loadSession() {
     try {
-        const response = await fetch('php/index.php', {
+        const response = await fetch('php/session.php', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
 
+        console.log('response: ' + response);
+        console.log('response.json(): ' + response.json());
+
         const data = await response.json();
 
+        console.log('data: ' + data);
+        //console.log('data.json(): ' + data.json());
+
         if (!data.active) {
-            window.location.href = 'login.html';
+            //window.location.href = 'login.html';
         } else {
             userData = data.user;
         }
@@ -204,6 +210,8 @@ function hidePopup() {
 }
 
 async function tryGettingSharedBoard(boardId, sharePassword, userId) {
+    console.log('UserId = ' + userId);
+
     try {
         const response = await fetch('php/share_board.php', {
             method: 'POST',
@@ -212,6 +220,8 @@ async function tryGettingSharedBoard(boardId, sharePassword, userId) {
             },
             body: JSON.stringify({ board_id: boardId, board_share_password: sharePassword, user_id: userId })
         });
+
+        console.log('Sent data: ' + JSON.stringify({ board_id: boardId, board_share_password: sharePassword, user_id: userId })); 
 
         return await response.json();
     } catch (error) {

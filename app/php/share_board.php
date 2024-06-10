@@ -13,16 +13,16 @@
         exit();
     }
 
-    $boardData = json_decode(file_get_contents("php://input"), true);
+    $inputData = json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($boardData['board_id']) || !isset($boardData['board_share_password']) || !isset($boardData['user_id'])) {
+    if (!isset($inputData['board_id']) || !isset($inputData['board_share_password']) || !isset($inputData['user_id'])) {
         http_response_code(400);
-        echo json_encode(['success' => false, "message" => "Invalid input data!"]);
+        echo json_encode(['success' => false, "message" => "Invalid input data!", "inputData" => $inputData]);
 
         exit();
     }
 
-    //error_log("Board Data: " . print_r($boardData, true)); // for debugging purposes
+    //error_log("Board Data: " . print_r($inputData, true)); // for debugging purposes
 
     try {
         $db = new DB();
