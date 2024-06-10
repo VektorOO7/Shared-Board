@@ -22,8 +22,7 @@
         exit();
     }
 
-    // for debugging purposes
-    error_log("Board Data: " . print_r($boardData, true));
+    //error_log("Board Data: " . print_r($boardData, true)); // for debugging purposes
 
     try {
         $db = new DB();

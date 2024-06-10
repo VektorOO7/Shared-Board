@@ -481,26 +481,10 @@ nav {
     filter: blur(5px);
 }
 
-.active-create-board-popup #create-board-popup-overlay {
-    visibility: visible;
-    opacity: 1;
-}
-
-.active-edit-board-popup #edit-board-popup-overlay {
-    visibility: visible;
-    opacity: 1;
-}
-
-.active-share-board-popup #share-board-popup-overlay {
-    visibility: visible;
-    opacity: 1;
-}
-
-.active-delete-board-popup #delete-board-popup-overlay {
-    visibility: visible;
-    opacity: 1;
-}
-
+.active-create-board-popup #create-board-popup-overlay, 
+.active-edit-board-popup #edit-board-popup-overlay,
+.active-share-board-popup #share-board-popup-overlay,
+.active-delete-board-popup #delete-board-popup-overlay,
 .active-failed-delete-board-popup #failed-delete-board-popup-overlay {
     visibility: visible;
     opacity: 1;

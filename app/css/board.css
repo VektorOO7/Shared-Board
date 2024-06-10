@@ -45,6 +45,7 @@ nav {
 }
 
 #create-note-button-div,
+#back-button-div,
 #nav-title {
     width: 100%;
     height: 100%;
@@ -53,23 +54,7 @@ nav {
     align-items: center;
 }
 
-#dropdown-menu-div {
-    display: grid;
-    grid-template-columns: 1fr var(--nav-bar-height);
-    grid-gap: 0;
-
-    height: var(--nav-bar-height);
-}
-
 .grid-sub-elements {
-    display: grid;
-    align-items: center;
-}
-
-#back-button-div {
-    width: 100%;
-    height: 100%;
-
     display: grid;
     align-items: center;
 }
@@ -85,23 +70,6 @@ nav {
     color: var(--text-color);
 
     font-size: var(--title-text-font);
-}
-
-#username-display-div {
-    text-align: right;
-}
-
-#username-display {
-    padding-right: 0.5vw;
-
-    color: var(--text-color);
-
-    font-size: var(--username-display-text-font);
-}
-
-#back-button-div {
-    display: inline-flex;
-    align-items: center;
 }
 
 #create-note-button,
@@ -129,18 +97,9 @@ nav {
     left: 0;
 }
 
-#back-button {/*arrow is very small for some reason*/
-    height: calc(var(--nav-bar-height) * 1.09);
-    width: calc(var(--nav-bar-height) * 1.09);
-    background-color: var(--secondary-color);
-    border: none;
-    padding: 3px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
+#back-button {
+    height: var(--nav-bar-height);
+    width: calc(var(--nav-bar-height) * 1);
 
     left: calc(100% - calc(var(--nav-bar-height) * 1));
 }
@@ -160,16 +119,15 @@ nav {
     fill: var(--text-color);
 }
 
-#back-button-svg {/*arrow size is controlled in #back-button*/
-    width: calc(var(--nav-bar-height) * 0.8);
-    height: calc(var(--nav-bar-height) * 0.8);
-
+#back-button-svg {
+    height: calc(var(--nav-bar-height) * 0.5);
+    width: auto;
 
     fill: var(--text-color);
 }
+
 /*Notes-css*/
 
-/* Container for the notes */
 .notes-container {
     display: grid;
     gap: var(--between-board-gap);
@@ -179,7 +137,6 @@ nav {
     background-color: var(--primary-color);
 }
 
-/* Note styling */
 .note {
     display: flex;
     flex-direction: column;
@@ -194,7 +151,6 @@ nav {
 
 .note-title,
 .note-text{
-
     color: var(--text-color);
 }
 

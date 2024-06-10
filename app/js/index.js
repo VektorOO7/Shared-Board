@@ -23,13 +23,12 @@ async function loadSession() {
                 'Content-Type': 'application/json'
             }
         });
+
         const data = await response.json();
 
         if (!data.active) {
-
             window.location.href = 'login.html';
         } else {
-
             userData = data.user;
         }
     } catch (error) {
@@ -598,7 +597,7 @@ async function showUnauthorizedDeleteErrorPopup() {
 
     return new Promise((resolve, reject) => {
         function hidePopup() {
-            //document.body.classList.remove('active-failed-delete-board-popup');
+            document.body.classList.remove('active-failed-delete-board-popup');
         }
 
         function handlePopupOk() {

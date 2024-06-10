@@ -1,3 +1,8 @@
+
+
+
+let userData;
+
 const backButton = document.querySelector('#back-button');
 
 const newNoteButton = document.querySelector('#create-note-button');
@@ -10,8 +15,30 @@ let noteCounter = 1;
 
 let renderedNotes = [];
 
+async function loadSession() {
+    try {
+        const response = await fetch('php/index.php', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (!data.active) {
+            window.location.href = 'login.html';
+        } else {
+            userData = data.user;
+        }
+    } catch (error) {
+        console.error('Error checking session:', error);
+    }
+}
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
+
     return urlParams.get(param);
 }
 
@@ -19,42 +46,6 @@ function unrenderNote(note) {
     renderedNotes.splice(renderedNotes.indexOf(note), 1);
 
     note.remove();
-}
-
-async function getNotes(boardId) {
-    try {
-        const response = await fetch(`php/get_notes.php?board_id=${boardId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Empty response or non-OK status');
-        }
-
-        const result = await response.json();
-
-        if (result.success) {
-            return {
-                success: true,
-                notes: result.notes
-            };
-        } else {
-            console.error('Error fetching notes:', result.message);
-            return {
-                success: false,
-                message: result.message
-            };
-        }
-    } catch (error) {
-        console.error('Error fetching notes:', error);
-        return {
-            success: false,
-            message: error.message
-        };
-    }
 }
 
 async function deleteNote(noteId) {
@@ -136,32 +127,6 @@ function renderNote(note) {
     notesContainer.appendChild(newNote);
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    const boardId = getQueryParam('board');
-    //console.log(boardId); debugging
-    if (boardId) {
-        fetch(`php/get_board_content.php?board=${boardId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('board-title-text').textContent = 'Error';
-                } else {
-                    const decodedFileContent = atob(data.file);
-                    //console.log(decodedFileContent); debugging
-                    
-                    const jsonData = JSON.parse(decodedFileContent);
-                    document.getElementById('board-title-text').textContent = jsonData.board_title;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching board content:', error);
-            });
-    } else {
-        document.getElementById('board-title-text').textContent = 'Error';
-    }
-});
-
 async function showPopup() {
     const noteTitleInput = document.querySelector('#popup-title-field');
     const noteTextInput = document.querySelector('#popup-description-field');
@@ -169,6 +134,7 @@ async function showPopup() {
 
     if (!noteTitleInput) {
         console.error('Popup title not found');
+
         return;
     }
 
@@ -233,25 +199,94 @@ async function showPopup() {
     });
 }
 
-
-
 function hidePopup() {
     document.body.classList.remove('active-popup');
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const boardId = getQueryParam('board');
-
+async function tryGettingSharedBoard(boardId, sharePassword, userId) {
     try {
-        const result = await getNotes(boardId);
-        if (result.success) {
-            //console.log('Notes fetched successfully:', result.notes); debugging
-            result.notes.forEach(note => renderNote(note));
-        } else {
-            console.error('Failed to fetch notes:', result.message);
+        const response = await fetch('php/share_board.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ board_id: boardId, board_share_password: sharePassword, user_id: userId })
+        });
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error sharing board:', error);
+                
+        return { success: false, message: 'Failed to share the board' };
+    }
+}
+
+async function getBoardContent(boardId) {
+    try {
+        const response = await fetch(`php/get_board_content.php?board_id=${boardId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
         }
+
+        const result = await response.json();
+
+        return result;
     } catch (error) {
         console.error('Error fetching notes:', error);
+        return {
+            success: false,
+            message: error.message
+        };
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadSession();
+
+    if (userData) {
+        const boardId = getQueryParam('board');
+        let sharePassword = getQueryParam('share-password');
+        const userId = userData.userId;
+
+        //console.log(boardId); // debugging
+        //console.log(sharePassword); // debugging
+        //console.log(userId); // debugging
+
+        if (sharePassword !== null) {
+            const sharedBoardResult = tryGettingSharedBoard(boardId, sharePassword, userId);
+
+            if (!sharedBoardResult.success) {
+                console.error(sharedBoardResult.message);
+            }
+        }
+
+        if (boardId) {
+            try {
+                const result = await getBoardContent(boardId, userData.userId);
+
+                document.getElementById('board-title-text').textContent = result.board_title;
+
+                if (result.success) {
+                    //console.log('Notes fetched successfully:', result.notes); // debugging
+
+                    result.notes.forEach(note => renderNote(note));
+                } else {
+                    console.error('Failed to fetch notes:', result.message);
+                }
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+            }
+        } else {
+            document.getElementById('board-title-text').textContent = 'Error';
+        }
+    } else {
+        console.error('The user data from the session is missing!');
     }
 
     newNoteButton.addEventListener('click', async () => {
@@ -263,8 +298,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     });
+
     backButton.addEventListener('click', () => {
         window.location.href = 'index.html';
     });
-
 });

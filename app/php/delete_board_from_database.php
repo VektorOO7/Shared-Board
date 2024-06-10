@@ -8,6 +8,7 @@
     } catch (PDOException $exc) {
         http_response_code(500);
         echo json_encode(["message" => "Failed to make a connection to database!"]);
+
         exit();
     }
 
@@ -17,6 +18,7 @@
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+        
         exit();
     }
 

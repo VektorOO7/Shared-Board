@@ -1,6 +1,11 @@
 
 - XAMPP Control Panel v3.3.0
+- Apache 2.4.58
+- MariaDB 10.4.32
 - PHP version 8.2.12
+- HTML 5
+- CSS 3
+- JS V8 12.3.219.16
 
 - Apache Port = 8443
 - MySQL Port = 3307
