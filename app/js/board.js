@@ -105,17 +105,22 @@ function renderNote(note) {
         const fileDisplay = document.createElement('div');
         fileDisplay.classList.add('file-display');
 
-        if (note.file && note.file.type /*&& note.file.type.startsWith('image/')*/) {
-            const image = document.createElement('img');
-            image.src = 'data:' + note.file.type + ';base64,' + note.file.content; 
-            fileDisplay.appendChild(image);
+        if (note.file && note.file.type) {
+            if (note.file.type.startsWith('image/')) {
+                const image = document.createElement('img');
 
-             const downloadLink = document.createElement('a');
-             downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // The file content schould be base64 encoded
-             downloadLink.download = note.file.name;
-             downloadLink.textContent = 'Download File';
-             fileDisplay.appendChild(downloadLink);
+                image.src = 'data:' + note.file.type + ';base64,' + note.file.content; 
+                
+                fileDisplay.appendChild(image);
+            }
+            
+            const downloadLink = document.createElement('a');
 
+            downloadLink.href = 'data:' + note.file.type + ';base64,' + note.file.content; // The file content schould be base64 encoded
+            downloadLink.download = note.file.name;
+            downloadLink.textContent = 'Download File';
+
+            fileDisplay.appendChild(downloadLink);
         }
 
         newNote.appendChild(fileDisplay);
