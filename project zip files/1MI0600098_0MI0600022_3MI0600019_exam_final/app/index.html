@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="./css/index.css">
+        <link rel="stylesheet" href="./css/variables.css">
+        <script type="module" src="./js/index.js" defer></script>
+        <script type="module" src="./js/file_manager.js" defer></script>
+
+        <title>Shared Board</title>
+
+        <script type="text/javascript">
+            /*
+            // This script is for testing only!
+            document.addEventListener("DOMContentLoaded", function() {
+                createBoard('Example Title 1', 'Example Owner 1', 'This is an example description about a board!');
+                createBoard('Example Title 2', 'Example Owner 2', 'This is an example description about a board!');
+                createBoard('Example Title 3', 'Example Owner 3', 'This is an example description about a board!');
+            });
+            */
+        </script>
+    </head>
+
+    <body>
+        <div id="behind-overlay-content">
+            <header>
+                <nav>
+                    <div class="grid-element">
+                        <div id="create-board-button-div">
+                            <button id="create-board-button">
+                                <svg class="bi bi-plus-lg" id="create-board-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                </svg>
+
+                                <p class="text">Create new board</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid-element">
+                        <div id="nav-title">
+                            <h1 id="title-text">Shared Board</h1>
+                        </div>
+                    </div>
+
+                    <div class="grid-element" id="dropdown-menu-div">
+                        <div class="grid-sub-elements" id="username-display-div">
+                            <span id="username-display"></span>
+                        </div>
+
+                        <div class="grid-sub-elements" id="account-button-div">
+                            <button id="account-button">
+                                <svg class="bi bi-person-circle" id="account-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <main>
+                <div class="board-container">
+                </div>
+            </main>
+        </div>
+
+        <div class="popup-overlay" id="create-board-popup-overlay">
+            <form class="popup-data-form" id="create-board-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title">Create new board</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div class="field-div">
+                        <input class="popup-title-field" id="create-board-popup-title-field" type="text" name="title" placeholder="Board Title">
+                    </div>
+
+                    <div class="field-div">
+                        <textarea class="popup-description-field" id="create-board-popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-done-button-div">
+                            <button class="popup-button popup-done-button" id="create-board-popup-done-button" type="submit">Done</button>
+                        </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button class="popup-button popup-close-button" id="create-board-popup-close-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="edit-board-popup-overlay">
+            <form class="popup-data-form" id="edit-board-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title">Create new board</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div class="field-div">
+                        <input class="popup-title-field" id="edit-board-popup-title-field" type="text" name="title" placeholder="Board Title" maxlength="32">
+                    </div>
+
+                    <div class="field-div">
+                        <textarea class="popup-description-field" id="edit-board-popup-description-field" name="description" rows="4" cols="50" placeholder="Description"></textarea>
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-done-button-div">
+                            <button class="popup-button popup-done-button" id="edit-board-popup-done-button" type="submit">Done</button>
+                        </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button class="popup-button popup-close-button" id="edit-board-popup-close-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="share-board-popup-overlay">
+            <form class="popup-data-form" id="share-board-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title" id="share-board-popup-board-title"></h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div id="popup-form-text-div">
+                        <span id="share-board-popup-board-share-link"></span>
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-copy-share-link-button-div">
+                            <button class="popup-button popup-copy-share-link-button" id="share-board-popup-copy-share-link-button" type="submit">Copy Link</button>
+                        </div>
+                        
+                        <div id="popup-close-button-div">
+                            <button class="popup-button popup-close-button" id="share-board-popup-close-button" type="button">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="delete-board-popup-overlay">
+            <form class="popup-data-form" id="delete-board-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title">Delete board</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div id="popup-form-text-div">
+                        <span class="delete-popup-form-text">Are you sure you want to delete the '<span id="delete-board-popup-board-title"></span>' board?</span>
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-yes-button-div">
+                            <button class="popup-button popup-yes-button" id="delete-board-popup-yes-button" type="submit">Yes</button>
+                        </div>
+                        
+                        <div id="popup-no-button-div">
+                            <button class="popup-button popup-no-button" id="delete-board-popup-no-button" type="button">No</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="failed-delete-board-popup-overlay">
+            <form class="popup-data-form" id="failed-delete-board-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title">Delete failed!</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div id="popup-form-text-div">
+                        <span id="failed-delete-popup-form-error-text"></span>
+                    </div>
+
+                    <div class="popup-single-button-div">
+                        <div id="popup-ok-button-div">
+                            <button class="popup-button popup-ok-button" id="failed-delete-board-popup-ok-button" type="submit">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
