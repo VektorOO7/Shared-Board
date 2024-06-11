@@ -10,6 +10,7 @@ Files:
     './Documentation.pdf' - Documentation for the project
     '.db_create_script.sql/' - SQL Script for creating the DB
     '.db_create_script (testing).sql/' - SQL Script for creating the DB + testing data
+    './test_images/' - A directory with images for testing purposes
 
 Required Versions:
     XAMPP Control Panel v3.3.0
