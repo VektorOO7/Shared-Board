@@ -13,7 +13,58 @@ const deleteBoardPopupDataForm = document.querySelector('#delete-board-popup-dat
 const shareBoardPopupDataForm = document.querySelector('#share-board-popup-data-form');
 
 let renderedBoards = {};
-let boardCounter = 1; 
+let boardCounter = 1;
+
+/* commented until csvFileInput is added
+document.getElementById('csvFileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const data = csvToJSON(text);
+            renderNote(data);
+            saveNotes(data);
+        };
+        reader.readAsText(file);
+    }
+});*/
+
+export function csvToJSON(csv) {
+    const lines = csv.split('\n');
+    const result = [];
+    for (let i = 1; i < lines.length; i++) { // skip header
+        const line = lines[i].split(',');
+        if (line.length >= 2) {
+            const note = {
+                title: line[0].trim(),
+                description: line[1].trim()
+            };
+            result.push(note);
+        }
+    }
+    return result;
+}
+
+    
+export function saveNotes(notes){
+    notes.forEach(note => {
+        fetch('save_note.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(note)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Note saved successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error saving note:', error);
+        });
+    });
+}
 
 async function loadSession() {
     try {
