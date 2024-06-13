@@ -71,9 +71,7 @@ export async function getBoard(boardId, boardTitle) {
     return result;
 }
 
-// Helper function to decode base64 to UTF-8
 function decodeBase64ToUtf8(base64) {
-    // Decode base64 to binary string
     let binaryString;
     try {
         binaryString = atob(base64);
@@ -82,7 +80,6 @@ function decodeBase64ToUtf8(base64) {
         return null;
     }
 
-    // Convert binary string to UTF-8 bytes
     const utf8Bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         utf8Bytes[i] = binaryString.charCodeAt(i);

@@ -463,8 +463,8 @@ async function showCreateBoardPopup() {
             const boarduserId = userData.user_id;
             const boardDescription = boardDescriptionInput.value;
 
-            if (!boardTitle || !boardDescription) {
-                console.error('Title and Description cannot be empty');
+            if (!boardTitle) {
+                console.error('Title cannot be empty');
                 return;
             }
 
