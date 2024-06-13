@@ -32,23 +32,6 @@ document.getElementById('ImportInput').addEventListener('change', function(event
     }
 });
 
-async function handleZipFile(zip) {
-    const csvFile = await zip.file("notes.csv").async("string");
-    const csvData = csvToJSON(csvFile);
-
-    const files = {};
-    zip.folder("files").forEach((relativePath, file) => {
-        file.async("blob").then(blob => {
-            files[relativePath] = blob;
-        });
-    });
-
-    // Wait for all files to be processed
-    await Promise.all(Object.values(files));
-
-    sendToServer(csvData, files);
-}
-
 function sendToServer(csvData, files) {
     const formData = new FormData();
     formData.append("notes", JSON.stringify(csvData));
@@ -69,6 +52,24 @@ function sendToServer(csvData, files) {
         console.error('Error importing notes:', error);
     });
 }*/
+
+async function handleZipFile(zip) {
+    const csvFile = await zip.file("notes.csv").async("string");
+    const csvData = csvToJSON(csvFile);
+
+    const files = {};
+    const filePromises = [];
+    zip.folder("files").forEach((relativePath, file) => {
+        const promise = file.async("blob").then(blob => {
+            files[relativePath] = blob;
+        });
+        filePromises.push(promise);
+    });
+
+    await Promise.all(filePromises);
+
+    sendToServer(csvData, files);
+}
 
 export function csvToJSON(csv) {
     const lines = csv.split('\n');
@@ -702,13 +703,13 @@ async function showShareBoardPopup(boardJSON) {
         }
 
         async function exportBoardAsFile() {
-            async function exportBoard(boardId, boardTitle, boardJsonPath) {
+            async function exportBoard(boardId, boardTitle) {
                 const response = await fetch('php/export_board.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ boardId, boardTitle, boardJsonPath })
+                    body: JSON.stringify({boardId, boardTitle})
                 });
 
                 const blob = await response.blob();
@@ -717,7 +718,7 @@ async function showShareBoardPopup(boardJSON) {
 
                 a.style.display = 'none';
                 a.href = url;
-                a.download = `${boardTitle}_board_export.zip`;
+                a.download = '${boardTitle}_board_export.zip';
 
                 document.body.appendChild(a);
 
@@ -728,13 +729,15 @@ async function showShareBoardPopup(boardJSON) {
 
             const boardId = boardJSON.board_id;
             const boardTitle = boardJSON.board_title;
-
+            console.log(boardId);
+            console.log(boardTitle);
+            exportBoard(boardId, boardTitle);
             //console.log(boardJSON); // for testing purposes only
 
-            getBoard(boardId, boardTitle)
+            /*getBoard(boardId, boardTitle)
             .then(boardJsonPath => {
-                exportBoard(boardId, boardTitle, boardJsonPath);
-            });
+                exportBoard(boardId, boardTitle);
+            });*/
         }
 
         async function handlePopupShareLink(event) {
