@@ -18,39 +18,6 @@ const shareBoardLinkPopupDataForm = document.querySelector('#share-board-link-po
 let renderedBoards = {};
 let boardCounter = 1;
 
-
-/* I assume this might be here? anyway needs a button
-document.getElementById('exportButton').addEventListener('click', function() {
-    const boardId = prompt("Enter the Board ID:");
-    const boardTitle = prompt("Enter the Board Title:");
-    getBoard(boardId, boardTitle)
-    .then(boardJsonPath => {
-        exportBoard(boardId, boardTitle, boardJsonPath);
-    });
-});
-*/
-//this should also be moved with the above function
-async function exportBoard(boardId, boardTitle, boardJsonPath) {
-    const response = await fetch('php/export_board.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ boardId, boardTitle, boardJsonPath })
-    });
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = `${boardTitle}_board_export.zip`;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-}//---------------
-
-
 /* commented until csvFileInput is added
 document.getElementById('ImportInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -732,7 +699,39 @@ async function showShareBoardPopup(boardJSON) {
         }
 
         async function exportBoardAsFile() {
-            console.log('Board Exported!');
+            async function exportBoard(boardId, boardTitle, boardJsonPath) {
+                const response = await fetch('php/export_board.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ boardId, boardTitle, boardJsonPath })
+                });
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `${boardTitle}_board_export.zip`;
+
+                document.body.appendChild(a);
+
+                a.click();
+                
+                window.URL.revokeObjectURL(url);
+            }
+
+            const boardId = boardJSON.board_id;
+            const boardTitle = boardJSON.board_title;
+
+            //console.log(boardJSON); // for testing purposes only
+
+            getBoard(boardId, boardTitle)
+            .then(boardJsonPath => {
+                exportBoard(boardId, boardTitle, boardJsonPath);
+            });
         }
 
         async function handlePopupShareLink(event) {
