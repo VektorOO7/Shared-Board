@@ -1,8 +1,6 @@
 <?php
     
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+    header('Content-Type: application/json; charset=utf-8');
 
     try {
         require_once("../db/db.php");
@@ -30,13 +28,13 @@
         $db = new DB();
         $conn = $db->getConnection();
 
-        $sql = 'SELECT board_id, board_title, board_share_password
+        $sql = 'SELECT board_id, board_title, board_desc, board_share_password
                 FROM boards
                 WHERE user_id = ?
 
                 UNION
 
-                SELECT b.board_id, b.board_title, b.board_share_password
+                SELECT b.board_id, b.board_title, b.board_desc, b.board_share_password
                 FROM boards b JOIN shared_boards sb
                 ON b.board_id = sb.board_id
                 WHERE sb.user_id = ?;';
@@ -50,7 +48,7 @@
     } catch (PDOException $e) {
         http_response_code(500);
         error_log("PDO Error: " . print_r($e->errorInfo, true));
-        echo json_encode(['success' => false, "message" => "Failed to connect to database!"]);
+        echo json_encode(['success' => false, "message" => "Failed to load bords from database!"]);
     }
 
 ?>

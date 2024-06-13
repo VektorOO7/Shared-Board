@@ -1,5 +1,7 @@
 <?php
 
+header('Content-Type: application/json; charset=utf-8');
+
     ini_set('file_uploads', 'On');
     ini_set('upload_max_filesize', '2M');
     ini_set('post_max_size', '8M');

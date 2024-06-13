@@ -15,6 +15,7 @@ CREATE TABLE boards (
     board_id VARCHAR(36) PRIMARY KEY,
     user_id INT NOT NULL,
 	board_title VARCHAR(32) NOT NULL,
+    board_desc VARCHAR(255) NOT NULL,
 	board_share_password VARCHAR(10) NOT NULL,
 	
     FOREIGN KEY (user_id) REFERENCES users(user_id)

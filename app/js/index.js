@@ -260,13 +260,14 @@ async function createNewBoardJSONObject(boardTitle, owner_username, user_id, des
 
 // returns a promise with: success & message
 async function saveBoardOnServer(boardJSON) {
-    async function sendBoardDataToDatabase(boardId, userId, boardTitle, boardSharePassword) {
+    async function sendBoardDataToDatabase(boardId, userId, boardTitle, boardDesc, boardSharePassword) {
         const response = await fetch('php/save_board_to_database.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle, board_share_password: boardSharePassword })
+            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle, board_desc:boardDesc,
+                 board_share_password: boardSharePassword })
         });
 
         const result = await response.json();
@@ -283,9 +284,10 @@ async function saveBoardOnServer(boardJSON) {
     const boardId = boardJSON.board_id;
     const userId = boardJSON.user_id;
     const boardTitle = boardJSON.board_title;
+    const boardDesc = boardJSON.board_desc;
     const boardSharePassword = boardJSON.board_share_password;
 
-    if (await sendBoardDataToDatabase(boardId, userId, boardTitle, boardSharePassword)) {
+    if (await sendBoardDataToDatabase(boardId, userId, boardTitle, boardDesc, boardSharePassword)) {
         const result = await saveBoard(boardJSON);
 
         return result;
@@ -312,7 +314,8 @@ async function loadBoardsFromServer(userId) {
         if (result.success) {
             return {
                 boards_count: result.count,
-                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title, board_share_password: board.board_share_password }))
+                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title, board_desc: board.board_desc,
+                     board_share_password: board.board_share_password }))
             };
         } else {
             console.error(result.message);
@@ -325,8 +328,8 @@ async function loadBoardsFromServer(userId) {
     }
 
     const boardsData = await getBoardsDataFromDatabase(userId);
+    console.log(boardsData);
     const boardsCount = boardsData.boards_count;
-
     if (boardsCount === 0) {
         return { boards_count: 0, boards: [] };
     }
@@ -337,6 +340,7 @@ async function loadBoardsFromServer(userId) {
 
     boardResults.forEach(result => {
         if (result.success) {
+            //console.log(result.file);
             boards.push(result.file);
         } else {
             console.error(`Failed to fetch board with id '${result.board_id}' and title '${result.board_title}': ${result.message}`);
@@ -651,6 +655,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (loadResult) {
                 //console.log('Boards loaded successfully:', loadResult); // for testing purposes only
 
+                //console.log(boards)
                 boards.forEach(renderBoard);
 
                 if (oldBoardCounter + boardsCount != boardCounter) {
