@@ -29,7 +29,7 @@
         $db = new DB();
         $conn = $db->getConnection();
 
-        $sql = "INSERT INTO boards (board_id, user_id, board_title, board_desc, board_share_password) VALUES (?,?,?, ?)";
+        $sql = "INSERT INTO boards (board_id, user_id, board_title, board_desc, board_share_password) VALUES (?,?,?,?,?)";
         $stmnt = $conn->prepare($sql);
         $stmnt->execute([$boardData["board_id"], $boardData["user_id"], $boardData["board_title"], $boardData["board_desc"], $boardData["board_share_password"]]);
 
