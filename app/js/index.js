@@ -49,19 +49,56 @@ async function exportBoard(boardId, boardTitle, boardJsonPath) {
 
 
 /* commented until csvFileInput is added
-document.getElementById('csvFileInput').addEventListener('change', function(event) {
+document.getElementById('ImportInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const text = e.target.result;
-            const data = csvToJSON(text);
-            renderNote(data);
-            saveNotes(data);
+            JSZip.loadAsync(e.target.result).then(zip => {
+                handleZipFile(zip);
+            });
         };
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file);
     }
-});*/
+});
+
+async function handleZipFile(zip) {
+    const csvFile = await zip.file("notes.csv").async("string");
+    const csvData = csvToJSON(csvFile);
+
+    const files = {};
+    zip.folder("files").forEach((relativePath, file) => {
+        file.async("blob").then(blob => {
+            files[relativePath] = blob;
+        });
+    });
+
+    // Wait for all files to be processed
+    await Promise.all(Object.values(files));
+
+    sendToServer(csvData, files);
+}
+
+function sendToServer(csvData, files) {
+    const formData = new FormData();
+    formData.append("notes", JSON.stringify(csvData));
+
+    for (const [fileName, fileBlob] of Object.entries(files)) {
+        formData.append(`files[${fileName}]`, fileBlob);
+    }
+
+    fetch('import_notes.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Import successful:', data);
+    })
+    .catch(error => {
+        console.error('Error importing notes:', error);
+    });
+}*/
 
 export function csvToJSON(csv) {
     const lines = csv.split('\n');
