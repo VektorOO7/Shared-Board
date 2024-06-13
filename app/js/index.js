@@ -496,6 +496,9 @@ async function extractBoardJSONFromFile(file) {
         }
 
         const boardJSON = await response.json();
+
+        //console.log(boardJSON); // debug
+
         return boardJSON;
     } catch (error) {
         throw new Error(`Error extracting board JSON from file: ${error.message}`);
