@@ -15,6 +15,39 @@ const shareBoardPopupDataForm = document.querySelector('#share-board-popup-data-
 let renderedBoards = {};
 let boardCounter = 1;
 
+
+/* I assume this might be here? anyway needs a button
+document.getElementById('exportButton').addEventListener('click', function() {
+    const boardId = prompt("Enter the Board ID:");
+    const boardTitle = prompt("Enter the Board Title:");
+    getBoard(boardId, boardTitle)
+    .then(boardJsonPath => {
+        exportBoard(boardId, boardTitle, boardJsonPath);
+    });
+});
+*/
+//this should also be moved with the above function
+async function exportBoard(boardId, boardTitle, boardJsonPath) {
+    const response = await fetch('php/export_board.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ boardId, boardTitle, boardJsonPath })
+    });
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = `${boardTitle}_board_export.zip`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+}//---------------
+
+
 /* commented until csvFileInput is added
 document.getElementById('csvFileInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -49,7 +82,7 @@ export function csvToJSON(csv) {
     
 export function saveNotes(notes){
     notes.forEach(note => {
-        fetch('save_note.php', {
+        fetch('php/save_note.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
