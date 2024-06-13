@@ -58,7 +58,8 @@ export async function getBoard(boardId, boardTitle) {
     const path = `/${boardId}/`;
 
     const result = await getFile(path, boardTitle + '.json');
-    console.log("Hello"+result);
+    
+    //console.log("Hello"+result); // debug
 
     if (result.success) {
         const decodedFileContent = decodeBase64ToUtf8(result.file);

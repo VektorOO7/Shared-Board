@@ -9,7 +9,7 @@ body {
     margin: 0;
     height: 100vh;
 
-    min-width: 600px;
+    min-width: 850px;
 
     background-color: var(--primary-color);
 
@@ -59,12 +59,30 @@ nav {
 }
 
 #create-board-button-div,
+#import-board-button-div,
 #nav-title {
     width: 100%;
     height: 100%;
 
     display: grid;
     align-items: center;
+}
+
+#create-board-button-div,
+#import-board-button-div {
+    width: calc(var(--nav-bar-height) * 2.25);
+}
+
+#import-board-button-div {
+    left: 0;
+}
+
+#add-boards-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 0;
+
+    height: var(--nav-bar-height);
 }
 
 #dropdown-menu-div {
@@ -75,7 +93,8 @@ nav {
     height: var(--nav-bar-height);
 }
 
-.grid-sub-elements {
+.add-boards-grid-sub-elements,
+.account-dropdown-grid-sub-elements {
     display: grid;
     align-items: center;
 }
@@ -116,6 +135,7 @@ nav {
 }
 
 #create-board-button,
+#import-board-button,
 #account-button {
     padding: 0;
     border: none;
@@ -127,13 +147,15 @@ nav {
 }
 
 #create-board-button:hover,
+#import-board-button:hover,
 #account-button:hover {
     background: var(--primary-color);
 
     cursor: pointer;
 }
 
-#create-board-button {
+#create-board-button,
+#import-board-button {
     height: var(--nav-bar-height);
     width: calc(var(--nav-bar-height) * 2.25);
 
@@ -157,7 +179,8 @@ nav {
     font-size: var(--text-font);
 }
 
-#create-board-button-svg {
+#create-board-button-svg,
+#import-board-button-svg {
     height: calc(var(--nav-bar-height) * 0.5);
     width: auto;
 
@@ -474,16 +497,20 @@ nav {
 }
 
 .active-create-board-popup #behind-overlay-content,
+.active-import-board-popup #behind-overlay-content,
 .active-edit-board-popup #behind-overlay-content,
 .active-share-board-popup #behind-overlay-content,
+.active-share-board-link-popup #behind-overlay-content,
 .active-delete-board-popup #behind-overlay-content,
 .active-failed-delete-board-popup #behind-overlay-content {
     filter: blur(5px);
 }
 
-.active-create-board-popup #create-board-popup-overlay, 
+.active-create-board-popup #create-board-popup-overlay,
+.active-import-board-popup #import-board-popup-overlay,
 .active-edit-board-popup #edit-board-popup-overlay,
 .active-share-board-popup #share-board-popup-overlay,
+.active-share-board-link-popup #share-board-link-popup-overlay,
 .active-delete-board-popup #delete-board-popup-overlay,
 .active-failed-delete-board-popup #failed-delete-board-popup-overlay {
     visibility: visible;

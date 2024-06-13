@@ -3,14 +3,17 @@ import { saveBoard, getBoard, deleteBoard } from "./file_manager.js";
 let userData;
 
 const createBoardButton = document.querySelector('#create-board-button');
+const importBoardButton = document.querySelector('#import-board-button');
 const accountButton = document.querySelector('#account-button');
 
 const boardContainer = document.querySelector('.board-container');
 
 const createBoardPopupDataForm = document.querySelector('#create-board-popup-data-form');
+const importBoardPopupDataForm = document.querySelector('#import-board-popup-data-form');
 const editBoardPopupDataForm = document.querySelector('#edit-board-popup-data-form');
 const deleteBoardPopupDataForm = document.querySelector('#delete-board-popup-data-form');
 const shareBoardPopupDataForm = document.querySelector('#share-board-popup-data-form');
+const shareBoardLinkPopupDataForm = document.querySelector('#share-board-link-popup-data-form');
 
 let renderedBoards = {};
 let boardCounter = 1;
@@ -405,7 +408,7 @@ async function saveBoardOnServer(boardJSON) {
     const boardId = boardJSON.board_id;
     const userId = boardJSON.user_id;
     const boardTitle = boardJSON.board_title;
-    const boardDesc = boardJSON.board_desc;
+    const boardDesc = boardJSON.description;
     const boardSharePassword = boardJSON.board_share_password;
 
     if (await sendBoardDataToDatabase(boardId, userId, boardTitle, boardDesc, boardSharePassword)) {
@@ -449,8 +452,8 @@ async function loadBoardsFromServer(userId) {
     }
 
     const boardsData = await getBoardsDataFromDatabase(userId);
-    console.log(boardsData);
     const boardsCount = boardsData.boards_count;
+    
     if (boardsCount === 0) {
         return { boards_count: 0, boards: [] };
     }
@@ -462,6 +465,7 @@ async function loadBoardsFromServer(userId) {
     boardResults.forEach(result => {
         if (result.success) {
             //console.log(result.file);
+
             boards.push(result.file);
         } else {
             console.error(`Failed to fetch board with id '${result.board_id}' and title '${result.board_title}': ${result.message}`);
@@ -503,6 +507,34 @@ async function deleteBoardFromServer(boardId, userId) {
     }
 
     return false;
+}
+
+async function extractBoardJSONFromFile(file) {
+    const formData = new FormData();
+    const boardId = await generateUniqueBoardId();
+    const boardSharePassword = generateSharePassword();
+
+    formData.append('file', file);
+    formData.append('board_id', boardId);
+    formData.append('board_share_password', boardSharePassword);
+
+    try {
+        const response = await fetch('import_board.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const boardJSON = await response.json();
+        return boardJSON;
+    } catch (error) {
+        throw new Error(`Error extracting board JSON from file: ${error.message}`);
+    }
+
+    return await createNewBoardJSONObject('Test', 'user', '2', 'This is a test!');
 }
 
 async function showCreateBoardPopup() {
@@ -549,10 +581,10 @@ async function showCreateBoardPopup() {
             hidePopup();
 
             resolve(boardJSON);
-            document.getElementById('create-board-popup-close-button').removeEventListener('click', handlePopupClose);
+            document.getElementById('create-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
         }
 
-        function handlePopupClose() {
+        function handlePopupCancel() {
             hidePopup();
 
             reject('Create Board Popup closed');
@@ -560,12 +592,69 @@ async function showCreateBoardPopup() {
         }
 
         createBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
-        document.getElementById('create-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+        document.getElementById('create-board-popup-cancel-button').addEventListener('click', handlePopupCancel, { once: true });
     });
 }
 
-async function updateBoardFile(boardJSON) {
-    return await saveBoard(boardJSON);
+async function showImportBoardPopup() {
+    const fileInput = document.querySelector('#file-input');
+
+    if (!fileInput) {
+        console.error('File input field not found');
+
+        return;
+    }
+
+    document.body.classList.add('active-import-board-popup');
+
+    fileInput.value = '';
+
+    return new Promise((resolve, reject) => {
+        function hidePopup() {
+            document.body.classList.remove('active-import-board-popup');
+        }
+
+        async function handlePopupDone(event) {
+            event.preventDefault();
+
+            const file = fileInput.files[0];
+
+            if (!file) {
+                console.error('No file selected');
+
+                return;
+            }
+
+            try {
+                const boardJSON = await extractBoardJSONFromFile(file);
+
+                // console.log(userData); // for testing purposes only
+                // console.log(boardJSON); // for testing purposes only
+
+                renderBoard(boardJSON);
+                saveBoardOnServer(boardJSON);
+
+                hidePopup();
+
+                resolve(boardJSON);
+                document.getElementById('import-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
+            } catch (error) {
+                console.error('Error extracting board JSON from file', error);
+
+                reject(error);
+            }
+        }
+
+        function handlePopupCancel() {
+            hidePopup();
+
+            reject('Import Board Popup closed');
+            importBoardPopupDataForm.removeEventListener('submit', handlePopupDone);
+        }
+
+        importBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
+        document.getElementById('import-board-popup-cancel-button').addEventListener('click', handlePopupCancel, { once: true });
+    });
 }
 
 async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpan) {
@@ -586,6 +675,10 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
     return new Promise((resolve, reject) => {
         function hidePopup() {
             document.body.classList.remove('active-edit-board-popup');
+        }
+
+        async function updateBoardFile(boardJSON) {
+            return await saveBoard(boardJSON);
         }
 
         async function handlePopupDone(event) {
@@ -633,6 +726,62 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
 async function showShareBoardPopup(boardJSON) {
     document.body.classList.add('active-share-board-popup');
 
+    return new Promise((resolve, reject) => {
+        function hidePopup() {
+            document.body.classList.remove('active-share-board-popup');
+        }
+
+        async function exportBoardAsFile() {
+            console.log('Board Exported!');
+        }
+
+        async function handlePopupShareLink(event) {
+            event.preventDefault();
+
+            hidePopup();
+
+            resolve('Share Board Popup closed');
+            document.getElementById('share-board-popup-export-button').removeEventListener('click', handlePopupExport);
+            document.getElementById('share-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
+
+            try {
+                await showShareLinkBoardPopup(boardJSON);
+            } catch (error) {
+                if (error != 'Share Board Link Popup closed') {
+                    console.error(error);
+                }
+            }
+        }
+
+        async function handlePopupExport(event) {
+            event.preventDefault();
+
+            await exportBoardAsFile();
+
+            hidePopup();
+
+            resolve('Share Board Popup closed');
+            shareBoardPopupDataForm.removeEventListener('submit', handlePopupShareLink);
+            document.getElementById('share-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
+        }
+
+        function handlePopupCancel() {
+            hidePopup();
+
+            reject('Share Board Popup closed');
+            shareBoardPopupDataForm.removeEventListener('submit', handlePopupShareLink);
+            document.getElementById('share-board-popup-export-button').removeEventListener('click', handlePopupExport);
+        }
+
+        shareBoardPopupDataForm.addEventListener('submit', handlePopupShareLink);
+        document.getElementById('share-board-popup-export-button').addEventListener('click', handlePopupExport, { once: true });
+        document.getElementById('share-board-popup-cancel-button').addEventListener('click', handlePopupCancel, { once: true });
+    });
+}
+
+async function showShareLinkBoardPopup(boardJSON) {
+    document.body.classList.add('active-share-board-link-popup');
+
     const boardTitle = boardJSON.board_title;
     const boardId = boardJSON.board_id;
     const boardSharePassword = boardJSON.board_share_password;
@@ -640,7 +789,7 @@ async function showShareBoardPopup(boardJSON) {
 
     return new Promise((resolve, reject) => {
         function hidePopup() {
-            document.body.classList.remove('active-share-board-popup');
+            document.body.classList.remove('active-share-board-link-popup');
         }
 
         function copyText(text) {
@@ -664,15 +813,15 @@ async function showShareBoardPopup(boardJSON) {
         function handlePopupClose() {
             hidePopup();
 
-            reject('Share Board Popup closed');
-            shareBoardPopupDataForm.removeEventListener('submit', handlePopupCopyShareLink);
+            reject('Share Board Link Popup closed');
+            shareBoardLinkPopupDataForm.removeEventListener('submit', handlePopupCopyShareLink);
         }
 
-        document.querySelector("#share-board-popup-board-title").textContent = 'Link for sharing the "' + boardTitle + '" board:';
-        document.querySelector("#share-board-popup-board-share-link").textContent = boardShareLink;
+        document.querySelector("#share-board-link-popup-board-title").textContent = 'Link for sharing the "' + boardTitle + '" board:';
+        document.querySelector("#share-board-link-popup-board-share-link").textContent = boardShareLink;
 
-        shareBoardPopupDataForm.addEventListener('submit', handlePopupCopyShareLink);
-        document.getElementById('share-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+        shareBoardLinkPopupDataForm.addEventListener('submit', handlePopupCopyShareLink);
+        document.getElementById('share-board-link-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
     });
 }
 
@@ -797,6 +946,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             await showCreateBoardPopup();
         } catch (error) {
             if (error != 'Create Board Popup closed') {
+                console.error(error);
+            }
+        }
+    });
+
+    importBoardButton.addEventListener('click', async () => {
+        try {
+            await showImportBoardPopup();
+        } catch (error) {
+            if (error != 'Import Board Popup closed') {
                 console.error(error);
             }
         }
