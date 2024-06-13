@@ -787,7 +787,8 @@ async function showShareLinkBoardPopup(boardJSON) {
     const boardTitle = boardJSON.board_title;
     const boardId = boardJSON.board_id;
     const boardSharePassword = boardJSON.board_share_password;
-    const boardShareLink = 'http://localhost/Shared-Board/app/board.html?board=' + boardId + '&share-password=' + boardSharePassword;
+
+    const boardShareLink = window.location.href + '?board=' + boardId + '&share-password=' + boardSharePassword;
 
     return new Promise((resolve, reject) => {
         function hidePopup() {
