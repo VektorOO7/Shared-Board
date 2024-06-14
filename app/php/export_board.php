@@ -23,80 +23,34 @@ function getNotes($boardId, $connection) {
     return $notes;
 }
 
-function generateCSV($notes) {
-    $csv = "Title,Description,File Name,File Type,File Size\n";
+function generateCSV($boardTitle, $boardDescription, $notes) {
+    // First line: board title and description
+    $csv = "Board Title,Board Description\n";
+    $csv .= "{$boardTitle},{$boardDescription}\n";
+    // Second line: headers for notes
+    $csv .= "Title,Description,File Name,File Type,File Size,File Base64\n";
+    // Subsequent lines: notes data
     foreach ($notes as $note) {
-        $csv .= "{$note['title']},{$note['description']},{$note['file_name']},{$note['file_type']},{$note['file_size']}\n";
+        $fileBase64 = !empty($note['file']) ? base64_encode($note['file']) : '';
+        $csv .= "{$note['title']},{$note['description']},{$note['file_name']},{$note['file_type']},{$note['file_size']},{$fileBase64}\n";
     }
     return $csv;
 }
 
-function get_board_path($boardId, $boardTitle) {
-    return "../.data/" . $boardId . "/" . $boardTitle . ".json";
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    error_log("Received POST request");
-
     $input = json_decode(file_get_contents('php://input'), true);
-    if (!$input) {
-        error_log("Failed to decode JSON input");
-        echo json_encode(['status' => 'error', 'message' => 'Invalid JSON input']);
-        exit();
-    }
-
     $boardId = $input['boardId'];
     $boardTitle = $input['boardTitle'];
-    $boardJsonPath = get_board_path($boardId, $boardTitle);
-
-    // Retrieve the board JSON data
-    if (file_exists($boardJsonPath)) {
-        $boardJson = file_get_contents($boardJsonPath);
-        error_log("Board JSON file found: $boardJsonPath");
-    } else {
-        error_log("Board JSON file not found: $boardJsonPath");
-        echo json_encode(['status' => 'error', 'message' => 'Board JSON file not found']);
-        exit();
-    }
+    $boardDescription = $input['boardDesc'];
 
     $notes = getNotes($boardId, $connection);
-    error_log("Retrieved " . count($notes) . " notes for board ID: $boardId");
+    $csvData = generateCSV($boardTitle, $boardDescription, $notes);
 
-    $zip = new ZipArchive();
-    $zipFilename = tempnam(sys_get_temp_dir(), 'board_export_') . '.zip';
-
-    if ($zip->open($zipFilename, ZipArchive::CREATE) !== TRUE) {
-        error_log("Unable to create zip file");
-        echo json_encode(['status' => 'error', 'message' => 'Unable to create zip file']);
-        exit();
-    }
-
-    $zip->addFromString('board.json', $boardJson);
-    error_log("Added board.json to zip");
-
-    $csvNotes = generateCSV($notes);
-    $zip->addFromString('notes.csv', $csvNotes);
-    error_log("Added notes.csv to zip");
-
-    foreach ($notes as $note) {
-        if (!empty($note['file'])) {
-            $zip->addFromString('files/' . $note['file_name'], $note['file']);
-            error_log("Added file to zip: " . $note['file_name']);
-        }
-    }
-
-    $zip->close();
-    error_log("Zip file created successfully: $zipFilename");
-
-    header('Content-Type: application/zip');
-    header('Content-Disposition: attachment; filename=' . basename($zipFilename));
-    header('Content-Length: ' . filesize($zipFilename));
-    readfile($zipFilename);
-
-    unlink($zipFilename);
-    error_log("Temporary zip file deleted: $zipFilename");
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' . $boardTitle . '_notes.csv"');
+    echo $csvData;
+    exit();
 } else {
-    error_log("Invalid request method");
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
 }
-?>
+

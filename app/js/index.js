@@ -53,24 +53,6 @@ function sendToServer(csvData, files) {
     });
 }*/
 
-async function handleZipFile(zip) {
-    const csvFile = await zip.file("notes.csv").async("string");
-    const csvData = csvToJSON(csvFile);
-
-    const files = {};
-    const filePromises = [];
-    zip.folder("files").forEach((relativePath, file) => {
-        const promise = file.async("blob").then(blob => {
-            files[relativePath] = blob;
-        });
-        filePromises.push(promise);
-    });
-
-    await Promise.all(filePromises);
-
-    sendToServer(csvData, files);
-}
-
 export function csvToJSON(csv) {
     const lines = csv.split('\n');
     const result = [];
@@ -703,42 +685,42 @@ async function showShareBoardPopup(boardJSON) {
         }
 
         async function exportBoardAsFile() {
-            async function exportBoard(boardId, boardTitle) {
-                const response = await fetch('php/export_board.php', {
+            async function exportBoard(boardId, boardTitle, boardDesc) {
+                fetch('php/export_board.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({boardId, boardTitle})
+                    body: JSON.stringify({ boardId, boardTitle, boardDesc })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = `${boardTitle}_notes.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error exporting notes:', error);
                 });
-
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-
-                a.style.display = 'none';
-                a.href = url;
-                a.download = '${boardTitle}_board_export.zip';
-
-                document.body.appendChild(a);
-
-                a.click();
-                
-                window.URL.revokeObjectURL(url);
             }
-
+        
             const boardId = boardJSON.board_id;
             const boardTitle = boardJSON.board_title;
-            console.log(boardId);
-            console.log(boardTitle);
-            exportBoard(boardId, boardTitle);
-            //console.log(boardJSON); // for testing purposes only
-
-            /*getBoard(boardId, boardTitle)
-            .then(boardJsonPath => {
-                exportBoard(boardId, boardTitle);
-            });*/
+            const boardDesc = boardJSON.description;
+            console.log(boardJSON);
+            exportBoard(boardId, boardTitle, boardDesc);
         }
+        
 
         async function handlePopupShareLink(event) {
             event.preventDefault();
