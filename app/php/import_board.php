@@ -1,58 +1,91 @@
 <?php
 
+try {
+    require_once("../db/db.php");
+} catch (PDOException $exc) {
+    http_response_code(500);
+    echo json_encode(["message" => "Failed to make a connection to database!"]);
+    exit();
+}
+
+try {
+    $db = new DB();
+    $connection = $db->getConnection();
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+    exit();
+}
+
+function createBoard($title, $description, $boardId, $boardSharePassword, $userId, $connection) {
+    // Check if user_id exists in users table
+    $stmt = $connection->prepare('SELECT user_id FROM users WHERE user_id = ?');
+    $stmt->execute([$userId]);
+    if ($stmt->rowCount() == 0) {
+        throw new Exception("User ID does not exist in users table");
+    }
+
+    $stmt = $connection->prepare('INSERT INTO boards (board_id, board_title, board_desc, board_share_password, user_id) VALUES (?, ?, ?, ?, ?)');
+    $stmt->execute([$boardId, $title, $description, $boardSharePassword, $userId]);
+    return $boardId; // Return the provided boardId
+}
+
+function saveNote($boardId, $title, $description, $fileName, $fileData, $fileType, $fileSize, $connection) {
+    $stmt = $connection->prepare('INSERT INTO notes (board_id, title, text, file_name, file, file_type, file_size) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$boardId, $title, $description, $fileName, $fileData, $fileType, $fileSize]);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $csvFile = $_FILES['csv']['tmp_name'];
+    $boardId = $_POST['board_id'];
+    $boardSharePassword = $_POST['board_share_password'];
+    $userId = $_POST['user_id'];
+
     try {
-        require_once("../db/db.php");
-    } catch (PDOException $exc) {
-        http_response_code(500);
-        echo json_encode(["message" => "Failed to make a connection to database!"]);
-    }
+        if (($handle = fopen($csvFile, 'r')) !== FALSE) {
+            // Read the first line for board title and description
+            $boardDetails = fgetcsv($handle, 1000, ",");
+            $boardTitle = $boardDetails[0];
+            $boardDescription = $boardDetails[1];
 
-    try {
-        $db = new DB();
-        $connection = $db->getConnection();
-    } catch (PDOException $e) {
-        echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-        
-        exit();
-    }
+            // Create the board and get its ID
+            $boardId = createBoard($boardTitle, $boardDescription, $boardId, $boardSharePassword, $userId, $connection);
+            
+            // Log the board ID for debugging
+            error_log("Board created with ID: $boardId");
 
-    function saveNote($note, $fileData, $fileName, $fileType, $fileSize, $connection) {
-        $stmt = $connection->prepare('INSERT INTO notes (board_id, title, text, file_name, file, file_type, file_size) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([
-            $note['board_id'],
-            $note['title'],
-            $note['description'],
-            $fileName,
-            $fileData,
-            $fileType,
-            $fileSize
-        ]);
-    }
+            // Check if there are more lines in the CSV for headers and notes
+            if (($headers = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                // Read the subsequent lines for notes
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    if (count($headers) != count($data)) {
+                        throw new Exception("CSV format error: header count and data count do not match");
+                    }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $notes = json_decode($_POST['notes'], true);
-        $files = $_FILES['files'];
+                    $note = array_combine($headers, $data);
 
-        foreach ($notes as $note) {
-            $fileData = null;
-            $fileName = null;
-            $fileType = null;
-            $fileSize = null;
+                    $title = $note['Title'];
+                    $description = $note['Description'];
+                    $fileName = $note['File Name'];
+                    $fileType = $note['File Type'];
+                    $fileSize = $note['File Size'];
+                    $fileBase64 = $note['File Base64'];
 
-            if (isset($files['tmp_name'][$note['file_name']])) {
-                $fileTmpName = $files['tmp_name'][$note['file_name']];
-                $fileData = file_get_contents($fileTmpName);
-                $fileName = $files['name'][$note['file_name']];
-                $fileType = $files['type'][$note['file_name']];
-                $fileSize = $files['size'][$note['file_name']];
+                    $fileData = !empty($fileBase64) ? base64_decode($fileBase64) : null;
+
+                    saveNote($boardId, $title, $description, $fileName, $fileData, $fileType, $fileSize, $connection);
+                }
             }
-
-            saveNote($note, $fileData, $fileName, $fileType, $fileSize, $connection);
+            fclose($handle);
+            echo json_encode(['board_title' => $boardTitle, 'board_description' => $boardDescription]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Unable to read CSV file']);
         }
-
-        echo json_encode(['status' => 'success', 'message' => 'Notes imported successfully']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    } catch (Exception $e) {
+        // Log the error message for debugging
+        error_log("Error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
-
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+}
 ?>

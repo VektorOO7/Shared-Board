@@ -24,15 +24,11 @@ function getNotes($boardId, $connection) {
 }
 
 function generateCSV($boardTitle, $boardDescription, $notes) {
-    // First line: board title and description
-    $csv = "Board Title,Board Description\n";
-    $csv .= "{$boardTitle},{$boardDescription}\n";
-    // Second line: headers for notes
+    $csv = "\"$boardTitle\",\"$boardDescription\"\n"; // Enclose board title and description in double quotes
     $csv .= "Title,Description,File Name,File Type,File Size,File Base64\n";
-    // Subsequent lines: notes data
     foreach ($notes as $note) {
         $fileBase64 = !empty($note['file']) ? base64_encode($note['file']) : '';
-        $csv .= "{$note['title']},{$note['description']},{$note['file_name']},{$note['file_type']},{$note['file_size']},{$fileBase64}\n";
+        $csv .= "\"{$note['title']}\",\"{$note['description']}\",\"{$note['file_name']}\",\"{$note['file_type']}\",\"{$note['file_size']}\",\"$fileBase64\"\n"; // Enclose each field in double quotes
     }
     return $csv;
 }
@@ -53,4 +49,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
 }
-

@@ -320,9 +320,9 @@ function generateSharePassword() {
     return result;
 }
 
-async function createNewBoardJSONObject(boardTitle, owner_username, user_id, description) {
+async function createNewBoardJSONObject(board_id, boardTitle, owner_username, user_id, description) {
     return {
-        'board_id': await generateUniqueBoardId(),
+        'board_id': board_id,
         'board_share_password': generateSharePassword(),
         'board_title': boardTitle,
         'owner_username': owner_username,
@@ -463,13 +463,15 @@ async function extractBoardJSONFromFile(file) {
     const formData = new FormData();
     const boardId = await generateUniqueBoardId();
     const boardSharePassword = generateSharePassword();
+    const userId = userData.user_id; // Assuming userData has user_id
 
-    formData.append('file', file);
+    formData.append('csv', file);
     formData.append('board_id', boardId);
     formData.append('board_share_password', boardSharePassword);
+    formData.append('user_id', userId);
 
     try {
-        const response = await fetch('import_board.php', {
+        const response = await fetch('php/import_board.php', {
             method: 'POST',
             body: formData
         });
@@ -479,16 +481,17 @@ async function extractBoardJSONFromFile(file) {
         }
 
         const boardJSON = await response.json();
-
-        //console.log(boardJSON); // debug
+        boardJSON.boardId = boardId;
+        console.log(boardJSON); // debug
 
         return boardJSON;
     } catch (error) {
         throw new Error(`Error extracting board JSON from file: ${error.message}`);
     }
-
-    return await createNewBoardJSONObject('Test', 'user', '2', 'This is a test!');
 }
+
+
+
 
 async function showCreateBoardPopup() {
     const boardTitleInput = document.querySelector('#create-board-popup-title-field');
@@ -522,8 +525,8 @@ async function showCreateBoardPopup() {
                 console.error('Title cannot be empty');
                 return;
             }
-
-            const boardJSON = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
+            const board_id = await generateUniqueBoardId();
+            const boardJSON = await createNewBoardJSONObject(board_id, boardTitle, boardOwnerUsername, boarduserId, boardDescription);
 
             //console.log(userData); // for testing purposes only
             //console.log(boardJSON); // for testing purposes only
@@ -579,13 +582,21 @@ async function showImportBoardPopup() {
             }
 
             try {
-                const boardJSON = await extractBoardJSONFromFile(file);
+                const preBoardJSON = await extractBoardJSONFromFile(file);
+                const boardTitle = preBoardJSON.board_title;
+                const boardDescription = preBoardJSON.board_description;
+                const boardOwnerUsername = userData.username;
+                const boarduserId = userData.user_id;
 
+                const board_id = preBoardJSON.boardId;
+                const boardJSON = await createNewBoardJSONObject(board_id, boardTitle, boardOwnerUsername, boarduserId, boardDescription);
                 // console.log(userData); // for testing purposes only
-                // console.log(boardJSON); // for testing purposes only
+                console.log("created new :");
+                console.log(boardJSON); // for testing purposes only
 
+                saveBoard(boardJSON);
                 renderBoard(boardJSON);
-                saveBoardOnServer(boardJSON);
+                //saveBoardOnServer(boardJSON); saves it twice
 
                 hidePopup();
 
