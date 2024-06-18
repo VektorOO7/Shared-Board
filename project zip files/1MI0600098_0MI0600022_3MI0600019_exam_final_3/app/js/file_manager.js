@@ -86,7 +86,6 @@ function decodeBase64ToUtf8(base64) {
         utf8Bytes[i] = binaryString.charCodeAt(i);
     }
 
-    // Decode UTF-8 bytes to string
     const utf8Decoder = new TextDecoder('utf-8');
     return utf8Decoder.decode(utf8Bytes);
 }

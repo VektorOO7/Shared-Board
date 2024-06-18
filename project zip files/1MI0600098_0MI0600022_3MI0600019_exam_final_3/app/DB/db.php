@@ -1,13 +1,5 @@
 <?php
 
-    $host = 'localhost';
-    $port = '3307';
-    $dbname = 'sharedboard';
-    $username = 'root';
-    $password = '';
-
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
-
     class DB {
         private $host = 'localhost';
         private $port = '3307';

@@ -482,7 +482,7 @@ async function extractBoardJSONFromFile(file) {
 
         const boardJSON = await response.json();
         boardJSON.boardId = boardId;
-        console.log(boardJSON); // debug
+        // console.log(boardJSON); // debug
 
         return boardJSON;
     } catch (error) {
@@ -592,7 +592,7 @@ async function showImportBoardPopup() {
                 const boardJSON = await createNewBoardJSONObject(board_id, boardTitle, boardOwnerUsername, boarduserId, boardDescription);
                 // console.log(userData); // for testing purposes only
                 console.log("created new :");
-                console.log(boardJSON); // for testing purposes only
+                //console.log(boardJSON); // for testing purposes only
 
                 saveBoard(boardJSON);
                 renderBoard(boardJSON);
@@ -689,7 +689,7 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
 
 async function showShareBoardPopup(boardJSON) {
     document.body.classList.add('active-share-board-popup');
-
+    console.log(boardJSON);
     return new Promise((resolve, reject) => {
         function hidePopup() {
             document.body.classList.remove('active-share-board-popup');
@@ -783,8 +783,9 @@ async function showShareLinkBoardPopup(boardJSON) {
     const boardTitle = boardJSON.board_title;
     const boardId = boardJSON.board_id;
     const boardSharePassword = boardJSON.board_share_password;
-
-    const boardShareLink = window.location.href + '?board=' + boardId + '&share-password=' + boardSharePassword;
+    let currentUrl = window.location.href;
+    currentUrl = currentUrl.replace('index.html', 'board.html');
+    const boardShareLink = currentUrl + '?board=' + boardId + '&share-password=' + boardSharePassword;
 
     return new Promise((resolve, reject) => {
         function hidePopup() {

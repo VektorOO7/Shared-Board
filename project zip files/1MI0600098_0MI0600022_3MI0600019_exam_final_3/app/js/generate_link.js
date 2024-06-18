@@ -1,5 +1,4 @@
 document.getElementById('shareButton').addEventListener('click', function() {
-    // Assume the pageId is 1 for this example
     var pageId = 1;
 
     fetch('php/generate_link.php', {

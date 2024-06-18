@@ -152,8 +152,6 @@ async function showPopup() {
     }
 
     document.body.classList.add('active-popup');
-
-    // Clear input fields
     noteTitleInput.value = '';
     noteTextInput.value = '';
 
@@ -261,18 +259,12 @@ async function getBoardContent(boardId) {
 
 document.addEventListener('DOMContentLoaded', async function() {
     await loadSession();
-    //console.log("here should be the uset" + userData);
-
-    //console.log(userData); // debug
 
     if (userData) {
         const boardId = getQueryParam('board');
         let sharePassword = getQueryParam('share-password');
         const userId = userData.user_id;
-        
-        //console.log(boardId); // debugging
-        //console.log(sharePassword); // debugging
-        //console.log(userId); // debugging
+    
 
         if (sharePassword !== null) {
             const sharedBoardResult = await tryGettingSharedBoard(boardId, sharePassword, userId);
@@ -286,12 +278,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             try {
                 const result = await getBoardContent(boardId, userData.userId);
 
-                //console.log('Result:', result); // debugging
-
                 document.getElementById('board-title-text').textContent = result.board_title;
 
                 if (result.success) {
-                    //console.log('Notes fetched successfully:', result.notes); // debugging
 
                     result.notes.forEach(note => renderNote(note));
                 } else {
