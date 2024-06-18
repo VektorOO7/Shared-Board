@@ -13,6 +13,7 @@ try {
         if (file_exists($filePath)) {
             $fileContent = file_get_contents($filePath);
 
+            // Ensure the file content is UTF-8 encoded
             if (!mb_check_encoding($fileContent, 'UTF-8')) {
                 $fileContent = mb_convert_encoding($fileContent, 'UTF-8', 'auto');
             }

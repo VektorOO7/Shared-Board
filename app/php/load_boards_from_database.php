@@ -22,8 +22,6 @@
 
     $userId = $inputData['user_id'];
 
-    //error_log("User ID: " . print_r($userId, true)); // for debugging purposes only
-
     try {
         $db = new DB();
         $conn = $db->getConnection();

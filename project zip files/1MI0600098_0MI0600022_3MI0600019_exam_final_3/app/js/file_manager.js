@@ -43,6 +43,7 @@ async function getFile(path, fileName) {
     const response = await fetch('php/get_file.php', {
         method: 'POST',
         headers: {
+            charset: 'UTF-8',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ path: path, fileName: fileName })
@@ -57,9 +58,11 @@ export async function getBoard(boardId, boardTitle) {
     const path = `/${boardId}/`;
 
     const result = await getFile(path, boardTitle + '.json');
+    
+    //console.log("Hello"+result); // debug
 
     if (result.success) {
-        const decodedFileContent = atob(result.file);
+        const decodedFileContent = decodeBase64ToUtf8(result.file);
         return {
             success: true,
             file: JSON.parse(decodedFileContent)
@@ -68,6 +71,26 @@ export async function getBoard(boardId, boardTitle) {
 
     return result;
 }
+
+function decodeBase64ToUtf8(base64) {
+    let binaryString;
+    try {
+        binaryString = atob(base64);
+    } catch (error) {
+        console.error('Failed to decode base64:', error);
+        return null;
+    }
+
+    const utf8Bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        utf8Bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Decode UTF-8 bytes to string
+    const utf8Decoder = new TextDecoder('utf-8');
+    return utf8Decoder.decode(utf8Bytes);
+}
+
 
 async function deleteFile() {
     // body...

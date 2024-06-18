@@ -27,14 +27,24 @@
         <div id="behind-overlay-content">
             <header>
                 <nav>
-                    <div class="grid-element">
-                        <div id="create-board-button-div">
+                    <div class="grid-element" id="add-boards-div">
+                        <div class="add-boards-grid-sub-elements" id="create-board-button-div">
                             <button id="create-board-button">
                                 <svg class="bi bi-plus-lg" id="create-board-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                 </svg>
 
                                 <p class="text">Create new board</p>
+                            </button>
+                        </div>
+                        <div class="add-boards-grid-sub-elements" id="import-board-button-div">
+                            <button id="import-board-button">
+                                <svg class="bi bi-file-earmark-arrow-down" id="import-board-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                    <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
+                                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                                </svg>
+
+                                <p class="text">Import board</p>
                             </button>
                         </div>
                     </div>
@@ -46,11 +56,11 @@
                     </div>
 
                     <div class="grid-element" id="dropdown-menu-div">
-                        <div class="grid-sub-elements" id="username-display-div">
+                        <div class="account-dropdown-grid-sub-elements" id="username-display-div">
                             <span id="username-display"></span>
                         </div>
 
-                        <div class="grid-sub-elements" id="account-button-div">
+                        <div class="account-dropdown-grid-sub-elements" id="account-button-div">
                             <button id="account-button">
                                 <svg class="bi bi-person-circle" id="account-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -88,8 +98,33 @@
                             <button class="popup-button popup-done-button" id="create-board-popup-done-button" type="submit">Done</button>
                         </div>
                         
-                        <div id="popup-close-button-div">
-                            <button class="popup-button popup-close-button" id="create-board-popup-close-button" type="button">Cancel</button>
+                        <div id="popup-cancel-button-div">
+                            <button class="popup-button popup-cancel-button" id="create-board-popup-cancel-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="import-board-popup-overlay">
+            <form class="popup-data-form" id="import-board-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title">Import board</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div class="file-input-div">
+                        <label for="file-input" class="text">Choose a file:</label>
+                        <input type="file" name="file-input" id="file-input">
+                    </div>
+
+                    <div class="popup-buttons-div">
+                        <div id="popup-import-button-div">
+                            <button class="popup-button popup-import-button" id="import-board-popup-import-button" type="submit">Import</button>
+                        </div>
+                        
+                        <div id="popup-cancel-button-div">
+                            <button class="popup-button popup-cancel-button" id="import-board-popup-cancel-button" type="button">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -99,7 +134,7 @@
         <div class="popup-overlay" id="edit-board-popup-overlay">
             <form class="popup-data-form" id="edit-board-popup-data-form">
                 <div class="popup-form-title-div">
-                    <h1 class="popup-form-title">Create new board</h1>
+                    <h1 class="popup-form-title">Edit board</h1>
                 </div>
 
                 <div id="popup-form-body-div">
@@ -127,21 +162,47 @@
         <div class="popup-overlay" id="share-board-popup-overlay">
             <form class="popup-data-form" id="share-board-popup-data-form">
                 <div class="popup-form-title-div">
-                    <h1 class="popup-form-title" id="share-board-popup-board-title"></h1>
+                    <h1 class="popup-form-title">Choose sharing method</h1>
+                </div>
+
+                <div id="popup-form-body-div">
+                    <div class="popup-buttons-div">
+                        <div id="popup-share-link-button-div">
+                            <button class="popup-button popup-share-link-button" id="share-board-link-popup-share-link-button" type="submit">Share Link</button>
+                        </div>
+                        
+                        <div id="popup-export-button-div">
+                            <button class="popup-button popup-export-button" id="share-board-popup-export-button" type="button">Export</button>
+                        </div>
+                    </div>
+
+                    <div class="popup-single-button-div">
+                        <div id="popup-cancel-button-div">
+                            <button class="popup-button popup-cancel-button" id="share-board-popup-cancel-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-overlay" id="share-board-link-popup-overlay">
+            <form class="popup-data-form" id="share-board-link-popup-data-form">
+                <div class="popup-form-title-div">
+                    <h1 class="popup-form-title" id="share-board-link-popup-board-title"></h1>
                 </div>
 
                 <div id="popup-form-body-div">
                     <div id="popup-form-text-div">
-                        <span id="share-board-popup-board-share-link"></span>
+                        <span id="share-board-link-popup-board-share-link"></span>
                     </div>
 
                     <div class="popup-buttons-div">
                         <div id="popup-copy-share-link-button-div">
-                            <button class="popup-button popup-copy-share-link-button" id="share-board-popup-copy-share-link-button" type="submit">Copy Link</button>
+                            <button class="popup-button popup-copy-share-link-button" id="share-board-link-popup-copy-share-link-button" type="submit">Copy Link</button>
                         </div>
-                        
+
                         <div id="popup-close-button-div">
-                            <button class="popup-button popup-close-button" id="share-board-popup-close-button" type="button">Close</button>
+                            <button class="popup-button popup-close-button" id="share-board-link-popup-close-button" type="button">Close</button>
                         </div>
                     </div>
                 </div>

@@ -1,8 +1,4 @@
 <?php
-    
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
 
     try {
         require_once("../db/db.php");
@@ -24,7 +20,8 @@
             return ["isValid" => false, "message" => "Passwords don't match!"];
         }
 
-        $regex = "/^[a-z0-9_]+@[a-z]+\.[a-z]+$/";
+        $regex = "/^[\w.\-]+@[\w.\-]+\.[\w\-]{2,4}$/";
+
 
         if (!preg_match($regex, $userData["email"])) {
             return ["isValid" => false, "message" => "Invalid email!"];

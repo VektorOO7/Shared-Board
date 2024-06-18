@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the token from the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 

@@ -3,17 +3,91 @@ import { saveBoard, getBoard, deleteBoard } from "./file_manager.js";
 let userData;
 
 const createBoardButton = document.querySelector('#create-board-button');
+const importBoardButton = document.querySelector('#import-board-button');
 const accountButton = document.querySelector('#account-button');
 
 const boardContainer = document.querySelector('.board-container');
 
 const createBoardPopupDataForm = document.querySelector('#create-board-popup-data-form');
+const importBoardPopupDataForm = document.querySelector('#import-board-popup-data-form');
 const editBoardPopupDataForm = document.querySelector('#edit-board-popup-data-form');
 const deleteBoardPopupDataForm = document.querySelector('#delete-board-popup-data-form');
 const shareBoardPopupDataForm = document.querySelector('#share-board-popup-data-form');
+const shareBoardLinkPopupDataForm = document.querySelector('#share-board-link-popup-data-form');
 
 let renderedBoards = {};
-let boardCounter = 1; 
+let boardCounter = 1;
+
+/* commented until csvFileInput is added
+document.getElementById('ImportInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            JSZip.loadAsync(e.target.result).then(zip => {
+                handleZipFile(zip);
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+});
+
+function sendToServer(csvData, files) {
+    const formData = new FormData();
+    formData.append("notes", JSON.stringify(csvData));
+
+    for (const [fileName, fileBlob] of Object.entries(files)) {
+        formData.append(`files[${fileName}]`, fileBlob);
+    }
+
+    fetch('import_notes.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Import successful:', data);
+    })
+    .catch(error => {
+        console.error('Error importing notes:', error);
+    });
+}*/
+
+export function csvToJSON(csv) {
+    const lines = csv.split('\n');
+    const result = [];
+    for (let i = 1; i < lines.length; i++) { // skip header
+        const line = lines[i].split(',');
+        if (line.length >= 2) {
+            const note = {
+                title: line[0].trim(),
+                description: line[1].trim()
+            };
+            result.push(note);
+        }
+    }
+    return result;
+}
+
+    
+export function saveNotes(notes){
+    notes.forEach(note => {
+        fetch('php/save_note.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(note)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Note saved successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error saving note:', error);
+        });
+    });
+}
 
 async function loadSession() {
     try {
@@ -246,9 +320,9 @@ function generateSharePassword() {
     return result;
 }
 
-async function createNewBoardJSONObject(boardTitle, owner_username, user_id, description) {
+async function createNewBoardJSONObject(board_id, boardTitle, owner_username, user_id, description) {
     return {
-        'board_id': await generateUniqueBoardId(),
+        'board_id': board_id,
         'board_share_password': generateSharePassword(),
         'board_title': boardTitle,
         'owner_username': owner_username,
@@ -260,13 +334,14 @@ async function createNewBoardJSONObject(boardTitle, owner_username, user_id, des
 
 // returns a promise with: success & message
 async function saveBoardOnServer(boardJSON) {
-    async function sendBoardDataToDatabase(boardId, userId, boardTitle, boardSharePassword) {
+    async function sendBoardDataToDatabase(boardId, userId, boardTitle, boardDesc, boardSharePassword) {
         const response = await fetch('php/save_board_to_database.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle, board_share_password: boardSharePassword })
+            body: JSON.stringify({ board_id: boardId, user_id: userId, board_title: boardTitle, board_desc:boardDesc,
+                 board_share_password: boardSharePassword })
         });
 
         const result = await response.json();
@@ -283,9 +358,10 @@ async function saveBoardOnServer(boardJSON) {
     const boardId = boardJSON.board_id;
     const userId = boardJSON.user_id;
     const boardTitle = boardJSON.board_title;
+    const boardDesc = boardJSON.description;
     const boardSharePassword = boardJSON.board_share_password;
 
-    if (await sendBoardDataToDatabase(boardId, userId, boardTitle, boardSharePassword)) {
+    if (await sendBoardDataToDatabase(boardId, userId, boardTitle, boardDesc, boardSharePassword)) {
         const result = await saveBoard(boardJSON);
 
         return result;
@@ -312,7 +388,8 @@ async function loadBoardsFromServer(userId) {
         if (result.success) {
             return {
                 boards_count: result.count,
-                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title, board_share_password: board.board_share_password }))
+                boards: result.boards.map(board => ({ board_id: board.board_id, board_title: board.board_title, board_desc: board.board_desc,
+                     board_share_password: board.board_share_password }))
             };
         } else {
             console.error(result.message);
@@ -326,7 +403,7 @@ async function loadBoardsFromServer(userId) {
 
     const boardsData = await getBoardsDataFromDatabase(userId);
     const boardsCount = boardsData.boards_count;
-
+    
     if (boardsCount === 0) {
         return { boards_count: 0, boards: [] };
     }
@@ -337,6 +414,8 @@ async function loadBoardsFromServer(userId) {
 
     boardResults.forEach(result => {
         if (result.success) {
+            //console.log(result.file);
+
             boards.push(result.file);
         } else {
             console.error(`Failed to fetch board with id '${result.board_id}' and title '${result.board_title}': ${result.message}`);
@@ -380,6 +459,40 @@ async function deleteBoardFromServer(boardId, userId) {
     return false;
 }
 
+async function extractBoardJSONFromFile(file) {
+    const formData = new FormData();
+    const boardId = await generateUniqueBoardId();
+    const boardSharePassword = generateSharePassword();
+    const userId = userData.user_id; // Assuming userData has user_id
+
+    formData.append('csv', file);
+    formData.append('board_id', boardId);
+    formData.append('board_share_password', boardSharePassword);
+    formData.append('user_id', userId);
+
+    try {
+        const response = await fetch('php/import_board.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const boardJSON = await response.json();
+        boardJSON.boardId = boardId;
+        console.log(boardJSON); // debug
+
+        return boardJSON;
+    } catch (error) {
+        throw new Error(`Error extracting board JSON from file: ${error.message}`);
+    }
+}
+
+
+
+
 async function showCreateBoardPopup() {
     const boardTitleInput = document.querySelector('#create-board-popup-title-field');
     const boardDescriptionInput = document.querySelector('#create-board-popup-description-field');
@@ -408,12 +521,12 @@ async function showCreateBoardPopup() {
             const boarduserId = userData.user_id;
             const boardDescription = boardDescriptionInput.value;
 
-            if (!boardTitle || !boardDescription) {
-                console.error('Title and Description cannot be empty');
+            if (!boardTitle) {
+                console.error('Title cannot be empty');
                 return;
             }
-
-            const boardJSON = await createNewBoardJSONObject(boardTitle, boardOwnerUsername, boarduserId, boardDescription);
+            const board_id = await generateUniqueBoardId();
+            const boardJSON = await createNewBoardJSONObject(board_id, boardTitle, boardOwnerUsername, boarduserId, boardDescription);
 
             //console.log(userData); // for testing purposes only
             //console.log(boardJSON); // for testing purposes only
@@ -424,10 +537,10 @@ async function showCreateBoardPopup() {
             hidePopup();
 
             resolve(boardJSON);
-            document.getElementById('create-board-popup-close-button').removeEventListener('click', handlePopupClose);
+            document.getElementById('create-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
         }
 
-        function handlePopupClose() {
+        function handlePopupCancel() {
             hidePopup();
 
             reject('Create Board Popup closed');
@@ -435,12 +548,77 @@ async function showCreateBoardPopup() {
         }
 
         createBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
-        document.getElementById('create-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+        document.getElementById('create-board-popup-cancel-button').addEventListener('click', handlePopupCancel, { once: true });
     });
 }
 
-async function updateBoardFile(boardJSON) {
-    return await saveBoard(boardJSON);
+async function showImportBoardPopup() {
+    const fileInput = document.querySelector('#file-input');
+
+    if (!fileInput) {
+        console.error('File input field not found');
+
+        return;
+    }
+
+    document.body.classList.add('active-import-board-popup');
+
+    fileInput.value = '';
+
+    return new Promise((resolve, reject) => {
+        function hidePopup() {
+            document.body.classList.remove('active-import-board-popup');
+        }
+
+        async function handlePopupDone(event) {
+            event.preventDefault();
+
+            const file = fileInput.files[0];
+
+            if (!file) {
+                console.error('No file selected');
+
+                return;
+            }
+
+            try {
+                const preBoardJSON = await extractBoardJSONFromFile(file);
+                const boardTitle = preBoardJSON.board_title;
+                const boardDescription = preBoardJSON.board_description;
+                const boardOwnerUsername = userData.username;
+                const boarduserId = userData.user_id;
+
+                const board_id = preBoardJSON.boardId;
+                const boardJSON = await createNewBoardJSONObject(board_id, boardTitle, boardOwnerUsername, boarduserId, boardDescription);
+                // console.log(userData); // for testing purposes only
+                console.log("created new :");
+                console.log(boardJSON); // for testing purposes only
+
+                saveBoard(boardJSON);
+                renderBoard(boardJSON);
+                //saveBoardOnServer(boardJSON); saves it twice
+
+                hidePopup();
+
+                resolve(boardJSON);
+                document.getElementById('import-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
+            } catch (error) {
+                console.error('Error extracting board JSON from file', error);
+
+                reject(error);
+            }
+        }
+
+        function handlePopupCancel() {
+            hidePopup();
+
+            reject('Import Board Popup closed');
+            importBoardPopupDataForm.removeEventListener('submit', handlePopupDone);
+        }
+
+        importBoardPopupDataForm.addEventListener('submit', handlePopupDone, { once: true });
+        document.getElementById('import-board-popup-cancel-button').addEventListener('click', handlePopupCancel, { once: true });
+    });
 }
 
 async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpan) {
@@ -461,6 +639,10 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
     return new Promise((resolve, reject) => {
         function hidePopup() {
             document.body.classList.remove('active-edit-board-popup');
+        }
+
+        async function updateBoardFile(boardJSON) {
+            return await saveBoard(boardJSON);
         }
 
         async function handlePopupDone(event) {
@@ -508,14 +690,105 @@ async function showEditBoardPopup(boardJSON, boardTitleSpan, boardDescriptionSpa
 async function showShareBoardPopup(boardJSON) {
     document.body.classList.add('active-share-board-popup');
 
-    const boardTitle = boardJSON.board_title;
-    const boardId = boardJSON.board_id;
-    const boardSharePassword = boardJSON.board_share_password;
-    const boardShareLink = 'http://localhost/Shared-Board/app/board.html?board=' + boardId + '&share-password=' + boardSharePassword;
-
     return new Promise((resolve, reject) => {
         function hidePopup() {
             document.body.classList.remove('active-share-board-popup');
+        }
+
+        async function exportBoardAsFile() {
+            async function exportBoard(boardId, boardTitle, boardDesc) {
+                fetch('php/export_board.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ boardId, boardTitle, boardDesc })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = `${boardTitle}_notes.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error exporting notes:', error);
+                });
+            }
+        
+            const boardId = boardJSON.board_id;
+            const boardTitle = boardJSON.board_title;
+            const boardDesc = boardJSON.description;
+            console.log(boardJSON);
+            exportBoard(boardId, boardTitle, boardDesc);
+        }
+        
+
+        async function handlePopupShareLink(event) {
+            event.preventDefault();
+
+            hidePopup();
+
+            resolve('Share Board Popup closed');
+            document.getElementById('share-board-popup-export-button').removeEventListener('click', handlePopupExport);
+            document.getElementById('share-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
+
+            try {
+                await showShareLinkBoardPopup(boardJSON);
+            } catch (error) {
+                if (error != 'Share Board Link Popup closed') {
+                    console.error(error);
+                }
+            }
+        }
+
+        async function handlePopupExport(event) {
+            event.preventDefault();
+
+            await exportBoardAsFile();
+
+            hidePopup();
+
+            resolve('Share Board Popup closed');
+            shareBoardPopupDataForm.removeEventListener('submit', handlePopupShareLink);
+            document.getElementById('share-board-popup-cancel-button').removeEventListener('click', handlePopupCancel);
+        }
+
+        function handlePopupCancel() {
+            hidePopup();
+
+            reject('Share Board Popup closed');
+            shareBoardPopupDataForm.removeEventListener('submit', handlePopupShareLink);
+            document.getElementById('share-board-popup-export-button').removeEventListener('click', handlePopupExport);
+        }
+
+        shareBoardPopupDataForm.addEventListener('submit', handlePopupShareLink);
+        document.getElementById('share-board-popup-export-button').addEventListener('click', handlePopupExport, { once: true });
+        document.getElementById('share-board-popup-cancel-button').addEventListener('click', handlePopupCancel, { once: true });
+    });
+}
+
+async function showShareLinkBoardPopup(boardJSON) {
+    document.body.classList.add('active-share-board-link-popup');
+
+    const boardTitle = boardJSON.board_title;
+    const boardId = boardJSON.board_id;
+    const boardSharePassword = boardJSON.board_share_password;
+
+    const boardShareLink = window.location.href + '?board=' + boardId + '&share-password=' + boardSharePassword;
+
+    return new Promise((resolve, reject) => {
+        function hidePopup() {
+            document.body.classList.remove('active-share-board-link-popup');
         }
 
         function copyText(text) {
@@ -539,15 +812,15 @@ async function showShareBoardPopup(boardJSON) {
         function handlePopupClose() {
             hidePopup();
 
-            reject('Share Board Popup closed');
-            shareBoardPopupDataForm.removeEventListener('submit', handlePopupCopyShareLink);
+            reject('Share Board Link Popup closed');
+            shareBoardLinkPopupDataForm.removeEventListener('submit', handlePopupCopyShareLink);
         }
 
-        document.querySelector("#share-board-popup-board-title").textContent = 'Link for sharing the "' + boardTitle + '" board:';
-        document.querySelector("#share-board-popup-board-share-link").textContent = boardShareLink;
+        document.querySelector("#share-board-link-popup-board-title").textContent = 'Link for sharing the "' + boardTitle + '" board:';
+        document.querySelector("#share-board-link-popup-board-share-link").textContent = boardShareLink;
 
-        shareBoardPopupDataForm.addEventListener('submit', handlePopupCopyShareLink);
-        document.getElementById('share-board-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
+        shareBoardLinkPopupDataForm.addEventListener('submit', handlePopupCopyShareLink);
+        document.getElementById('share-board-link-popup-close-button').addEventListener('click', handlePopupClose, { once: true });
     });
 }
 
@@ -651,6 +924,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (loadResult) {
                 //console.log('Boards loaded successfully:', loadResult); // for testing purposes only
 
+                //console.log(boards)
                 boards.forEach(renderBoard);
 
                 if (oldBoardCounter + boardsCount != boardCounter) {
@@ -671,6 +945,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             await showCreateBoardPopup();
         } catch (error) {
             if (error != 'Create Board Popup closed') {
+                console.error(error);
+            }
+        }
+    });
+
+    importBoardButton.addEventListener('click', async () => {
+        try {
+            await showImportBoardPopup();
+        } catch (error) {
+            if (error != 'Import Board Popup closed') {
                 console.error(error);
             }
         }

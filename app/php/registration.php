@@ -33,7 +33,7 @@
     $userData = json_decode(file_get_contents("php://input"), true);
 
     // for debugging purposes
-    error_log("User Data: " . print_r($userData, true));
+    //error_log("User Data: " . print_r($userData, true));
 
     $valid = isUserDataValid($userData);
 

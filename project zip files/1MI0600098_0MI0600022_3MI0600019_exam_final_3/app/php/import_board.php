@@ -26,7 +26,7 @@ function createBoard($title, $description, $boardId, $boardSharePassword, $userI
 
     $stmt = $connection->prepare('INSERT INTO boards (board_id, board_title, board_desc, board_share_password, user_id) VALUES (?, ?, ?, ?, ?)');
     $stmt->execute([$boardId, $title, $description, $boardSharePassword, $userId]);
-    return $boardId;
+    return $boardId; // Return the provided boardId
 }
 
 function saveNote($boardId, $title, $description, $fileName, $fileData, $fileType, $fileSize, $connection) {
@@ -42,15 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if (($handle = fopen($csvFile, 'r')) !== FALSE) {
+            // Read the first line for board title and description
             $boardDetails = fgetcsv($handle, 1000, ",");
             $boardTitle = $boardDetails[0];
             $boardDescription = $boardDetails[1];
 
+            // Create the board and get its ID
             $boardId = createBoard($boardTitle, $boardDescription, $boardId, $boardSharePassword, $userId, $connection);
             
+            // Log the board ID for debugging
             error_log("Board created with ID: $boardId");
 
+            // Check if there are more lines in the CSV for headers and notes
             if (($headers = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                // Read the subsequent lines for notes
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     if (count($headers) != count($data)) {
                         throw new Exception("CSV format error: header count and data count do not match");
@@ -76,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['status' => 'error', 'message' => 'Unable to read CSV file']);
         }
     } catch (Exception $e) {
+        // Log the error message for debugging
         error_log("Error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
